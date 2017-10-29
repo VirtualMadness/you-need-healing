@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,10 +11,54 @@
     <title>You Need Healing</title>
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
-    <body>
-        <div class="main-menu">
-            <h1>You Need Healing</h1>
-            <button id="1player-button"><span id="maintitle.1player">PlaceHolder1Player</span></button>
-        </div>        
+    <header>
+        <p class="title">You Need Healing</p>
+    </header>
+    <body>        
+        <section class="main-menu">
+            <button id="1player-button" class="menu-button"><span title="1_jugador" class = "traducible">1 Jugador</span></button>
+            <button id="2player-button" class="menu-button"><span title="2_jugadores" class = "traducible">2 Jugadores</span></button>
+            
+            <hr>
+            
+            <button id="credits-button" class="menu-button"><span title="creditos" class = "traducible">Créditos</span></button>
+            <br>
+            <button id="settings-button" class="menu-button"><span title="ajustes" class = "traducible">Ajustes</span></button>
+            <br>
+            <button id="highscore-button" class="menu-button">HighScore</button>
+        </section> 
+        
+        <section id="settings-window" class ="settings-menu">
+            <button id="settings-close-button" class="close-button" style="right:6px; top:6px">x</button>
+            <p class="settings-title"><span title="ajustes" class = traducible>Ajustes</span></p>
+            
+            <p title="volumen_musica" class="traducible">Volumen de la Musica</p>
+            <input id="music-volume-level" type="range"/>            
+            <br>
+            
+            <p title="volumen_efectos" class="traducible">Volumen de Efectos</p>
+            <input id="music-sounds-level" type="range"/>
+            <br><br>
+            
+            <span title="lenguaje" class="traducible">Lenguaje seleccionado: </span><span id="lang"></span>
+            <button onclick="i18next.changeLanguage('es')">ES</button>
+            <button onclick="i18next.changeLanguage('en')">EN</button>
+            <button onclick="i18next.changeLanguage('fr')">FR</button>
+            <button onclick="i18next.changeLanguage('de')">DE</button>
+            <button onclick="i18next.changeLanguage('it')">IT</button>
+        </section>
+        
+        
+        
+        <!-- importamos las librerias necesarias al final del body para aligerar la carga de la pagina -->        
+        <script src=js/i18nextBrowserLanguageDetector.min.js></script>
+        <script src="https://unpkg.com/i18next/i18next.min.js"></script>
         <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="js/you-need-healing.js"></script>
+        
     </body>
+    
+    <footer>
+        
+    </footer>
+</html>
