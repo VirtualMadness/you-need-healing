@@ -1,3 +1,11 @@
+:root{
+    --main-color: #7cd42a;
+    --secondary-color: #03a231;
+    --light-color: #b8e88b;
+    --dark-color: #036831;
+    --my-black: #2d2d2d;
+}
+
 html{
     max-height: 100%;
     height: 100%;
@@ -8,7 +16,7 @@ body{
     max-width: 80%;
     margin: 0 auto;
     background-color: #c3e6a3;
-    color: #2d2d2d;
+    color: var(--my-black);
 }
 
 .title{
@@ -32,33 +40,45 @@ body{
     height: 100px;
     width: 300px;    
     border-radius: 20px;
-    border:4px solid #2d2d2d;
-    background: #7cd42a;
-    background-image: -moz-linear-gradient(-45deg, #7cd42a 20%, #03a231 70%);
-    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #7cd42a), color-stop(0.8, #03a231));
+    border:4px solid var(--my-black);
+    background: var(--main-color);
+    background-image: -moz-linear-gradient(-45deg, var(--main-color) 20%, var(--secondary-color) 70%);
+    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, var(--main-color)), color-stop(0.8, var(--secondary-color)));
     -webkit-box-shadow: 1px 3px 4px 3px rgba(50,50,50, 0.4);
     -moz-box-shadow: 1px 3px 4px 3px rgba(50, 50, 50, 0.4);
     box-shadow: 1px 3px 4px 3px rgba(50, 50, 50, 0.4);
     margin: 20px;
     padding:10px;
     text-align: center;   
-    color: #2d2d2d;
+    color: var(--my-black);
     font-size: 30px;
     font-weight: bold;
     cursor:pointer;  
 }
 .menu-button:hover{
-    background: #b8e88b;
-    background-image: -moz-linear-gradient(-45deg, #b8e88b 20%, #5ab874 70%);
-    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #b8e88b), color-stop(0.8, #5ab874));
+    background: var(--light-color);
+    background-image: -moz-linear-gradient(-45deg, var(--light-color) 20%, var(--main-color) 70%);
+    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, var(--light-color)), color-stop(0.8, var(--main-color)));
 }
 .menu-button:active{
-    background: #7cd42a;
-    background-image: -moz-linear-gradient(-45deg, #7cd42a 20%, #03a231 70%);
-    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #7cd42a), color-stop(0.8, #03a231));
+    background: var(--main-color);
+    background-image: -moz-linear-gradient(-45deg, var(--main-color) 20%, var(--secondary-color) 70%);
+    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, var(--main-color)), color-stop(0.8, var(--secondary-color)));
     -webkit-box-shadow: inset 2px 3px 4px 3px rgba(0, 0, 0, 0.4);
     -moz-box-shadow: inset 2px 3px 4px 3px rgba(0, 0, 0, 0.4);
     box-shadow: inset 2px 3px 4px 3px rgba(0, 0, 0, 0.4);
+}
+.menu-button[disabled]{
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+    background: var(--dark-color);    
+}
+.menu-button[disabled]:hover{
+    background: var(--dark-color);  
 }
 
 .close-button{
@@ -81,11 +101,13 @@ body{
     font-weight: bold;
     cursor:pointer;     
 }
+
 .close-button:hover{    
     background: #ed5e61;
     background-image: -moz-linear-gradient(-45deg, #ed5e61 20%, #e7363e 70%);
     background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #ed5e61), color-stop(0.8, #e7363e));    
 }
+
 .close-button:active{
     background: #d83037;
     background-image: -moz-linear-gradient(-45deg, #e7363e 20%, #af2e2f 70%);
@@ -93,6 +115,26 @@ body{
     -webkit-box-shadow: inset 1px 2px 3px 2px rgba(0, 0, 0,0.4);
     -moz-box-shadow: inset 1px 2px 3px 2px rgba(0, 0, 0, 0.4);
     box-shadow: inset 1px 2px 3px 2px rgba(0, 0, 0, 0.4);
+}
+
+.play-button{
+    height: 30px;
+    width: 50px;
+    border-radius: 20px;
+    border:2px solid #2d2d2d;
+    background: #d83037;
+    background-image: -moz-linear-gradient(-45deg, #e7363e 20%, #af2e2f 70%);
+    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #e7363e), color-stop(0.8, #af2e2f));
+    -webkit-box-shadow: 1px 2px 3px 2px rgba(50,50,50,0.4);
+    -moz-box-shadow: 1px 2px 3px 2px rgba(50, 50, 50, 0.4);
+    box-shadow: 1px 2px 3px 2px rgba(50, 50, 50, 0.4);
+    margin: 20px;
+    padding: 0px;
+    text-align: center;   
+    color: #2d2d2d;
+    font-size: 20px;
+    font-weight: bold;
+    cursor:pointer;     
 }
 
 .settings-menu{
@@ -107,6 +149,78 @@ body{
     left:10%;
     top:15%;
 }
+
+.game-window{
+    display: none;
+    background: white;
+    border: none;    
+    position: absolute;
+    height:100%;
+    width:100%;
+}
+
+.level-window{
+    display: none;
+    background: rgba(150,200,150,0.8);
+    border: none;    
+    border-radius:  20px; 
+    position: absolute;
+    width:60%;
+    height:50%;
+    left:20%;
+    top:25%;
+    padding:0px;
+    margin:0px;
+}
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  height: 100%;
+}
+
+.carousel-indicators{
+    margin-bottom:0px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 100%;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;  
+  height: 100%;
+}
+
+.carousel-inner {
+    height: 100%;
+}
+
+.carousel-control.left{
+  background-image: -webkit-linear-gradient(left, rgba(0, 150, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+  background-image:      -o-linear-gradient(left, rgba(0, 150, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 150, 0, .5)), to(rgba(0, 0, 0, .0001)));
+  background-image:         linear-gradient(to right, rgba(0, 150, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+}
+
+.carousel-control.right{
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
+  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 150, 0, .5)));
+  background-image:         linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
+}
+
+
 
 
 

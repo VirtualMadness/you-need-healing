@@ -9,6 +9,8 @@
     <meta name="author" content="Daniel Abad, Sergio de Frutos, Sergio Martin, Javier Peña, Gabriel Sevilla">
 
     <title>You Need Healing</title>
+      <!-- Bootstrap core CSS -->
+      <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
     <header>
@@ -25,11 +27,11 @@
             <br>
             <button id="settings-button" class="menu-button"><span title="ajustes" class = "traducible">Ajustes</span></button>
             <br>
-            <button id="highscore-button" class="menu-button">HighScore</button>
+            <button id="highscore-button" class="menu-button">HighScore</button>            
         </section> 
         
         <section id="settings-window" class ="settings-menu">
-            <button id="settings-close-button" class="close-button" style="right:6px; top:6px">x</button>
+            <button id="settings-close-button" class="close-button" style="right:6px; left:auto; top:6px">x</button>
             <p class="settings-title"><span title="ajustes" class = traducible>Ajustes</span></p>
             
             <p title="volumen_musica" class="traducible">Volumen de la Musica</p>
@@ -48,12 +50,74 @@
             <button onclick="i18next.changeLanguage('it')">IT</button>
         </section>
         
+        <section id="level-window" class = "level-window">            
+            <button id="level-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
+            <div style="padding:0px; margin:0px; height:15%, width:100%;">
+                <h1 title="dificultad" class="traducible">Dificultad</h1>
+            </div>
+            <div style="padding:0px; margin:0px; height:82%; width:100%;">
+                <!-- Carousel
+            ================================================== -->
+            <div id="myCarousel" class="carousel" data-ride="carousel">
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+              </ol>
+                
+              <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                  <img class="first-slide" src="http://zelda.com/breath-of-the-wild/assets/icons/BOTW-Share_icon.jpg" alt="Level 1">
+                  <div class="container">
+                    <div class="carousel-caption">
+                      <h1 title="facil" class="traducible">Nivel 1 - Fácil</h1>                      
+                        <button class="play-button" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <img class="second-slide" src="" alt="Level 2">
+                  <div class="container">
+                    <div class="carousel-caption">
+                      <h1 title="medio" class="traducible">Nivel 2 - Normal</h1>                        
+                      <p><a class="btn btn-lg btn-primary" href="#" role="button"><span title="jugar" class="traducible">JUGAR</span></a></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <img class="third-slide" src="" alt="Level 3">
+                  <div class="container">
+                    <div class="carousel-caption">
+                      <h1 title="dificil" class="traducible">Nivel 3 - Dificil</h1>                       
+                      <p><a class="btn btn-lg btn-primary" href="#" role="button"><span title="jugar" class="traducible">JUGAR</span></a></p>
+                    </div>
+                  </div>
+                </div>                 
+              </div>
+              <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div><!-- /.carousel -->
+            </div>           
+        </section>
+        
+        <section id="game-window" class = "game-window">
+            <canvas id="playground" height=100% width=100%/>
+        </section>
         
         
         <!-- importamos las librerias necesarias al final del body para aligerar la carga de la pagina -->        
         <script src=js/i18nextBrowserLanguageDetector.min.js></script>
         <script src="https://unpkg.com/i18next/i18next.min.js"></script>
         <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/localization.js"></script>
         <script src="js/you-need-healing.js"></script>
         
     </body>
