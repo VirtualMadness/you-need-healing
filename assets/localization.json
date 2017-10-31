@@ -1,6 +1,4 @@
-'use strict';
-//literales de las traducciones;
-let literals = {
+{
         es: {
           translation: {
             "1_jugador": "1 Jugador",
@@ -64,42 +62,3 @@ let literals = {
         }
           
       }
-
-$.getJSON("assets/localization.json", function(result, status){
-    console.log("peticion realizada con status "+status);
-        $.each(result, function(i, field){
-            console.log(field);
-        });
-    });
-
-//inicia el plugin para traduciones i18next
-function init_i18n(){
-    i18next
-        .use(i18nextBrowserLanguageDetector)
-        .init({
-      lng: 'es',
-      debug: true,
-      resources: literals,
-    }, function(err, t) {
-      // init set content
-      updateContent();
-    });
-}
-
-function updateContent() {
-    var valores = $(".traducible");
-    for(var i = 0; i < valores.length; i++){
-        var item = valores[i];
-        item.innerHTML = i18next.t(item.title);
-    }
-    //cambia el texto para mostrar el lenguaje seleccionado
-    $("#lang").html(i18next.language);
-}
-
-function changeLng(lng) {
-  i18next.changeLanguage(lng);
-}
-
-i18next.on('languageChanged', () => {
-  updateContent();
-});

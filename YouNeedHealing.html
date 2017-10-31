@@ -13,11 +13,9 @@
       <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
-    <header>
-        <p class="title">You Need Healing</p>
-    </header>
     <body>        
-        <section class="main-menu">
+        <section id= "menu-window" class="main-menu" style="height:100%; padding:auto">
+            <p class="title">You Need Healing</p>
             <button id="1player-button" class="menu-button"><span title="1_jugador" class = "traducible">1 Jugador</span></button>
             <button id="2player-button" class="menu-button"><span title="2_jugadores" class = "traducible">2 Jugadores</span></button>
             
@@ -48,10 +46,12 @@
             <button onclick="i18next.changeLanguage('fr')">FR</button>
             <button onclick="i18next.changeLanguage('de')">DE</button>
             <button onclick="i18next.changeLanguage('it')">IT</button>
+            
+            <button id="exit-button" class="menu-button" style="display:none;"><span title="salir" class="traducible">Salir</span></button>
         </section>
         
         <section id="level-window" class = "level-window">            
-            <button id="level-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
+            <button id="level-close-button" class="close-button" style="right:5px; left:auto; top:5px">x</button>
             <div style="padding:0px; margin:0px; height:15%, width:100%;">
                 <h1 title="dificultad" class="traducible">Dificultad</h1>
             </div>

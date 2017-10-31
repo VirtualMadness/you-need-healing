@@ -1,15 +1,23 @@
+var started = false;
+
 function toggleSettings(){    
     var actualState = $("#settings-window").css("display");
     actualState = actualState == "none"? false: true;
-    changeButtonsState($(".main-menu"), !actualState);
-    toggledisplay($("#settings-window"), !actualState);
+    if(started){
+        toggleDisplay($("#exit-button"), true);
+        //myGame.pause();
+    }else{
+        toggleDisplay($("#exit-button"), false);
+        changeButtonsState($(".main-menu"), !actualState);
+    }    
+    toggleDisplay($("#settings-window"), !actualState);
 }
 
 function toggleLevels(){
     var actualState = $("#level-window").css("display");
     actualState = actualState == "none"? false: true;
     changeButtonsState($(".main-menu"), !actualState);
-    toggledisplay($("#level-window"), !actualState);
+    toggleDisplay($("#level-window"), !actualState);
 }
 
 function changeButtonsState(container, newState){
@@ -21,13 +29,23 @@ function changeButtonsState(container, newState){
 }
 
 //cambia la visibilidad de un objeto (referenciado con el selector de jquery)
-function toggledisplay(item, newState){
+function toggleDisplay(item, newState){
     if(newState){
         item.css({"display": "block"});
     }else{
         item.css({"display": "none"});
     }
 }
+
+function play(level){
+    toggleDisplay($("#level-window"), false);
+    toggleDisplay($("#menu-window"), false);
+    toggleDisplay($("#game-window"), true);
+    //myGame = new Game();
+    started = true;
+}
+
+var myGame;
 
 $(function(){
     init_i18n();    
@@ -37,4 +55,23 @@ $(function(){
     
     $("#1player-button").click(toggleLevels);
     $("#level-close-button").click(toggleLevels);
+    
+    // Manejador esc para pause
+    $(document).keydown(function(e)
+    {   
+        if(e.which == 27){
+            toggleSettings();
+        }                              
+    });
+    
+    //manejador boton salir del juego
+    $("#exit-button").click(function(){
+        toggleDisplay($("#level-window"), false);
+        toggleDisplay($("#menu-window"), true);
+        toggleDisplay($("#game-window"), false);
+        toggleDisplay($("#settings-window"), false);
+        changeButtonsState($(".main-menu"), false);
+        //myGame.end();
+        started = false;
+    });
 })
