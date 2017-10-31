@@ -65,7 +65,7 @@ let literals = {
           
       }
 
-var jqJson = $.getJSON("https://github.com/VirtualMadness/you-need-healing/blob/master/assets/localization.json")
+var jqJson = $.getJSON("https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/localization.json")
 .done(function(result){
     console.log("peticion realizada con exito");
     console.log(result);
