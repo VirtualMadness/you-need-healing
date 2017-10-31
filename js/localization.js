@@ -65,12 +65,16 @@ let literals = {
           
       }
 
-$.getJSON("assets/localization.json", function(result, status){
-    console.log("peticion realizada con status "+status);
-        $.each(result, function(i, field){
-            console.log(field);
-        });
-    });
+var jqJson = $.getJSON("assets/localization.json")
+.done(function(result){
+    console.log("peticion realizada con exito");
+    console.log(result);
+}).fail(function(result){
+    console.log("peticion fallida");
+}).always(function(){
+    console.log("peticion completa");
+});
+
 
 //inicia el plugin para traduciones i18next
 function init_i18n(){
