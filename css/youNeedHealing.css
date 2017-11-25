@@ -4,6 +4,12 @@
     --light-color: #b8e88b;
     --dark-color: #036831;
     --my-black: #2d2d2d;
+    --text-blue: #5db9cc;
+}
+
+@font-face {
+    font-family: Telemarines1Import;
+    src: url("telemarines.ttf");
 }
 
 html{
@@ -12,19 +18,21 @@ html{
 }
 
 body{
+    font-family: Telemarines1Import;
     text-align: center;
     margin: 0 auto;
-    background-color: #c3e6a3;
-    color: var(--my-black);
+    color: var(--text-blue);
     height:100%;
+    width: 100%;
+    background: #000;
 }
 
 .title{
-    font-size:350%;
+    font-size:600%;
     font-weight: bold;
     margin:0px;
     padding: auto;
-    height: 12%;
+    height: 15%;
 }
 
 .settings-title{
@@ -36,9 +44,51 @@ body{
 .main-menu{    
     padding: 40px;  
     padding-top: 10px;
-    background-image: url("assets/bg.png");
+    background-image: url("../assets/bg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
+.menu-image{
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    height: 100%;
+}
+
+.menu-btn{
+    background-image: url("/you-need-healing/assets/btn1.png");
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    background-repeat: no-repeat;
+    width: 600px;
+    height: 138px;
+    background-size: 600px 130px;
+    position: absolute;
+    top: 200px;
+    left: 540px;
+    
+    font-family: Telemarines1Import;
+    font-weight: bold;
+    font-size: 400%;
+    transform-origin: 0% 0%;
+}
+
+.menu-btn:hover{
+    transform: scaleX(1.1);
+}
+
+.menu-btn:focus{
+	outline-style:none;
+}
+
+.btn-group{
+    position: absolute;
+    top: -25px;
+    left: -45px;
+}
+
+/*
 .menu-button{
     height: 16%;
     width: 25%;    
@@ -65,6 +115,8 @@ body{
     background-image: -moz-linear-gradient(-45deg, var(--light-color) 20%, var(--main-color) 70%);
     background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, var(--light-color)), color-stop(0.8, var(--main-color)));
 }
+*/
+
 .menu-button:active{
     background: var(--main-color);
     background-image: -moz-linear-gradient(-45deg, var(--main-color) 20%, var(--secondary-color) 70%);

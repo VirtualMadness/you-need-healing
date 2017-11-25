@@ -16,16 +16,27 @@
     <body>        
         <section id= "menu-window" class="main-menu" style="height:100%; padding:auto">
             <p class="title">You Need Healing</p>
-            <button id="1player-button" class="menu-button"><span title="1_jugador" class = "traducible">1 Jugador</span></button>
-            <button id="2player-button" class="menu-button"><span title="2_jugadores" class = "traducible">2 Jugadores</span></button>
             
-            <hr>
+            <img class="menu-image" src="assets/bg_roll.png">
             
-            <button id="credits-button" class="menu-button"><span title="creditos" class = "traducible">Créditos</span></button>
-            <br>
-            <button id="settings-button" class="menu-button"><span title="ajustes" class = "traducible">Ajustes</span></button>
-            <br>
-            <button id="highscore-button" class="menu-button">HighScore</button>            
+            <div class="btn-group">
+                <button id="1player-button" class="menu-btn" style="top: 200px; background-image: url('assets/btn1.png')">
+                    <span title="1_jugador" class = "traducible">1 Jugador</span></button>
+                <br>
+                <button id="2player-button" class="menu-btn" style="top: 330px; left: 610px; width: 600px; height: 110px;
+                        background-size: 600px 110px; background-image: url('assets/btn5.png')">
+                    <span title="2_jugadores" class = "traducible">2 Jugadores</span></button>
+                <br>
+                <button id="highscore-button" class="menu-btn" style="top: 462px; left: 650px; width: 600px; height: 110px;
+                        background-size: 600px 110px;background-image: url('assets/btn4.png')"> HighScore</button>  
+                <br>
+                <button id="settings-button" class="menu-btn" style="top: 590px; left: 610px; width: 600px; height: 110px;
+                        background-size: 600px 110px; background-image: url('assets/btn2.png')">
+                    <span title="ajustes" class = "traducible">Ajustes</span></button>
+                <br>
+                <button id="credits-button" class="menu-btn" style="top: 700px; background-image: url('assets/btn3.png')">
+                    <span title="creditos" class = "traducible">Créditos</span></button>
+            </div>
         </section> 
         
         <section id="settings-window" class ="settings-menu">
