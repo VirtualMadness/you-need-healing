@@ -65,7 +65,9 @@ let literals = {
           
       }
 
-var jqJson = $.getJSON("https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/localization.json")
+// no funciona
+/*
+var jqJson = $.getJSON("assets/localization.json")
 .done(function(result){
     console.log("peticion realizada con exito");
     console.log(result);
@@ -74,6 +76,7 @@ var jqJson = $.getJSON("https://raw.githubusercontent.com/VirtualMadness/you-nee
 }).always(function(){
     console.log("peticion completa");
 });
+*/
 
 
 //inicia el plugin para traduciones i18next
