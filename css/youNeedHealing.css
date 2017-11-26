@@ -5,6 +5,7 @@
     --dark-color: #036831;
     --my-black: #2d2d2d;
     --text-blue: #5db9cc;
+    --text-light-blue: #9eecfc;
 }
 
 @font-face {
@@ -12,19 +13,28 @@
     src: url("telemarines.ttf");
 }
 
-html{
-    max-height: 100%;
-    height: 100%;
-}
-
-body{
+body, html{
+    cursor: url("../assets/evolution_cursor.png"), auto;
+    //cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
     font-family: Telemarines1Import;
     text-align: center;
-    margin: 0 auto;
+    margin: 0px auto;
     color: var(--text-blue);
     height:100%;
     width: 100%;
     background: #000;
+}
+
+input, button{
+    cursor: url("../assets/evolution_cursor.png"), auto;
+}
+
+input, button:focus{
+	outline-style:none;
+}
+
+input, button:hover{
+    cursor: url("../assets/evolution_cursor_hover.png"), auto;
 }
 
 .title{
@@ -57,7 +67,7 @@ body{
 }
 
 .menu-btn{
-    background-image: url("/you-need-healing/assets/btn1.png");
+    background-image: url("assets/btn1.png");
     background-color: rgba(0, 0, 0, 0);
     border: none;
     background-repeat: no-repeat;
@@ -67,7 +77,7 @@ body{
     position: absolute;
     top: 200px;
     left: 540px;
-    
+    color: var(--text-blue);
     font-family: Telemarines1Import;
     font-weight: bold;
     font-size: 400%;
@@ -76,10 +86,17 @@ body{
 
 .menu-btn:hover{
     transform: scaleX(1.1);
+    filter: brightness(150%);
 }
 
-.menu-btn:focus{
-	outline-style:none;
+.menu-btn[disabled]{
+    filter: alpha(opacity=65);
+    opacity: .65;
+}
+
+.menu-btn[disabled]:hover{
+    transform: scaleX(1);
+    filter: brightness(100%);
 }
 
 .btn-group{
@@ -87,35 +104,6 @@ body{
     top: -25px;
     left: -45px;
 }
-
-/*
-.menu-button{
-    height: 16%;
-    width: 25%;    
-    border-radius: 20px;
-    border:4px solid var(--my-black);
-    background: var(--main-color);
-    background-image: -moz-linear-gradient(-45deg, var(--main-color) 20%, var(--secondary-color) 70%);
-    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, var(--main-color)), color-stop(0.8, var(--secondary-color)));
-    -webkit-box-shadow: 1px 3px 4px 3px rgba(50,50,50, 0.4);
-    -moz-box-shadow: 1px 3px 4px 3px rgba(50, 50, 50, 0.4);
-    box-shadow: 1px 3px 4px 3px rgba(50, 50, 50, 0.4);
-    margin: auto;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    padding:auto;
-    text-align: center;   
-    color: var(--my-black);
-    font-size: 30px;
-    font-weight: bold;
-    cursor:pointer;  
-}
-.menu-button:hover{
-    background: var(--light-color);
-    background-image: -moz-linear-gradient(-45deg, var(--light-color) 20%, var(--main-color) 70%);
-    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, var(--light-color)), color-stop(0.8, var(--main-color)));
-}
-*/
 
 .menu-button:active{
     background: var(--main-color);
@@ -155,8 +143,7 @@ body{
     text-align: center;   
     color: var(--my-black);
     font-size: 20px;
-    font-weight: bold;
-    cursor:pointer;     
+    font-weight: bold;    
 }
 
 .close-button:hover{    
@@ -195,14 +182,16 @@ body{
 .settings-menu{
     text-align : center;
     display: none;
-    background: green;
+    background-image: url("../assets/bg_settings.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     border:4px solid #2d2d2d;
     border-radius:  20px;    
     border-color: #ffffff #5d5d5d #5d5d5d #fafafa;
     position: absolute;
-    height:80%;
-    width:80%;
-    left:10%;
+    height:60%;
+    width:50%;
+    left:25%;
     top:15%;
     z-index: 10;
     padding: auto;
@@ -220,6 +209,11 @@ input[type=range]{
     position: absolute;
     height:100%;
     width:100%;
+}
+
+#playground{
+    height: 100%;
+    width: 100%;
 }
 
 .level-window{

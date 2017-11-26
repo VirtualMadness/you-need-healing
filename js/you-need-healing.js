@@ -8,9 +8,20 @@ function toggleSettings(){
         //myGame.pause();
     }else{
         toggleDisplay($("#exit-button"), false);
-        changeButtonsState($(".main-menu"), !actualState);
+        changeButtonsState($(".btn-group"), !actualState);
     }    
     toggleDisplay($("#settings-window"), !actualState);
+    toggleBlur($("#menu-window"), !actualState);
+    
+}
+
+function toggleBlur(view, state){
+    if(state){
+        view.css({"filter": "blur(7px)"});
+    }
+    else{
+        view.css({"filter": "blur(0px)"});
+    }
 }
 
 function toggleLevels(){
