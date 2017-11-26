@@ -57,13 +57,31 @@ input, button:hover{
     background-image: url("../assets/bg.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    margin: 0 auto;
+    height: 100%;
 }
 
 .menu-image{
     position: absolute;
     top: 0px;
     left: 50px;
-    height: 100%;
+    width: 600px;
+}
+
+@media (max-width: 768px) {
+  .btn-responsive {
+    padding:2px 4px;
+    font-size:80%;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .btn-responsive {
+    padding:4px 9px;
+    font-size:90%;
+    line-height: 1.2;
+  }
 }
 
 .menu-btn{
@@ -74,9 +92,9 @@ input, button:hover{
     width: 600px;
     height: 138px;
     background-size: 600px 130px;
-    position: absolute;
-    top: 200px;
-    left: 540px;
+    //position: absolute;
+    //top: 200px;
+    //left: 540px;
     color: var(--text-blue);
     font-family: Telemarines1Import;
     font-weight: bold;
@@ -99,7 +117,7 @@ input, button:hover{
     filter: brightness(100%);
 }
 
-.btn-group{
+.button-group{
     position: absolute;
     top: -25px;
     left: -45px;
@@ -124,6 +142,18 @@ input, button:hover{
 }
 .menu-button[disabled]:hover{
     background: var(--dark-color);  
+}
+
+.bt-select-lenguaje{
+    background-color: #03202f;
+}
+
+.bt-select-lenguaje:hover{
+    filter: brightness(150%);
+}
+
+.bt-select-lenguaje[disabled]{
+    filter: brightness(150%);
 }
 
 .close-button{

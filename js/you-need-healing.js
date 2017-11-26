@@ -24,6 +24,15 @@ function toggleBlur(view, state){
     }
 }
 
+function toggleLang(view, state){
+    if(state){
+        view.css({"filter": "blur(7px)"});
+    }
+    else{
+        view.css({"filter": "blur(0px)"});
+    }
+}
+
 function toggleLevels(){
     var actualState = $("#level-window").css("display");
     actualState = actualState == "none"? false: true;
@@ -56,6 +65,11 @@ function play(level){
     started = true;
 }
 
+function changeLang(lang){
+    i18next.changeLanguage(lang);
+    
+}
+
 var myGame;
 
 $(function(){
@@ -85,4 +99,12 @@ $(function(){
         //myGame.end();
         started = false;
     });
+    
+    //manejador botones de idiomas
+    $("#bt-es").click(function (){changeLang("es")});
+    $("#bt-en").click(function (){changeLang("en")});
+    $("#bt-de").click(function (){changeLang("de")});
+    $("#bt-it").click(function (){changeLang("it")});
+    $("#bt-es").click(function (){changeLang("es")});
+    $("#bt-fr").click(function (){changeLang("fr")});
 })
