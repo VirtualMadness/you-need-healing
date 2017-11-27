@@ -1,4 +1,6 @@
 var started = false;
+var gameLoop;
+var ctx;
 
 function toggleSettings(){    
     var actualState = $("#settings-window").css("display");
@@ -37,18 +39,40 @@ function toggleDisplay(item, newState){
     }
 }
 
+function gameLoopF(){
+    console.log(myGame.movables.size);
+    if(started){
+        myGame.update(1);
+        myGame.render(ctx);
+        requestAnimationFrame(gameLoopF);
+    }
+}
+
 function play(level){
     toggleDisplay($("#level-window"), false);
     toggleDisplay($("#menu-window"), false);
     toggleDisplay($("#game-window"), true);
-    //myGame = new Game();
+    myGame = new Scene("level"+level);
     started = true;
+    loadLevel(level);    
+    myGame.start();
+    gameLoop = requestAnimationFrame(gameLoopF);
+}
+
+function loadLevel(lvl){
+    let ninja;
+    ninja = new Entity("ninja", null, new Transform(ninja, new Victor(20, 20), new Victor(1, 1)));
+    ninja.addComponent(new Sprite(ninja, "assets/sprites/ninja0.png"));
+    ninja.addComponent(new Kinematic(ninja, new Victor(0,5)));
+    ninja.addComponent(new Collider(ninja));
+    myGame.addEntity(ninja);    
 }
 
 var myGame;
 
 $(function(){
     init_i18n();    
+    ctx = $("#playground").get(0).getContext("2d");
     
     $("#settings-button").click(toggleSettings);
     $("#settings-close-button").click(toggleSettings);
