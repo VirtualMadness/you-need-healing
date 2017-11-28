@@ -5,14 +5,14 @@ function toggleSettings(){
     actualState = actualState == "none"? false: true;
     if(started){
         toggleDisplay($("#exit-button"), true);
+        toggleBlur($("#menu-window"), !actualState);
         //myGame.pause();
     }else{
-        toggleDisplay($("#exit-button"), false);
-        changeButtonsState($(".btn-group"), !actualState);
-    }    
+        toggleDisplay($("#exit-buttons"), false);
+        changeButtonsState($(".menu-btn"), !actualState);
+        toggleBlur($("#game-window"), !actualState);        
+    }  
     toggleDisplay($("#settings-window"), !actualState);
-    toggleBlur($("#menu-window"), !actualState);
-    
 }
 
 function toggleBlur(view, state){
@@ -40,12 +40,16 @@ function toggleLevels(){
     toggleDisplay($("#level-window"), !actualState);
 }
 
-function changeButtonsState(container, newState){
-    let items = container.children("button");
+function changeButtonsState(container, newState){    
+    container.each(function(){
+        $(this).prop("disabled", newState);
+    })
+    
+    /*let items = container.children("button");
     for(var i = 0; i < items.length; i++){
         var item = items[i];
         item.disabled = newState;            
-    }
+    }*/
 }
 
 //cambia la visibilidad de un objeto (referenciado con el selector de jquery)
