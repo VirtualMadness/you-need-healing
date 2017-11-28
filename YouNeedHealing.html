@@ -17,17 +17,17 @@
         <!--<section id= "menu-window" class="main-menu" style="height:100%; padding:auto">-->
             
             <div id="menu-window" class="container main-menu">
-                <div class="row-fluid">
+                <div class="row-fluid" style="height: calc(15vh)">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 span4">
                       <img class="menu-image" src="assets/bg_roll3.png">
                     </div>
-                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="padding-top: 10px; text-align:left">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:left">
                         <p class="title"><nobr>You Need Healing</nobr></p>
                     </div>
                 </div>
                 <div class="row-fluid">          
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 span4">
-                        <div style="height: calc(85vh); padding: 5% 0px 0% 0px; text-align: left">
+                        <div style="height: calc(85vh); text-align: left">
                             <button id="1player-button" class="menu-btn" style="padding-bottom: 3%; margin:0px; background-image: url('assets/btn1.png')">
                                 <nobr><span title="1_jugador" class="traducible">1 Jugador</span></nobr></button>
                             
@@ -37,30 +37,12 @@
                              <button id="highscore-button" class="menu-btn" style="height:16%; margin-left:13%; background-image: url('assets/btn4.png')">
                                  <nobr>Highscore</nobr></button>
                             
-                             <button id="settings-button" class="menu-btn" style="margin-left:8%; height:16%; background-image: url('assets/btn2.png')">
+                             <button id="settings-button" class="menu-btn" style="margin-left:8%; margin-bottom:0%; height:16%; background-image: url('assets/btn2.png')">
                                 <nobr><span title="ajustes" class="traducible" style="vertical-align: middle;">Ajustes</span></nobr></button> 
                             
                              <button id="credits-button" class="menu-btn" style="padding-top: 2%; margin:0px; background-image: url('assets/btn3.png')">
                                 <nobr><span title="creditos" class="traducible">Créditos</span></nobr></button>
                         </div>
-                        <!--<div class="button-group">
-                        <button id="1player-button" class="menu-btn" style="top: 200px; padding-bottom: 30px; background-image: url('assets/btn1.png')">
-                            <span title="1_jugador" class = "traducible">1 Jugador</span></button>
-                        <br>
-                        <button id="2player-button" class="menu-btn" style="top: 330px; left: 610px; width: 600px; height: 110px;
-                                background-size: 600px 110px; background-image: url('assets/btn5.png')">
-                            <span title="2_jugadores" class = "traducible">2 Jugadores</span></button>
-                        <br>
-                        <button id="highscore-button" class="menu-btn" style="top: 462px; left: 650px; width: 600px; height: 110px;
-                                background-size: 600px 110px;background-image: url('assets/btn4.png')"> HighScore</button>  
-                        <br>
-                        <button id="settings-button" class="menu-btn" style="top: 590px; left: 610px; width: 600px; height: 110px;
-                                background-size: 600px 110px; background-image: url('assets/btn2.png')">
-                            <span title="ajustes" class = "traducible">Ajustes</span></button>
-                        <br>
-                        <button id="credits-button" class="menu-btn" style="top: 700px; padding-top: 15px; background-image: url('assets/btn3.png')">
-                            <span title="creditos" class = "traducible">Créditos</span></button>
-                     </div>-->
                     </div>
                 </div>
             </div>
@@ -93,23 +75,38 @@
         </section> -->
         
         <section id="settings-window" class ="settings-menu">
-            <button id="settings-close-button" class="close-button" style="right:6px; left:auto; top:6px">x</button>
-            <p class="settings-title" style="padding-top: 50px; font-size: 450%;"><span title="ajustes" class = traducible>Ajustes</span></p>
+            <button id="settings-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
+            <div class="settings-title" ><span title="ajustes" class = traducible >Ajustes</span></div>
             
-            <p title="volumen_musica" class="traducible" style="padding-top: 10px; font-size: 200%;">Volumen de la Musica</p>
-            <input id="music-volume-level" type="range"/>            
-            <br>
+            <div class="menu-subtitle">
+                <span title="volumen_musica" class="traducible">Volumen de la Musica</span>
+                <input id="music-volume-level" type="range"/>   
+            </div>
+            <div class="menu-subtitle">
+                <span title="volumen_efectos" class="traducible">Volumen de Efectos</span>
+                <input id="music-sounds-level" type="range"/>
+            </div>
+            <div class="menu-subtitle" style="height: 12%">
+                <nobr><span title="pantalla_completa" class="traducible">Pantalla completa</span>
+                <input id="full-screen" type="checkbox"/></nobr>
+            </div>
+            <div class="menu-subtitle">
+                <span title="lenguaje" class="traducible">Lenguaje seleccionado: </span>
+                <div class="">
+                    <button id="bt-es" class="bt-select-lenguaje">ES</button>
+                    <button id="bt-en" class="bt-select-lenguaje">EN</button>
+                    <button id="bt-fr" class="bt-select-lenguaje">FR</button>
+                    <button id="bt-de" class="bt-select-lenguaje">DE</button>
+                    <button id="bt-it" class="bt-select-lenguaje">IT</button>
+                </div>
+            </div>
             
-            <p title="volumen_efectos" class="traducible" style="padding-top: 20px; font-size: 200%;">Volumen de Efectos</p>
-            <input id="music-sounds-level" type="range"/>
-            <br><br>
-            
-            <span title="lenguaje" class="traducible">Lenguaje seleccionado: </span><span id="lang"></span>
+            <!--<span title="lenguaje" class="traducible">Lenguaje seleccionado: </span><span id="lang"></span>
             <button id="bt-es" class="bt-select-lenguaje">ES</button>
             <button id="bt-en" class="bt-select-lenguaje">EN</button>
             <button id="bt-fr" class="bt-select-lenguaje">FR</button>
             <button id="bt-de" class="bt-select-lenguaje">DE</button>
-            <button id="bt-it" class="bt-select-lenguaje">IT</button>
+            <button id="bt-it" class="bt-select-lenguaje">IT</button>-->
             
             <button id="exit-button" class="menu-button" style="display:none;"><span title="salir" class="traducible">Salir</span></button>
         </section>

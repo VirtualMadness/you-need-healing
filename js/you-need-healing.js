@@ -66,8 +66,8 @@ function play(level){
 }
 
 function changeLang(lang){
-    i18next.changeLanguage(lang);
-    
+    console.log("cambiando lenguaje " + lang)
+    i18next.changeLanguage(lang);    
 }
 
 var myGame;

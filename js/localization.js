@@ -7,7 +7,8 @@ let literals = {
             "2_jugadores": "2 Jugadores",
             "creditos": "Créditos",
             "ajustes": "Ajustes",
-            "lenguaje": "Lenguaje seleccionado: ",
+            "lenguaje": "Lenguaje: ",
+            "pantalla_completa": "Pantalla Completa",
             "dificultad": "Dificultad",  
             "facil": "Nivel 1 - Fácil",
             "medio": "Nivel 2 - Normal",
@@ -24,7 +25,8 @@ let literals = {
             "2_jugadores": "2 Players",
             "creditos": "Credits",
             "ajustes": "Settings",
-            "lenguaje": "Language selected: ",  
+            "lenguaje": "Language: ",  
+            "pantalla_completa": "Full Screen",
             "dificultad": "Difficulty",
             "facil": "Level 1 - Easy",
             "medio": "Level 2 - Normal",
@@ -65,7 +67,7 @@ let literals = {
           
       }
 
-var jqJson = $.getJSON("https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/localization.json")
+/*var jqJson = $.getJSON("https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/localization.json")
 .done(function(result){
     console.log("peticion realizada con exito");
     console.log(result);
@@ -73,7 +75,7 @@ var jqJson = $.getJSON("https://raw.githubusercontent.com/VirtualMadness/you-nee
     console.log("peticion fallida");
 }).always(function(){
     console.log("peticion completa");
-});
+});*/
 
 
 //inicia el plugin para traduciones i18next
@@ -91,13 +93,16 @@ function init_i18n(){
 }
 
 function updateContent() {
-    var valores = $(".traducible");
+    var valores = $(".traducible").each(function(){
+        $(this).html(i18next.t($(this).prop("title")));
+    });
+    /*
     for(var i = 0; i < valores.length; i++){
         var item = valores[i];
         item.innerHTML = i18next.t(item.title);
-    }
+    }*/
     //cambia el texto para mostrar el lenguaje seleccionado
-    $("#lang").html(i18next.language);
+    //$("#lang").html(i18next.language);
 }
 
 function changeLng(lng) {

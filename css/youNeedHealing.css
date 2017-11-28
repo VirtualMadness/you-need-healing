@@ -23,7 +23,8 @@ body, html{
     color: var(--text-blue);
     height:100%;
     width: 100%;
-    background: #222;    
+    background: #202020;   
+    overflow-y: hidden;
 }
 
 input, button{
@@ -39,25 +40,29 @@ input, button:hover{
 }
 
 .title{
-    font-size:1.8em;
-    
+    font-size:1.8em;    
     font-weight: bold;
     margin:0px;
     padding: auto;
-    //height: 15%;
     font-weight: bold;    
     text-shadow:7px 7px 1px var(--dark-blue);
 }
 
 .settings-title{
-    font-size:350%;
+    font-size:1.6em;
     font-weight: bold;
-    margin:30px;
+    height: 18%;
+    margin:0px;
+    vertical-align: middle;
+}
+
+.menu-subtitle{
+    height: 18%;
+    padding-top: 2%;
+    font-size: 1em;
 }
 
 .main-menu{    
-    //padding: 40px;  
-    //padding-top: 10px;
     background-image: url("../assets/bg.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -71,6 +76,11 @@ input, button:hover{
     height: calc(100vh);
     min-width: 50px;
     width: calc(100%);
+}
+
+input[type=checkbox]{
+    transform: scale(1);
+    margin-left: 5%;
 }
 
 .menu-btn{
@@ -112,11 +122,11 @@ input, button:hover{
     filter: brightness(100%);
 }
 
-.button-group{
+/*.button-group{
     position: absolute;
     top: -25px;
     left: -45px;
-}
+}*/
 
 .menu-button:active{
     background: var(--main-color);
@@ -152,10 +162,10 @@ input, button:hover{
 }
 
 .close-button{
-    margin:5px;
+    margin:1%;
     position: absolute;
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
     border-radius: 20px;
     border:2px solid #2d2d2d;
     background: #d83037;
@@ -167,14 +177,17 @@ input, button:hover{
     padding: 0px;
     text-align: center;   
     color: var(--my-black);
-    font-size: 20px;
+    font-size: 0.9em;
     font-weight: bold;    
 }
 
 .close-button:hover{    
-    background: #ed5e61;
-    background-image: -moz-linear-gradient(-45deg, #ed5e61 20%, #e7363e 70%);
-    background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #ed5e61), color-stop(0.8, #e7363e));    
+    transform: scale(1.1);
+    filter: brightness(150%);
+    transition-duration: 0.2s;
+    //background: #ed5e61;
+    //background-image: -moz-linear-gradient(-45deg, #ed5e61 20%, #e7363e 70%);
+    //background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #ed5e61), color-stop(0.8, #e7363e));    
 }
 
 .close-button:active{
@@ -311,6 +324,17 @@ input[type=range]{
     .menu-btn{
         font-size:1.2em;
     }
+    .close-button{
+        font-size: 1em;
+        height: 24px;
+        width: 24px;
+    }
+    .settings-title{
+        font-size:1.85em;
+    }
+    .menu-subtitle{
+        font-size:1.1em;
+    }
 }
 
 
@@ -322,6 +346,18 @@ input[type=range]{
     .menu-btn{
         font-size:1.6em;
     }
+    .close-button{
+        font-size: 1em;
+        height: 24px;
+        width: 24px;
+    }
+    .settings-title{
+        font-size:2.2em;
+    }
+    .menu-subtitle{
+        font-size:1.2em;
+    }
+    
 }
 
 /*Medium devices (tablets, 768px and up)*/
@@ -331,6 +367,20 @@ input[type=range]{
     }
     .menu-btn{
         font-size:2em;
+    }
+    .close-button{
+        font-size: 1em;
+        height: 24px;
+        width: 24px;
+    }
+    .settings-title{
+        font-size:2.7em;
+    }
+    .menu-subtitle{
+        font-size:1.3em;
+    }
+    input[type=checkbox]{
+        transform: scale(1.5);
     }
 }
 
@@ -342,7 +392,17 @@ input[type=range]{
     }.menu-btn{
         font-size:2.3em;
     }    
-    
+    .close-button{
+        font-size: 1em;
+        height: 24px;
+        width: 24px;
+    }
+    .settings-title{
+        font-size:3em;
+    }
+    .menu-subtitle{
+        font-size:1.5em;
+    }
 }
 
 /*Large devices (desktop, 992px and up)*/
@@ -352,6 +412,17 @@ input[type=range]{
     }
     .menu-btn{
         font-size:2.8em;
+    }
+    .close-button{
+        font-size: 1em;
+        height: 26px;
+        width: 26px;
+    }
+    .settings-title{
+        font-size:3.4em;
+    }
+    .menu-subtitle{
+        font-size:1.6em;
     }
 }
 
@@ -363,6 +434,20 @@ input[type=range]{
     .menu-btn{
         font-size:3.2em;
     }
+    .close-button{
+        font-size: 1em;
+        height: 28px;
+        width: 28px;
+    }
+    .settings-title{
+        font-size:3.8em;
+    }
+    .menu-subtitle{
+        font-size:1.7em;
+    }
+    input[type=checkbox]{
+        transform: scale(2);
+    }
 }
 
 /*Extra Large devices (large desktops, 1200px and up)*/
@@ -373,16 +458,38 @@ input[type=range]{
     .menu-btn{
         font-size:3.8em;
     }
+    .close-button{
+        font-size: 1.2em;
+        height: 30px;
+        width: 30px;
+    }
+    .settings-title{
+        font-size:4.1em;
+    }
+    .menu-subtitle{
+        font-size:1.8em;
+    }
 }
 
 
 /*Extra X Large devices (large desktops, 1500px and up)*/
 @media (min-width: 1500px){
      .title{
-        font-size:6.7em;
+        font-size:6.4em;
     }
     .menu-btn{
         font-size:4.5em;
+    }
+    .close-button{
+        font-size: 1.2em;
+        height: 30px;
+        width: 30px;
+    }
+    .settings-title{
+        font-size:4.3em;
+    }
+    .menu-subtitle{
+        font-size:2em;
     }
 }
 
