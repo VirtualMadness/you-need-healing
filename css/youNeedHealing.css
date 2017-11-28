@@ -6,14 +6,12 @@
     --my-black: #2d2d2d;
     --text-blue: #5db9cc;
     --text-light-blue: #9eecfc;
+    --dark-blue: #39539d;
 }
 
 @font-face {
     font-family: Telemarines1Import;
     src: url("telemarines.ttf");
-}
-html{
-    //transform: rotateZ(90deg);
 }
 
 body, html{
@@ -25,7 +23,7 @@ body, html{
     color: var(--text-blue);
     height:100%;
     width: 100%;
-    background: #000;    
+    background: #222;    
 }
 
 input, button{
@@ -41,11 +39,14 @@ input, button:hover{
 }
 
 .title{
-    font-size:2rem;
+    font-size:1.8em;
+    
     font-weight: bold;
     margin:0px;
     padding: auto;
-    height: 15%;
+    //height: 15%;
+    font-weight: bold;    
+    text-shadow:7px 7px 1px var(--dark-blue);
 }
 
 .settings-title{
@@ -66,9 +67,9 @@ input, button:hover{
 }
 
 .menu-image{
-    min-height: 420px;
+    min-height: 150px;
     height: calc(100vh);
-    min-width: 200px;
+    min-width: 50px;
     width: calc(100%);
 }
 
@@ -78,7 +79,9 @@ input, button:hover{
     border: none;
     background-repeat: no-repeat;
     width: calc(70%);
-    //height: 138px;
+    height: 20%;
+    margin-top: 1%;
+    margin-bottom: 1%;
     background-size: 100% 100%;
     //position: absolute;
     //top: 200px;
@@ -86,14 +89,17 @@ input, button:hover{
     color: var(--text-blue);
     font-family: Telemarines1Import;
     font-weight: bold;
-    font-size: 400%;
+    font-size: 1em;
     transform-origin: 0% 0%;
     white-space: normal;
+    transform: scaleX(1);
+    transition-duration: 0.3s;
 }
 
 .menu-btn:hover{
-    transform: scaleX(1.1);
+    transform: scaleX(1.2);
     filter: brightness(150%);
+    transition-duration: 0.3s;
 }
 
 .menu-btn[disabled]{
@@ -249,34 +255,6 @@ input[type=range]{
     margin:0px;
 }
 
-/*Small devices (landscape phones, 544px and up)*/
-@media (min-width: 544px) {
-    .title{
-        font-size:3rem;
-    }
-}
-
-/*Medium devices (tablets, 768px and up)*/
-@media (min-width: 768px){
-     .title{
-        font-size:5rem;
-    }
-}
-
-/*Large devices (desktop, 992px and up)*/
-@media (min-width: 992px){
-     .title{
-        font-size:6rem;
-    }
-}
-
-/*Extra Large devices (large desktops, 1200px and up)*/
-@media (min-width: 1200px){
-     .title{
-        font-size:8rem;
-    }
-}
-
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
 
@@ -322,6 +300,90 @@ input[type=range]{
   background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
   background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 150, 0, .5)));
   background-image:         linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
+}
+
+
+/*Small devices (landscape phones, 544px and up)*/
+@media (min-width: 544px) {
+    .title{
+        font-size:2em;
+    }
+    .menu-btn{
+        font-size:1.2em;
+    }
+}
+
+
+/*Medium devices (tablets, 565px and up)*/
+@media (min-width: 656px){
+     .title{
+        font-size:2.5em;
+    }
+    .menu-btn{
+        font-size:1.6em;
+    }
+}
+
+/*Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px){
+     .title{
+        font-size:3.2em;
+    }
+    .menu-btn{
+        font-size:2em;
+    }
+}
+
+
+/*Large devices (desktop, 880px and up)*/
+@media (min-width: 880px){
+     .title{
+        font-size:3.8em;
+    }.menu-btn{
+        font-size:2.3em;
+    }    
+    
+}
+
+/*Large devices (desktop, 992px and up)*/
+@media (min-width: 992px){
+     .title{
+        font-size:4.3em;
+    }
+    .menu-btn{
+        font-size:2.8em;
+    }
+}
+
+/*Extra Large devices (large desktops, 1104px and up)*/
+@media (min-width: 1104px){
+     .title{
+        font-size:4.8em;
+    }
+    .menu-btn{
+        font-size:3.2em;
+    }
+}
+
+/*Extra Large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px){
+     .title{
+        font-size:5.2em;
+    }
+    .menu-btn{
+        font-size:3.8em;
+    }
+}
+
+
+/*Extra X Large devices (large desktops, 1500px and up)*/
+@media (min-width: 1500px){
+     .title{
+        font-size:6.7em;
+    }
+    .menu-btn{
+        font-size:4.5em;
+    }
 }
 
 
