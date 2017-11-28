@@ -12,11 +12,11 @@ let literals = {
             "dificultad": "Dificultad",  
             "facil": "Nivel 1 - Fácil",
             "medio": "Nivel 2 - Normal",
-            "dificil": "Nivel 3 - Dificil",
+            "dificil": "Nivel 3 - Difícil",
             "jugar": "Jugar",
             "volumen_musica": "Volumen de la Música:",
             "volumen_efectos": "Volumen de Efectos:",
-            "salir":"Salir",
+            "salir": "Salir",
           }
         },
         en: {
@@ -31,10 +31,10 @@ let literals = {
             "facil": "Level 1 - Easy",
             "medio": "Level 2 - Normal",
             "dificil": "Level 3 - Hard",
-            "jugar":"Play",
+            "jugar": "Play",
             "volumen_musica": "Music volume:",
             "volumen_efectos": "Effects volume:",
-            "salir":"Exit",
+            "salir": "Exit",
           }
         },
         fr: {
@@ -43,7 +43,16 @@ let literals = {
             "2_jugadores": "2 Joueurs",
             "creditos": "Crédits",
             "ajustes": "Configuration",
-            "lenguaje": "Langue sélectionnée: ",              
+            "lenguaje": "Langue: ",
+            "pantalla_completa": "Plein Écran",
+            "dificultad": "Difficulté",
+            "facil": "Niveau 1 - Facile",
+            "medio": "Niveau 2 - Normal",
+            "dificil": "Niveau 3 - Difficile",
+            "jugar": "Jouer",
+            "volumen_musica": "Volume de la Musique",
+            "volumen_efectos": "Volume d'effets",
+            "salir": "Sortir",
           }
         },
         de: {
@@ -52,7 +61,16 @@ let literals = {
             "2_jugadores": "2 Spieler",
             "creditos": "Kredite",
             "ajustes": "Konfiguration",
-            "lenguaje": "Ausgewählte Sprache: ",              
+            "lenguaje": "Sprache: ",
+            "pantalla_completa": "Vollbild",
+            "dificultad": "Schwierigkeit",
+            "facil": "Ebene 1 - Einfach",
+            "medio": "Ebene 2 - Mittel",
+            "dificil": "Ebene 3 - Schwer",
+            "jugar": "Abspielen",
+            "volumen_musica": "Musik-Lautstärke",
+            "volumen_efectos": "Lautstärke der Effekte",
+            "salir": "Herausgehen",
           }
         },
         it: {
@@ -61,7 +79,16 @@ let literals = {
             "2_jugadores": "2 giocatori",
             "creditos": "Crediti",
             "ajustes": "Configuración",
-            "lenguaje": "Lingua selezionata: ",              
+            "lenguaje": "Lingua: ",
+            "pantalla_completa": "Schermo Intero",
+            "dificultad": "Difficoltà",
+            "facil": "Livello 1 - Facile",
+            "medio": "Livello 2 - Mezzi",
+            "dificil": "Livello 3 - Difficile",
+            "jugar": "Giocare",
+            "volumen_musica": "Volume di Musica",
+            "volumen_efectos": "Volume di Effetti",
+            "salir": "Vieni Fuori",
           }
         }
           
