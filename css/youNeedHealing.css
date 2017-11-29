@@ -1,12 +1,10 @@
 :root{
-    --main-color: #7cd42a;
-    --secondary-color: #03a231;
-    --light-color: #b8e88b;
-    --dark-color: #036831;
     --my-black: #2d2d2d;
     --text-blue: #5db9cc;
     --text-light-blue: #9eecfc;
-    --dark-blue: #39539d;
+    --dark-blue: #10425e;
+    --cursor-rest: "../assets/evolution_cursor.png";
+    --cursor-hover: '../assets/evolution_cursor_hover.png';
 }
 
 @font-face {
@@ -23,18 +21,19 @@ body, html{
     color: var(--text-blue);
     height:100%;
     width: 100%;
-    background: #202020;   
+    background: var(--my-black);   
     overflow-y: hidden;
 }
-
+input[type=range]{
+    width: 70%;
+    margin:auto;
+}
 input, button{
     cursor: url("../assets/evolution_cursor.png"), auto;
 }
-
 input, button:focus{
 	outline-style:none;
 }
-
 input, button:hover{
     cursor: url("../assets/evolution_cursor_hover.png"), auto;
 }
@@ -42,10 +41,8 @@ input, button:hover{
 .title{
     font-size:1.8em;    
     font-weight: bold;
-    margin:0px;
-    padding: auto;
-    font-weight: bold;    
-    text-shadow:7px 7px 1px var(--dark-blue);
+    margin:0px; 
+    text-shadow:7px 7px 1px #39539d;
 }
 
 .settings-title{
@@ -66,7 +63,7 @@ input, button:hover{
     background-image: url("../assets/bg.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    margin: 0px;
+    margin: 0px auto;
     width: 100%;
     height: 100%;
 }
@@ -84,7 +81,7 @@ input[type=checkbox]{
 }
 
 .menu-btn{
-    background-image: url("assets/btn1.png");
+    //background-image: url("assets/btn1.png");
     background-color: rgba(0, 0, 0, 0);
     border: none;
     background-repeat: no-repeat;
@@ -93,15 +90,12 @@ input[type=checkbox]{
     margin-top: 1%;
     margin-bottom: 1%;
     background-size: 100% 100%;
-    //position: absolute;
-    //top: 200px;
-    //left: 540px;
     color: var(--text-blue);
     font-family: Telemarines1Import;
     font-weight: bold;
     font-size: 1em;
     transform-origin: 0% 0%;
-    white-space: normal;
+    //white-space: nowrap;
     transform: scaleX(1);
     transition-duration: 0.3s;
 }
@@ -115,6 +109,7 @@ input[type=checkbox]{
 .menu-btn[disabled]{
     filter: alpha(opacity=65);
     opacity: .65;
+    cursor: url("../assets/evolution_cursor.png"), auto;
 }
 
 .menu-btn[disabled]:hover{
@@ -128,7 +123,7 @@ input[type=checkbox]{
     left: -45px;
 }*/
 
-.menu-button:active{
+/*.menu-button:active{
     background: var(--main-color);
     background-image: -moz-linear-gradient(-45deg, var(--main-color) 20%, var(--secondary-color) 70%);
     background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, var(--main-color)), color-stop(0.8, var(--secondary-color)));
@@ -147,10 +142,13 @@ input[type=checkbox]{
 }
 .menu-button[disabled]:hover{
     background: var(--dark-color);  
-}
+}*/
 
 .bt-select-lenguaje{
-    background-color: #03202f;
+    background-color: var(--text-blue); /*#03202f;*/
+    border: 1px solid var(--dark-blue);
+    width: 20%;
+    color: var(--my-black);
 }
 
 .bt-select-lenguaje:hover{
@@ -158,6 +156,7 @@ input[type=checkbox]{
 }
 
 .bt-select-lenguaje[disabled]{
+    outline-style: double;
     filter: brightness(150%);
 }
 
@@ -233,11 +232,6 @@ input[type=checkbox]{
     top:15%;
     z-index: 10;
     padding: auto;
-}
-
-input[type=range]{
-    width: 50%;
-    margin:auto;
 }
 
 .game-window{
@@ -467,7 +461,7 @@ input[type=range]{
         font-size:4.1em;
     }
     .menu-subtitle{
-        font-size:1.8em;
+        font-size:2em;
     }
 }
 
@@ -489,7 +483,7 @@ input[type=range]{
         font-size:4.3em;
     }
     .menu-subtitle{
-        font-size:2em;
+        font-size:2.2em;
     }
 }
 
