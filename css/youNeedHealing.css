@@ -45,19 +45,7 @@ input, button:hover{
     text-shadow:7px 7px 1px #39539d;
 }
 
-.settings-title{
-    font-size:1.6em;
-    font-weight: bold;
-    height: 18%;
-    margin:0px;
-    vertical-align: middle;
-}
 
-.menu-subtitle{
-    height: 18%;
-    padding-top: 2%;
-    font-size: 1em;
-}
 
 .main-menu{    
     background-image: url("../assets/bg.png");
@@ -75,21 +63,16 @@ input, button:hover{
     width: calc(100%);
 }
 
-input[type=checkbox]{
-    transform: scale(1);
-    margin-left: 5%;
-}
-
 .menu-btn{
     //background-image: url("assets/btn1.png");
     background-color: rgba(0, 0, 0, 0);
     border: none;
     background-repeat: no-repeat;
+    background-size: 100% 100%;
     width: calc(70%);
     height: 20%;
     margin-top: 1%;
-    margin-bottom: 1%;
-    background-size: 100% 100%;
+    margin-bottom: 1%;    
     color: var(--text-blue);
     font-family: Telemarines1Import;
     font-weight: bold;
@@ -144,20 +127,73 @@ input[type=checkbox]{
     background: var(--dark-color);  
 }*/
 
-.bt-select-lenguaje{
-    background-color: var(--text-blue); /*#03202f;*/
-    border: 1px solid var(--dark-blue);
-    width: 20%;
-    color: var(--my-black);
+.settings-menu{
+    text-align : center;
+    display: none;
+    background-image: url("../assets/bg_settings.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    border:4px solid #2d2d2d;
+    border-radius:  20px;    
+    border-color: #ffffff #5d5d5d #5d5d5d #fafafa;
+    position: absolute;
+    height:70%;
+    width:50%;
+    left:25%;
+    top:15%;
+    z-index: 10;
+    padding: auto;
 }
 
+.settings-title{
+    font-size:1.6em;
+    font-weight: bold;
+    height: 18%;
+    margin:0px;
+    vertical-align: middle;
+}
+
+.menu-subtitle{
+    height: 18%;
+    padding-top: 2%;
+    font-size: 1em;
+}
+
+input[type=checkbox]{
+    transform: scale(1);
+    margin-left: 5%;
+}
+
+.bt-select-lenguaje{
+    background-color: rgba(0 , 0, 0, 0);
+    width: 20%;
+    height: 100%;
+    padding: 1%;
+    transform: scaleX(1);
+    transition-duration: 0.2s;
+}
+
+.img-language{
+    min-width: 36px;
+    min-height: 22px;
+    width: 80%;
+    height: 80%;
+    background-repeat: no-repeat;
+    background-size: auto;
+    border: 2px solid var(--dark-blue);
+    border-radius: 5px;
+}
+
+.bt-select-lenguaje:hover{
+    transform: scale(1.1);
+    transition-duration: 0.2s;
+}
 .bt-select-lenguaje:hover{
     filter: brightness(150%);
 }
 
-.bt-select-lenguaje[disabled]{
-    outline-style: double;
-    filter: brightness(150%);
+.language-selected{
+    border: 5px solid var(--text-blue);
 }
 
 .close-button{
@@ -198,6 +234,22 @@ input[type=checkbox]{
     box-shadow: inset 1px 2px 3px 2px rgba(0, 0, 0, 0.4);
 }
 
+.exit-btn{
+    width: 40%;
+    height: 75%;
+    background-color: var(--dark-blue);
+    color: var(--text-blue);
+    font-size: 0.7em;
+    vertical-align: middle;
+    transform: scale(1);
+    transition-duration: 0.15s;
+}
+.exit-btn:hover{
+    transform: scale(1.1);
+    transition-duration: 0.15s;
+    filter: brightness(150%);
+}
+
 .play-button{
     height: 25%;
     width: 30%;
@@ -214,24 +266,6 @@ input[type=checkbox]{
     font-size: 20px;
     font-weight: bold;
     cursor:pointer;     
-}
-
-.settings-menu{
-    text-align : center;
-    display: none;
-    background-image: url("../assets/bg_settings.png");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    border:4px solid #2d2d2d;
-    border-radius:  20px;    
-    border-color: #ffffff #5d5d5d #5d5d5d #fafafa;
-    position: absolute;
-    height:60%;
-    width:50%;
-    left:25%;
-    top:15%;
-    z-index: 10;
-    padding: auto;
 }
 
 .game-window{
@@ -351,7 +385,9 @@ input[type=checkbox]{
     .menu-subtitle{
         font-size:1.2em;
     }
-    
+    .exit-btn{
+        font-size:0.65em;
+    }    
 }
 
 /*Medium devices (tablets, 768px and up)*/
@@ -376,6 +412,9 @@ input[type=checkbox]{
     input[type=checkbox]{
         transform: scale(1.5);
     }
+    .exit-btn{
+        font-size:0.68em;
+    }
 }
 
 
@@ -397,6 +436,9 @@ input[type=checkbox]{
     .menu-subtitle{
         font-size:1.5em;
     }
+    .exit-btn{
+        font-size:0.7em;
+    }
 }
 
 /*Large devices (desktop, 992px and up)*/
@@ -417,6 +459,9 @@ input[type=checkbox]{
     }
     .menu-subtitle{
         font-size:1.6em;
+    }
+    .exit-btn{
+        font-size:0.75em;
     }
 }
 
@@ -442,6 +487,9 @@ input[type=checkbox]{
     input[type=checkbox]{
         transform: scale(2);
     }
+    .exit-btn{
+        font-size:0.8em;
+    }
 }
 
 /*Extra Large devices (large desktops, 1200px and up)*/
@@ -462,6 +510,9 @@ input[type=checkbox]{
     }
     .menu-subtitle{
         font-size:2em;
+    }
+    .exit-btn{
+        font-size:1em;
     }
 }
 
@@ -484,6 +535,9 @@ input[type=checkbox]{
     }
     .menu-subtitle{
         font-size:2.2em;
+    }
+    .exit-btn{
+        font-size:1em;
     }
 }
 

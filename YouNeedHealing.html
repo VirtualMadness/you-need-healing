@@ -38,7 +38,7 @@
                                  <nobr>Highscore</nobr></button>
                             
                              <button id="settings-button" class="menu-btn" style="margin-left:8%; margin-bottom:0%; height:16%; background-image: url('assets/btn2.png')">
-                                <nobr><span title="ajustes" class="traducible" style="vertical-align: middle;">Ajustes</span></nobr></button> 
+                                <nobr><span title="ajustes" class="traducible" >Ajustes</span></nobr></button> 
                             
                              <button id="credits-button" class="menu-btn" style="padding-top: 2%; margin:0px; background-image: url('assets/btn3.png')">
                                 <nobr><span title="creditos" class="traducible">Créditos</span></nobr></button>
@@ -76,7 +76,7 @@
         
         <section id="settings-window" class ="settings-menu">
             <button id="settings-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
-            <div class="settings-title" ><span title="ajustes" class = traducible >Ajustes</span></div>
+            <div class="settings-title" ><span title="ajustes" class=traducible >Ajustes</span></div>
             
             <div class="menu-subtitle">
                 <span title="volumen_musica" class="traducible">Volumen de la Musica</span>
@@ -91,17 +91,17 @@
                 <input id="full-screen" type="checkbox"/></nobr>
             </div>
             <div class="menu-subtitle" style="padding-top: 0px">
-                <div title="lenguaje" class="traducible">Lenguaje seleccionado: </div>
+                <span title="lenguaje" class="traducible" style="height: 40%">Lenguaje seleccionado: </span><br>
                 <div class="btn-group" role="group" style="width: 70%; height: 60%">
-                    <button type="button" id="bt-es" class="btn bt-select-lenguaje">ES</button>
-                    <button type="button" id="bt-en" class="btn bt-select-lenguaje">EN</button>
-                    <button type="button" id="bt-fr" class="btn bt-select-lenguaje">FR</button>
-                    <button type="button" id="bt-de" class="btn bt-select-lenguaje">DE</button>
-                    <button type="button" id="bt-it" class="btn bt-select-lenguaje">IT</button>
+                    <button type="button" id="bt-es" class="btn bt-select-lenguaje"><img class="img-language language-selected" src='assets/spain.png'/></button>
+                    <button type="button" id="bt-en" class="btn bt-select-lenguaje"><img class="img-language" src='assets/english.png'/></button>
+                    <button type="button" id="bt-fr" class="btn bt-select-lenguaje"><img class="img-language" src='assets/france.png'/></button>
+                    <button type="button" id="bt-de" class="btn bt-select-lenguaje"><img class="img-language" src='assets/germany.png'/></button>
+                    <button type="button" id="bt-it" class="btn bt-select-lenguaje"><img class="img-language" src='assets/italy.png'/></button>
                 </div>
             </div>
             <div class="menu-subtitle" style="height:14%">
-                <button id="exit-button" class="btn exit-btn" style="display:none; margin:auto;"><span title="salir" class="traducible">Salir</span></button>
+                <button id="exit-button" title="salir" class="traducible exit-btn" style="display:block; margin:auto;">Salir</button>
             </div>
             
             <!--<span title="lenguaje" class="traducible">Lenguaje seleccionado: </span><span id="lang"></span>

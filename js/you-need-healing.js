@@ -1,4 +1,6 @@
 var started = false;
+var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement ||
+document.webkitFullscreenElement || document.msFullscreenElement;
 
 function toggleSettings(){    
     var actualState = $("#settings-window").css("display");
@@ -69,15 +71,44 @@ function play(level){
     started = true;
 }
 
-function changeLang(lang){
-    console.log("cambiando lenguaje " + lang)
+function resetLanguageButtons(){
+    $("#bt-es").children().removeClass("language-selected");
+    $("#bt-en").children().removeClass("language-selected");
+    $("#bt-fr").children().removeClass("language-selected");
+    $("#bt-de").children().removeClass("language-selected");    
+    $("#bt-it").children().removeClass("language-selected");
+}
+
+function changeLang(but, lang){
+    //console.log("cambiando lenguaje " + lang)
+    if(i18next.language == "lang")
+            return;
+    resetLanguageButtons();
     i18next.changeLanguage(lang);    
+    but.children().addClass("language-selected");
 }
 
 var myGame;
 
 $(function(){
     init_i18n();    
+    
+    //listener para detectar fullScreen
+    $(window).on('resize', function(){
+        console.log($(document).is(":fullscreen"))
+        if (fullscreenElement != null) {
+              console.info("Went full screen");
+          } else {
+              console.info("Exited full screen");              
+          }
+    /*if(screen.width === window.innerWidth){
+      // this is full screen
+        console.log("full-screen")
+        $("#full-screen").get(0).checked;
+    }else{
+        $("#full-screen").get(0).checked = false;
+    }*/
+  });
     
     $("#settings-button").click(toggleSettings);
     $("#settings-close-button").click(toggleSettings);
@@ -105,10 +136,9 @@ $(function(){
     });
     
     //manejador botones de idiomas
-    $("#bt-es").click(function (){changeLang("es")});
-    $("#bt-en").click(function (){changeLang("en")});
-    $("#bt-de").click(function (){changeLang("de")});
-    $("#bt-it").click(function (){changeLang("it")});
-    $("#bt-es").click(function (){changeLang("es")});
-    $("#bt-fr").click(function (){changeLang("fr")});
+    $("#bt-es").click(function (){changeLang($(this), "es")});
+    $("#bt-en").click(function (){changeLang($(this), "en")});
+    $("#bt-fr").click(function (){changeLang($(this), "fr")});
+    $("#bt-de").click(function (){changeLang($(this), "de")});
+    $("#bt-it").click(function (){changeLang($(this), "it")});    
 })
