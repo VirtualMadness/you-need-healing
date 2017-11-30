@@ -14,8 +14,7 @@
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
     <body>        
-        <!--<section id= "menu-window" class="main-menu" style="height:100%; padding:auto">-->
-            
+        <!--<section id= "menu-window" class="main-menu" style="height:100%; padding:auto">-->            
             <div id="menu-window" class="container main-menu">
                 <div class="row-fluid" style="height: calc(15vh)">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 span4">
@@ -31,7 +30,7 @@
                             <button id="1player-button" class="menu-btn" style="padding-bottom: 3%; margin:0px; background-image: url('assets/btn1.png')">
                                 <nobr><span title="1_jugador" class="traducible">1 Jugador</span></nobr></button>
                             
-                            <button id="2player-button" class="menu-btn" style="margin-top:0px; margin-left:8%; height:16%; background-image: url('assets/btn5.png')">
+                            <button id="2players-button" class="menu-btn" style="margin-top:0px; margin-left:8%; height:16%; background-image: url('assets/btn5.png')">
                                 <nobr><span title="2_jugadores" class="traducible" style="vertical-align: middle;">2 Jugadores</span></nobr></button>
                             
                              <button id="highscore-button" class="menu-btn" style="height:16%; margin-left:13%; background-image: url('assets/btn4.png')">
@@ -46,34 +45,8 @@
                     </div>
                 </div>
             </div>
-                           
-            
-            
-            <!--
-            <p class="title">You Need Healing</p>
-            
-            <img class="menu-image" src="assets/bg_roll.png">
-            
-            <div class="btn-group">
-                <button id="1player-button" class="menu-btn" style="top: 200px; padding-bottom: 30px; background-image: url('assets/btn1.png')">
-                    <span title="1_jugador" class = "traducible">1 Jugador</span></button>
-                <br>
-                <button id="2player-button" class="menu-btn" style="top: 330px; left: 610px; width: 600px; height: 110px;
-                        background-size: 600px 110px; background-image: url('assets/btn5.png')">
-                    <span title="2_jugadores" class = "traducible">2 Jugadores</span></button>
-                <br>
-                <button id="highscore-button" class="menu-btn" style="top: 462px; left: 650px; width: 600px; height: 110px;
-                        background-size: 600px 110px;background-image: url('assets/btn4.png')"> HighScore</button>  
-                <br>
-                <button id="settings-button" class="menu-btn" style="top: 590px; left: 610px; width: 600px; height: 110px;
-                        background-size: 600px 110px; background-image: url('assets/btn2.png')">
-                    <span title="ajustes" class = "traducible">Ajustes</span></button>
-                <br>
-                <button id="credits-button" class="menu-btn" style="top: 700px; padding-top: 15px; background-image: url('assets/btn3.png')">
-                    <span title="creditos" class = "traducible">Créditos</span></button>
-            </div>
-        </section> -->
         
+        <!--VENTANA DE AJUSTES *******************************************************************************  -->
         <section id="settings-window" class ="settings-menu">
             <button id="settings-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
             <div class="settings-title" ><span title="ajustes" class=traducible >Ajustes</span></div>
@@ -84,15 +57,15 @@
             </div>
             <div class="menu-subtitle">
                 <span title="volumen_efectos" class="traducible">Volumen de Efectos</span>
-                <input id="music-sounds-level" type="range"/>
+                <input id="sounds-volume-level" type="range"/>
             </div>
-            <div class="menu-subtitle" style="height: 14%">
+            <div class="menu-subtitle subtitle-sm" style="height: 14%">
                 <nobr><span title="pantalla_completa" class="traducible">Pantalla completa</span>
                 <input id="full-screen" type="checkbox"/></nobr>
             </div>
             <div class="menu-subtitle" style="padding-top: 0px">
                 <span title="lenguaje" class="traducible" style="height: 40%">Lenguaje seleccionado: </span><br>
-                <div class="btn-group" role="group" style="width: 70%; height: 60%">
+                <div class="btn-group" role="group" style="width: 60%; height: 60%">
                     <button type="button" id="bt-es" class="btn bt-select-lenguaje"><img class="img-language language-selected" src='assets/spain.png'/></button>
                     <button type="button" id="bt-en" class="btn bt-select-lenguaje"><img class="img-language" src='assets/english.png'/></button>
                     <button type="button" id="bt-fr" class="btn bt-select-lenguaje"><img class="img-language" src='assets/france.png'/></button>
@@ -100,20 +73,19 @@
                     <button type="button" id="bt-it" class="btn bt-select-lenguaje"><img class="img-language" src='assets/italy.png'/></button>
                 </div>
             </div>
-            <div class="menu-subtitle" style="height:14%">
-                <button id="exit-button" title="salir" class="traducible exit-btn" style="display:block; margin:auto;">Salir</button>
+            <div class="menu-subtitle subtitle-sm" style="height:14%">
+                <button id="exit-button" title="salir" class="traducible exit-btn" style="display:none; margin:auto;">Salir</button>
             </div>
-            
-            <!--<span title="lenguaje" class="traducible">Lenguaje seleccionado: </span><span id="lang"></span>
-            <button id="bt-es" class="bt-select-lenguaje">ES</button>
-            <button id="bt-en" class="bt-select-lenguaje">EN</button>
-            <button id="bt-fr" class="bt-select-lenguaje">FR</button>
-            <button id="bt-de" class="bt-select-lenguaje">DE</button>
-            <button id="bt-it" class="bt-select-lenguaje">IT</button>-->            
-            
         </section>
         
-        <section id="level-window" class = "level-window">            
+        <!--VENTANA DE CREDITOS *******************************************************************************  -->
+        <section id="credits-window" class ="settings-menu">
+            <button id="credits-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
+            <div class="settings-title" ><span title="creditos" class=traducible>Créditos</span></div>
+        </section>        
+        
+        <!--VENTANA DE 1 JUGADOR ****************************************************************************** -->
+        <section id="level-window" class = "settings-menu">            
             <button id="level-close-button" class="close-button" style="right:5px; left:auto; top:5px">x</button>
             <div style="padding:0px; margin:0px; height:15%, width:100%;">
                 <h1 title="dificultad" class="traducible">Dificultad</h1>
@@ -170,6 +142,15 @@
             </div>           
         </section>
         
+         <!--VENTANA DE 2 JUGADORES *******************************************************************************  -->
+        <section id="2players-window" class ="settings-menu">
+            <button id="2players-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
+            <div class="settings-title" ><span title="2_jugadores" class=traducible>2 Jugadores</span></div>
+            <div class="settings-title" style="margin-top: 15%;"><span title="proximamente" class=traducible>Próximamente</span></div>
+            
+        </section>
+        
+         <!--VENTANA DE JUEGO ****************************************************************************** -->
         <section id="game-window" class = "game-window">
             <canvas id="playground" height=100% width=100%/>
         </section>

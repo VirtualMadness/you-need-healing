@@ -16,7 +16,8 @@ let literals = {
             "jugar": "Jugar",
             "volumen_musica": "Volumen de la Música:",
             "volumen_efectos": "Volumen de Efectos:",
-            "salir": "Salir",
+            "salir": "salir",
+            "proximamente": "Próximamente",
           }
         },
         en: {
@@ -24,9 +25,9 @@ let literals = {
             "1_jugador": "1 Player",
             "2_jugadores": "2 Players",
             "creditos": "Credits",
-            "ajustes": "Settings",
+            "ajustes": "settings",
             "lenguaje": "Language: ",  
-            "pantalla_completa": "Full Screen",
+            "pantalla_completa": "Full screen",
             "dificultad": "Difficulty",
             "facil": "Level 1 - Easy",
             "medio": "Level 2 - Normal",
@@ -35,6 +36,7 @@ let literals = {
             "volumen_musica": "Music volume:",
             "volumen_efectos": "Effects volume:",
             "salir": "Exit",
+            "proximamente": "Coming Soon",
           }
         },
         fr: {
@@ -52,25 +54,27 @@ let literals = {
             "jugar": "Jouer",
             "volumen_musica": "Volume de la Musique",
             "volumen_efectos": "Volume d'effets",
-            "salir": "Sortir",
+            "salir": "sortir",
+            "proximamente": "Comming soon",
           }
         },
         de: {
           translation: {
-            "1_jugador": "1 Spieler",
-            "2_jugadores": "2 Spieler",
+            "1_jugador": "1 spieler",
+            "2_jugadores": "2 spieler",
             "creditos": "Kredite",
             "ajustes": "Konfiguration",
-            "lenguaje": "Sprache: ",
+            "lenguaje": "sprache: ",
             "pantalla_completa": "Vollbild",
-            "dificultad": "Schwierigkeit",
+            "dificultad": "schwierigkeit",
             "facil": "Ebene 1 - Einfach",
             "medio": "Ebene 2 - Mittel",
-            "dificil": "Ebene 3 - Schwer",
+            "dificil": "Ebene 3 - schwer",
             "jugar": "Abspielen",
             "volumen_musica": "Musik-Lautstärke",
             "volumen_efectos": "Lautstärke der Effekte",
             "salir": "Herausgehen",
+            "proximamente": "Arrive Bientôt",
           }
         },
         it: {
@@ -89,6 +93,7 @@ let literals = {
             "volumen_musica": "Volume di Musica",
             "volumen_efectos": "Volume di Effetti",
             "salir": "Vieni Fuori",
+            "proximamente": "Prossimamente",
           }
         }
           
