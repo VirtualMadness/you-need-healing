@@ -7,14 +7,16 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="Daniel Abad, Sergio de Frutos, Sergio Martin, Javier Peña, Gabriel Sevilla">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <title>You Need Healing</title>
       <!-- Bootstrap core CSS -->
-      <link rel="manifest" href="js/manifest.json">
+      <link rel="manifest" href="manifest.json">
       <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
-    <body>        
+    <body>    
+        <button id="landscape-button" class="close-button" onClick="screen.orientation.lock('landscape');"><span class="glyphicon glyphicon-fullscreen"/></button>
         <!--<section id= "menu-window" class="main-menu" style="height:100%; padding:auto">-->            
             <div id="menu-window" class="container main-menu">
                 <div class="row-fluid" style="height: calc(15vh)">

@@ -1,0 +1,18 @@
+{
+  "short_name": "U Need Healing",
+  "name": "You Need Healing",
+  "icons": [
+    {
+      "src": "/assets/logoVM.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logoVM.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }],    
+    "start_url": "/YouNeedHealing.html",
+    "display":      "standalone", /* Could be "fullscreen", "standalone", "minimal-ui", or "browser" */
+    "orientation":  "landscape" /* Could be "landscape" or "portrait" */  
+}
