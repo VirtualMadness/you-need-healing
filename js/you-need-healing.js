@@ -53,13 +53,13 @@ function toggleLang(view, state){
     }
 }
 
-function toggleLevels(){
+/*function toggleLevels(){
     var actualState = $("#level-window").css("display");
     actualState = actualState == "none"? false: true;
     changeButtonsState($(".menu-btn"), !actualState);
     toggleDisplay($("#level-window"), !actualState);
     inMainMenu = actualState;
-}
+}*/
 
 function changeButtonsState(container, newState){    
     container.each(function(){
@@ -83,6 +83,7 @@ function toggleDisplay(item, newState){
 }
 
 function play(level){
+    toggleBlur($("#menu-window"), false);
     toggleDisplay($("#level-window"), false);
     toggleDisplay($("#menu-window"), false);
     toggleDisplay($("#game-window"), true);
@@ -187,6 +188,7 @@ $(function(){
     
     //manejador boton salir del juego
     $("#exit-button").click(function(){
+        toggleBlur($("#game-window"), false);
         toggleDisplay($("#level-window"), false);
         toggleDisplay($("#menu-window"), true);
         toggleDisplay($("#game-window"), false);

@@ -18,6 +18,11 @@ let literals = {
             "volumen_efectos": "Volumen de Efectos:",
             "salir": "salir",
             "proximamente": "Próximamente",
+            "creado_por": "Creado por:",
+            "programador_artista2D"  : "Programador / Artista 2D",
+            "programador": "Programador",
+            "diseñador": "Diseñador",
+            "artista2D": "Artista 2D",
           }
         },
         en: {
@@ -37,6 +42,7 @@ let literals = {
             "volumen_efectos": "Effects volume:",
             "salir": "Exit",
             "proximamente": "Coming Soon",
+            "creado_por": "Created by:",
           }
         },
         fr: {

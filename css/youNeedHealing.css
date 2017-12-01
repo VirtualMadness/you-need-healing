@@ -3,13 +3,16 @@
     --text-blue: #5db9cc;
     --text-light-blue: #9eecfc;
     --dark-blue: #10425e;
-    --cursor-rest: "../assets/evolution_cursor.png";
-    --cursor-hover: '../assets/evolution_cursor_hover.png';
 }
 
 @font-face {
     font-family: Telemarines1Import;
     src: url("telemarines.ttf");
+}
+
+.size100{
+    width: 100;
+    height: 100;
 }
 
 body, html{
@@ -42,10 +45,8 @@ input, button:hover{
     font-size:1.8em;    
     font-weight: bold;
     margin:0px; 
-    text-shadow:7px 7px 1px #39539d;
+    text-shadow:4px 4px 1px #39539d;
 }
-
-
 
 .main-menu{    
     background-image: url("../assets/bg.png");
@@ -126,6 +127,16 @@ input, button:hover{
 .menu-button[disabled]:hover{
     background: var(--dark-color);  
 }*/
+
+.title-md{
+    font-weight: bold;
+    font-size: 1.5em;  
+}
+
+.title-sm{
+    font-weight: bold;
+    font-size: 1.2em;  
+}
 
 .settings-menu{
     text-align : center;
@@ -214,6 +225,9 @@ input[type=checkbox]{
     color: var(--my-black);
     font-size: 0.9em;
     font-weight: bold;    
+    right:0px; 
+    left:auto; 
+    top:0px;
 }
 
 .close-button:hover{    
@@ -243,6 +257,7 @@ input[type=checkbox]{
     vertical-align: middle;
     transform: scale(1);
     transition-duration: 0.15s;
+    border-radius: 5px;
 }
 .exit-btn:hover{
     transform: scale(1.1);
@@ -251,21 +266,32 @@ input[type=checkbox]{
 }
 
 .play-button{
-    height: 25%;
-    width: 30%;
-    border-radius: 4px;
-    border:1px solid var(--secondary-color);
-    background: var(--main-color);    
+    height: 30%;
+    min-height: 20px;
+    width: 50%;
+    min-width: 80px;
+    border-radius: 5px;
+    border:1px solid var(--text-blue);
+    background-color: var(--dark-blue);
     -webkit-box-shadow: 1px 2px 3px 2px rgba(50,50,50,0.4);
     -moz-box-shadow: 1px 2px 3px 2px rgba(50, 50, 50, 0.4);
     box-shadow: 1px 2px 3px 2px rgba(50, 50, 50, 0.4);
-    margin: 2%;
-    padding: 0px;
+    margin-top:0px;
+    margin-bottom:2%;
+    padding:0px;
     text-align: center;   
-    color: var(--my-black);
-    font-size: 20px;
-    font-weight: bold;
-    cursor:pointer;     
+    color: var(--text-blue);
+    font-size: 1em;
+    font-weight: bold; 
+    vertical-align: middle;
+    transform: scale(1);
+    transition-duration: 0.15s;
+}
+
+.play-button:hover{
+    transform: scale(1.1);
+    transition-duration: 0.15s;
+    filter: brightness(150%);
 }
 
 .game-window{
@@ -282,7 +308,7 @@ input[type=checkbox]{
     width: 100%;
 }
 
-.level-window{
+/*.level-window{
     display: none;
     background: rgba(150,200,150,0.8);
     border: none;    
@@ -294,7 +320,7 @@ input[type=checkbox]{
     top:20%;
     padding:0px;
     margin:0px;
-}
+}*/
 
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
@@ -306,10 +332,19 @@ input[type=checkbox]{
 
 .carousel-indicators{
     margin-bottom:0px;
+    bottom: 0px;
+}
+
+.carousel-indicators > li{
+    transform: scale(1)
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
   z-index: 10;
+  padding: 0px;
+  height: 30%;
+  width: 80%;
+  left:10%;
 }
 
 /* Declare heights because of positioning of img element */
@@ -323,24 +358,28 @@ input[type=checkbox]{
   left: 0;
   min-width: 100%;  
   height: 100%;
+  border-radius:10px;
 }
 
 .carousel-inner {
     height: 100%;
+    border-radius:10px;
 }
 
 .carousel-control.left{
-  background-image: -webkit-linear-gradient(left, rgba(0, 150, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
-  background-image:      -o-linear-gradient(left, rgba(0, 150, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
-  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 150, 0, .5)), to(rgba(0, 0, 0, .0001)));
-  background-image:         linear-gradient(to right, rgba(0, 150, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+  background-image: -webkit-linear-gradient(left, rgba(93, 185, 204, .8) 0%, rgba(0, 0, 0, .0001) 100%);
+  background-image:      -o-linear-gradient(left, rgba(93, 185, 204, .8) 0%, rgba(0, 0, 0, .0001) 100%);
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(93, 185, 204, .8)), to(rgba(0, 0, 0, .0001)));
+  background-image:         linear-gradient(to right, rgba(93, 185, 204, .8) 0%, rgba(0, 0, 0, .0001) 100%);
+  border-radius: 10px 0px 0px 10px;
 }
 
 .carousel-control.right{
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
-  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
-  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 150, 0, .5)));
-  background-image:         linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 150, 0, .5) 100%);
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(93, 185, 204, .8) 100%);
+  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(93, 185, 204, .8) 100%);
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(93, 185, 204, .8)));
+  background-image:         linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(93, 185, 204, .8) 100%);
+  border-radius: 0px 10px 10px 0px;
 }
 
 
@@ -362,6 +401,12 @@ input[type=checkbox]{
     }
     .menu-subtitle{
         font-size:1.1em;
+    }
+    .title-md{
+        font-size:1.7em;
+    }
+    .title-sm{        
+        font-size:1.2em;
     }
 }
 
@@ -388,12 +433,19 @@ input[type=checkbox]{
     .exit-btn{
         font-size:0.65em;
     }    
+    .title-md{
+        font-size:2em;
+    }
+    .title-sm{        
+        font-size:1.4em;
+    }
 }
 
 /*Medium devices (tablets, 768px and up)*/
 @media (min-width: 768px){
      .title{
         font-size:3.2em;
+        text-shadow:5px 5px 1px #39539d;
     }
     .menu-btn{
         font-size:2em;
@@ -414,6 +466,12 @@ input[type=checkbox]{
     }
     .exit-btn{
         font-size:0.68em;
+    }
+    .title-md{
+        font-size:2.3em;
+    }
+    .title-sm{        
+        font-size:1.6em;
     }
 }
 
@@ -439,12 +497,19 @@ input[type=checkbox]{
     .exit-btn{
         font-size:0.7em;
     }
+    .title-md{
+        font-size:2.5em;
+    }
+    .title-sm{        
+        font-size:1.8em;
+    }
 }
 
 /*Large devices (desktop, 992px and up)*/
 @media (min-width: 992px){
      .title{
         font-size:4.3em;
+         text-shadow:5px 6px 1px #39539d;
     }
     .menu-btn{
         font-size:2.8em;
@@ -457,11 +522,17 @@ input[type=checkbox]{
     .settings-title{
         font-size:3.4em;
     }
-    .menu-subtitle{
+    .menu-subtitle .play-button{
         font-size:1.6em;
     }
     .exit-btn{
         font-size:0.75em;
+    }
+    .title-md{
+        font-size:2.7em;
+    }
+    .title-sm{        
+        font-size:2em;
     }
 }
 
@@ -481,7 +552,7 @@ input[type=checkbox]{
     .settings-title{
         font-size:3.8em;
     }
-    .menu-subtitle{
+    .menu-subtitle .play-button{
         font-size:1.7em;
     }
     input[type=checkbox]{
@@ -489,6 +560,12 @@ input[type=checkbox]{
     }
     .exit-btn{
         font-size:0.8em;
+    }
+    .title-md{
+        font-size:3em;
+    }    
+    .title-sm{        
+        font-size:2.3em;
     }
 }
 
@@ -508,11 +585,17 @@ input[type=checkbox]{
     .settings-title{
         font-size:4.1em;
     }
-    .menu-subtitle{
+    .menu-subtitle .play-button{
         font-size:2em;
     }
     .exit-btn{
         font-size:1em;
+    }
+    .title-md{
+        font-size:3.2em;
+    }
+    .title-sm{        
+        font-size:2.4em;
     }
 }
 
@@ -521,6 +604,7 @@ input[type=checkbox]{
 @media (min-width: 1500px){
      .title{
         font-size:6.4em;
+        text-shadow:7px 7px 1px #39539d;
     }
     .menu-btn{
         font-size:4.5em;
@@ -538,6 +622,12 @@ input[type=checkbox]{
     }
     .exit-btn{
         font-size:1em;
+    }
+    .title-md{
+        font-size:3.5em;
+    }
+    .title-sm{        
+        font-size:2.6em;
     }
 }
 

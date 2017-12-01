@@ -48,7 +48,7 @@
         
         <!--VENTANA DE AJUSTES *******************************************************************************  -->
         <section id="settings-window" class ="settings-menu">
-            <button id="settings-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
+            <button id="settings-close-button" class="close-button">x</button>
             <div class="settings-title" ><span title="ajustes" class=traducible >Ajustes</span></div>
             
             <div class="menu-subtitle">
@@ -79,21 +79,76 @@
         </section>
         
         <!--VENTANA DE CREDITOS *******************************************************************************  -->
-        <section id="credits-window" class ="settings-menu">
-            <button id="credits-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
-            <div class="settings-title" ><span title="creditos" class=traducible>Créditos</span></div>
+        <section id="credits-window" class ="settings-menu" style="width:74%; left:13%;">            
+            <div class="container" style="height:100%; width:100%;">
+                <div class="row-fluid" style="height:14%">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: table;">
+                        <span title="creditos" class="traducible" style="display:table-cell; vertical-align:middle; font-size: 3vw">Créditos</span>
+                    </div>
+                </div>
+                <div class="row-fluid" style="height:11%">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: table;">
+                        <span title="creado_por" class="traducible" style="display:table-cell; vertical-align:middle; font-size: 1.5vw; font-weight:normal;">Creado por:</span>
+                        <span style="display:table-cell; vertical-align:middle; font-size:3vw; color:var(--text-light-blue); text-shadow:4px 4px 1px #39539d;">VIRTUAL MADNEss</span>
+                    </div>
+                </div>                
+                <div class="row-fluid" style="height:22%">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; text-align:center; display:flex; align-items:center;">
+                        <div style="display:flex; flex-direction:column; margin:auto">
+                            <div style="font-size:1.8vw; margin-bottom:2%">sergio De Frutos López</div>          
+                            <div title="programador_artista2D" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Programador / Artista 2D</div>
+                        </div> 
+                    </div>                    
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; display:flex; align-items:center;">
+                        <div style="display:flex; flex-direction:column; margin:auto">
+                            <div style="font-size:1.8vw; margin-bottom:2%;">Daniel Abad Jaraute</div>   
+                            <div title="programador" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Programador</div>
+                        </div>    
+                    </div>
+                </div>
+                 <div class="row-fluid" style="height:22%">   
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; display:flex; align-items:center;">
+                        <div style="display:flex; flex-direction:column; margin:auto">
+                            <div style="font-size:1.8vw; margin-bottom:2%;">Javier Peña Moreno</div>   
+                            <div title="diseñador" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Diseñador</div>
+                        </div>    
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; display:flex; align-items:center;">
+                        <div style="display:flex; flex-direction:column; margin:auto">
+                            <div style="font-size:1.8vw; margin-bottom:2%;">Gabriel sevilla Camacho</div>   
+                            <div title="artista2D" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Artista 2D</div>
+                        </div>    
+                    </div>
+                </div>
+                 <div class="row-fluid" style="height:22%">   
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%;  display:flex; align-items:center;">
+                        <div style="display:flex; flex-direction:column; margin:auto">
+                            <div style="font-size:1.8vw; margin-bottom:2%;">sergio Martín León</div>   
+                            <div title="diseñador" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Diseñador</div>
+                        </div>    
+                    </div>
+                </div>
+                <div class="row-fluid" style="height:9%">  
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%;  display:flex; align-items:center;">
+                        <div style="font-size:1.2vw; margin:auto; color:white; margin-bottom:20px">(C) 2017, Virtual Madness<img src="assets/logoVM.png" height="8%" width="8%" style="margin-left:30px"/></div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="settings-title" style="height:14%"></div>
+            <div class="title-sm" style="height:11%"><span title="creado_por" class="traducible">Creado por:</span><span stlye =>VIRTUAL MADNESS</span></div>    -->        
+            <button id="credits-close-button" class="close-button">x</button>
         </section>        
         
         <!--VENTANA DE 1 JUGADOR ****************************************************************************** -->
-        <section id="level-window" class = "settings-menu">            
-            <button id="level-close-button" class="close-button" style="right:5px; left:auto; top:5px">x</button>
-            <div style="padding:0px; margin:0px; height:15%, width:100%;">
-                <h1 title="dificultad" class="traducible">Dificultad</h1>
+        <section id="level-window" class="settings-menu">            
+            <button id="level-close-button" class="close-button">x</button>
+            <div style="padding-top:1%; margin: auto 0px; height:15%; width:100%;">
+                <span title="dificultad" class="traducible title-md">Dificultad</span>
             </div>
-            <div style="padding:0px; margin:0px; height:82%; width:100%;">
+            <div style="padding:0px; margin:0px auto; height:82%; width:90%; border-radius:12px; border: 2px solid white;">
                 <!-- Carousel
             ================================================== -->
-            <div id="myCarousel" class="carousel" data-ride="carousel">
+            <div id="myCarousel" class="carousel slide" data-interval="false">
               <!-- Indicators -->
               <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -106,8 +161,8 @@
                   <img class="first-slide" src="http://zelda.com/breath-of-the-wild/assets/icons/BOTW-Share_icon.jpg" alt="Level 1">
                   <div class="container">
                     <div class="carousel-caption">
-                      <h1 title="facil" class="traducible">Nivel 1 - Fácil</h1>                      
-                        <button class="play-button" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span></button>
+                      <div class="title-sm" style="height:50%"><span title="facil" class="traducible">Nivel 1 - Fácil</span></div>
+                        <button class="play-button title-sm" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span></button>
                     </div>
                   </div>
                 </div>
@@ -115,8 +170,8 @@
                   <img class="second-slide" src="" alt="Level 2">
                   <div class="container">
                     <div class="carousel-caption">
-                      <h1 title="medio" class="traducible">Nivel 2 - Normal</h1>                        
-                      <p><a class="btn btn-lg btn-primary" href="#" role="button"><span title="jugar" class="traducible">JUGAR</span></a></p>
+                        <div class="title-sm" style="height:50%"><span title="medio" class="traducible">Nivel 2 - Normal</span></div>                      
+                      <button class="play-button title-sm" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span></button>
                     </div>
                   </div>
                 </div>
@@ -124,8 +179,8 @@
                   <img class="third-slide" src="" alt="Level 3">
                   <div class="container">
                     <div class="carousel-caption">
-                      <h1 title="dificil" class="traducible">Nivel 3 - Dificil</h1>                       
-                      <p><a class="btn btn-lg btn-primary" href="#" role="button"><span title="jugar" class="traducible">JUGAR</span></a></p>
+                        <div class="title-sm" style="height:50%"><span title="dificil" class="traducible">Nivel 3 - Dificil</span></div>                       
+                       <button class="play-button title-sm" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span></button>
                     </div>
                   </div>
                 </div>                 
@@ -144,7 +199,7 @@
         
          <!--VENTANA DE 2 JUGADORES *******************************************************************************  -->
         <section id="2players-window" class ="settings-menu">
-            <button id="2players-close-button" class="close-button" style="right:0px; left:auto; top:0px">x</button>
+            <button id="2players-close-button" class="close-button">x</button>
             <div class="settings-title" ><span title="2_jugadores" class=traducible>2 Jugadores</span></div>
             <div class="settings-title" style="margin-top: 15%;"><span title="proximamente" class=traducible>Próximamente</span></div>
             
@@ -152,7 +207,7 @@
         
          <!--VENTANA DE JUEGO ****************************************************************************** -->
         <section id="game-window" class = "game-window">
-            <canvas id="playground" height=100% width=100%/>
+            <canvas id="playground" height=640px width=360px/>
         </section>
         
         
