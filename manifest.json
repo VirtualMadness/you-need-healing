@@ -3,16 +3,22 @@
   "name": "You Need Healing",
   "icons": [
     {
-      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/logoVM.png?raw=true",
-      "sizes": "64x64",
+      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/appIconx2.png?raw=true",
+      "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/logoVM.png?raw=true",
+      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/appIconx3.png?raw=true",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/appIconx4.png?raw=true",
       "sizes": "192x192",
       "type": "image/png"
-    }],    
-    "start_url": "https://github.com/VirtualMadness/you-need-healing/blob/master/YouNeedHealing.html",
+    }
+  ],    
+    //"start_url": "https://github.com/VirtualMadness/you-need-healing/blob/master/YouNeedHealing.html",
     "display":      "fullscreen", /* Could be "fullscreen", "standalone", "minimal-ui", or "browser" */
     "orientation":  "landscape" /* Could be "landscape" or "portrait" */  
 }
