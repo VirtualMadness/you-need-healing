@@ -1,6 +1,6 @@
 'use strict';
 //literales de las traducciones;
-let literals = {
+var literals = {
         es: {
           translation: {
             "1_jugador": "1 Jugador",

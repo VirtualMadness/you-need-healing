@@ -5,6 +5,16 @@
     --dark-blue: #10425e;
 }
 
+/*Responsive text in font-size
+1vw = 1% of viewport width
+
+1vh = 1% of viewport height
+
+1vmin = 1vw or 1vh, whichever is smaller
+
+1vmax = 1vw or 1vh, whichever is large
+*/
+
 @font-face {
     font-family: Telemarines1Import;
     src: url("telemarines.ttf");
@@ -208,6 +218,9 @@ input[type=checkbox]{
 }
 
 .close-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin:1%;
     position: absolute;
     height: 20px;
@@ -228,6 +241,7 @@ input[type=checkbox]{
     right:0px; 
     left:auto; 
     top:0px;
+    z-index: 8;
 }
 
 .close-button:hover{    
@@ -240,6 +254,7 @@ input[type=checkbox]{
 }
 
 .close-button:active{
+    filter: brightness(100%);
     background: #d83037;
     background-image: -moz-linear-gradient(-45deg, #e7363e 20%, #af2e2f 70%);
     background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #e7363e), color-stop(0.8, #af2e2f));
@@ -281,7 +296,7 @@ input[type=checkbox]{
     padding:0px;
     text-align: center;   
     color: var(--text-blue);
-    font-size: 1em;
+    font-size: 1.8vw;
     font-weight: bold; 
     vertical-align: middle;
     transform: scale(1);

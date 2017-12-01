@@ -10,6 +10,7 @@
 
     <title>You Need Healing</title>
       <!-- Bootstrap core CSS -->
+      <link rel="manifest" href="js/manifest.json">
       <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
@@ -48,7 +49,7 @@
         
         <!--VENTANA DE AJUSTES *******************************************************************************  -->
         <section id="settings-window" class ="settings-menu">
-            <button id="settings-close-button" class="close-button">x</button>
+            <button id="settings-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
             <div class="settings-title" ><span title="ajustes" class=traducible >Ajustes</span></div>
             
             <div class="menu-subtitle">
@@ -80,6 +81,7 @@
         
         <!--VENTANA DE CREDITOS *******************************************************************************  -->
         <section id="credits-window" class ="settings-menu" style="width:74%; left:13%;">            
+            <button id="credits-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
             <div class="container" style="height:100%; width:100%;">
                 <div class="row-fluid" style="height:14%">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: table;">
@@ -130,18 +132,18 @@
                 </div>
                 <div class="row-fluid" style="height:9%">  
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%;  display:flex; align-items:center;">
-                        <div style="font-size:1.2vw; margin:auto; color:white; margin-bottom:20px">(C) 2017, Virtual Madness<img src="assets/logoVM.png" height="8%" width="8%" style="margin-left:30px"/></div>
+                        <div style="font-size:1.2vw; margin:auto; color:white; margin-bottom:1%">(C) 2017, Virtual Madness<img src="assets/logoVM.png" height="8%" width="8%" style="margin-left:5%"/></div>
                     </div>
                 </div>
             </div>
+            <p style="position:absolute; right:0px; bottom:1%; width:25%; margin:0px; font-size: 1.1vw">Powered by: <img src="assets/powered-by.png" style="width:30%;"/></p>
             <!--<div class="settings-title" style="height:14%"></div>
-            <div class="title-sm" style="height:11%"><span title="creado_por" class="traducible">Creado por:</span><span stlye =>VIRTUAL MADNESS</span></div>    -->        
-            <button id="credits-close-button" class="close-button">x</button>
+            <div class="title-sm" style="height:11%"><span title="creado_por" class="traducible">Creado por:</span><span stlye =>VIRTUAL MADNESS</span></div>    -->    
         </section>        
         
         <!--VENTANA DE 1 JUGADOR ****************************************************************************** -->
         <section id="level-window" class="settings-menu">            
-            <button id="level-close-button" class="close-button">x</button>
+            <button id="level-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
             <div style="padding-top:1%; margin: auto 0px; height:15%; width:100%;">
                 <span title="dificultad" class="traducible title-md">Dificultad</span>
             </div>
@@ -162,7 +164,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                       <div class="title-sm" style="height:50%"><span title="facil" class="traducible">Nivel 1 - Fácil</span></div>
-                        <button class="play-button title-sm" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span></button>
+                        <button class="play-button" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
                     </div>
                   </div>
                 </div>
@@ -171,7 +173,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="medio" class="traducible">Nivel 2 - Normal</span></div>                      
-                      <button class="play-button title-sm" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span></button>
+                      <button class="play-button" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
                     </div>
                   </div>
                 </div>
@@ -180,7 +182,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="dificil" class="traducible">Nivel 3 - Dificil</span></div>                       
-                       <button class="play-button title-sm" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span></button>
+                       <button class="play-button" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
                     </div>
                   </div>
                 </div>                 
