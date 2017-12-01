@@ -12,7 +12,7 @@
       "sizes": "192x192",
       "type": "image/png"
     }],    
-    "start_url": "https://virtualmadness.github.io/you-need-healing/YouNeedHealing.htmlYouNeedHealing.html",
+    //"start_url": "https://virtualmadness.github.io/you-need-healing/YouNeedHealing.htmlYouNeedHealing.html",
     "display":      "fullscreen", /* Could be "fullscreen", "standalone", "minimal-ui", or "browser" */
     "orientation":  "landscape" /* Could be "landscape" or "portrait" */  
 }
