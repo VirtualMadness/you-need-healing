@@ -23,6 +23,9 @@ var literals = {
             "programador": "Programador",
             "diseñador": "Diseñador",
             "artista2D": "Artista 2D",
+            "aviso_portrait": "Este juego esta diseñado para mostrarse en modo apaisado.", 
+            "cambiar": "Cambiar",
+            "aviso_webapp": "Puedes añadir este juego a tu pantalla de inicio gracias a la tecnología 'Progressive Web App'.",
           }
         },
         en: {
@@ -122,7 +125,7 @@ function init_i18n(){
         .use(i18nextBrowserLanguageDetector)
         .init({
       lng: 'es',
-      debug: true,
+      debug: false,
       resources: literals,
     }, function(err, t) {
       // init set content

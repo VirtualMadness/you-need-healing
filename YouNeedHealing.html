@@ -16,7 +16,7 @@
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
     <body>    
-        <button id="landscape-button" class="close-button" onClick="screen.orientation.lock('landscape');" style="width: 8vmin; height: 8vmin"><span class="glyphicon"/></button>
+        <!--<button id="landscape-button" class="close-button" onClick="screen.orientation.lock('landscape');" style="width: 8vmin; height: 8vmin"><span class="glyphicon"/></button>
         <!--<section id= "menu-window" class="main-menu" style="height:100%; padding:auto">-->            
             <div id="menu-window" class="container main-menu">
                 <div class= "container pull-left" style="height:100%; width:30%">
@@ -76,7 +76,7 @@
         
         <!--VENTANA DE AJUSTES *******************************************************************************-->
         <section id="settings-window" class ="settings-menu">
-            <button id="settings-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
+            <button id="settings-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
             <div class="settings-title" ><span title="ajustes" class=traducible >Ajustes</span></div>
             
             <div class="menu-subtitle">
@@ -108,7 +108,7 @@
         
         <!--VENTANA DE CREDITOS *******************************************************************************  -->
         <section id="credits-window" class ="settings-menu" style="width:74%; left:13%;">            
-            <button id="credits-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
+            <button id="credits-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
             <div class="container" style="height:100%; width:100%;">
                 <div class="row-fluid" style="height:14%">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: table;">
@@ -170,7 +170,7 @@
         
         <!--VENTANA DE 1 JUGADOR ****************************************************************************** -->
         <section id="level-window" class="settings-menu">            
-            <button id="level-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
+            <button id="level-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
             <div style="padding-top:1%; margin: auto 0px; height:15%; width:100%;">
                 <span title="dificultad" class="traducible title-md">Dificultad</span>
             </div>
@@ -191,7 +191,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                       <div class="title-sm" style="height:50%"><span title="facil" class="traducible">Nivel 1 - Fácil</span></div>
-                        <button class="play-button" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
+                        <button class="play-button" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
                     </div>
                   </div>
                 </div>
@@ -200,7 +200,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="medio" class="traducible">Nivel 2 - Normal</span></div>                      
-                      <button class="play-button" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
+                      <button class="play-button" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
                     </div>
                   </div>
                 </div>
@@ -209,7 +209,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="dificil" class="traducible">Nivel 3 - Dificil</span></div>                       
-                       <button class="play-button" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
+                        <button class="play-button" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
                     </div>
                   </div>
                 </div>                 
@@ -228,7 +228,7 @@
         
          <!--VENTANA DE 2 JUGADORES *******************************************************************************  -->
         <section id="2players-window" class ="settings-menu">
-            <button id="2players-close-button" class="close-button">x</button>
+            <button id="2players-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
             <div class="settings-title" ><span title="2_jugadores" class=traducible>2 Jugadores</span></div>
             <div class="settings-title" style="margin-top: 15%;"><span title="proximamente" class=traducible>Próximamente</span></div>
             
@@ -236,7 +236,20 @@
         
          <!--VENTANA DE JUEGO ****************************************************************************** -->
         <section id="game-window" class = "game-window">
+            <button id="pause-button" class="pause-button"><span class="glyphicon glyphicon-pause"></span></button>
             <canvas id="playground" height=640px width=360px/>
+        </section>
+        
+        <!--VENTANA DE AVISO PORTRAIT************************************************************************ -->
+        <section id="prompt-window" class="prompt-window" style="display:none">
+            <div class="size100 vertical" style="padding:4%">
+                <span class="glyphicon glyphicon-warning-sign" style="font-size:20vw"></span><br>
+                <span title="aviso_portrait" class="traducible" style="font-size:5vw;">Este juego esta diseñado para mostrarse en modo apaisado.</span>
+                <br>
+                <button id="change-mode-button" title="cambiar" class="exit-btn traducible" style="height:8%; font-size:calc(12px + 2vw); display:none">Cambiar</button>
+                <br>
+                <span id="webApp-hint" title="aviso_webapp" class="traducible" style="font-size:3.2vw; color:white; display:none">Puedes añadir este juego a tu pantalla de inicio gracias a la tecnología 'Progressive Web App'.</span>
+            </div>
         </section>
         
         

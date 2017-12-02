@@ -5,6 +5,9 @@ var soundsVol = 80;
 var inMainMenu = true;
 var isMobile = false;
 var isChromium = false;
+var webApp = false;
+var fullScreen = false;
+var orientationLandscape = true;
 
 function toggleSettings(){
     var actualState = $("#settings-window").css("display");    
@@ -15,7 +18,7 @@ function toggleSettings(){
         $(".menu-subtitle").css({"height": "18%"})
         $(".subtitle-sm").css({"height": "14%"})
         toggleDisplay($("#exit-button"), true);
-        toggleBlur($("#game-window"), !actualState);
+        toggleBlur($("#playground"), !actualState);
         //myGame.pause();
     }else{
         $(".menu-subtitle").css({"height": "20%"})
@@ -110,6 +113,35 @@ function changeLang(but, lang){
     but.children().addClass("language-selected");
 }
 
+//funciones para el modo fullscreen
+// mozfullscreenerror event handler
+function errorHandler() {
+   alert('mozfullscreenerror');
+}
+document.documentElement.addEventListener('mozfullscreenerror', errorHandler, false);
+
+// toggle full screen
+function toggleFullScreen() {
+  if (!document.fullscreenElement &&    // alternative standard method
+      !document.mozFullScreenElement && !document.webkitFullscreenElement) {  // current working methods
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.cancelFullScreen) {
+      document.cancelFullScreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitCancelFullScreen) {
+      document.webkitCancelFullScreen();
+    }
+  }
+}
+
 function detectDevice(){
     isChromium = !!window.chrome;
     /*if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -121,26 +153,80 @@ function detectDevice(){
     }
 }
 
+function detectFullscreen(){
+    //detectamos si estamos en full screen
+    if (document.fullscreenElement ||    // alternative standard method
+      document.mozFullScreenElement || document.webkitFullscreenElement){
+         $("#full-screen").get(0).checked = true;
+        fullScreen = true;
+    }else{
+         $("#full-screen").get(0).checked = false;
+        fullScreen = false;
+    }
+}
+
+function detectOrientation(){
+    //detectamos si se ha cambiado la orientación del movil
+    if (matchMedia("(orientation: portrait)").matches) {
+        orientationLandscape = false;
+      $("#landscape-button").children().removeClass("glyphicon-folder-close");
+      $("#landscape-button").children().addClass("glyphicon-file");
+    }
+    if (matchMedia("(orientation: landscape)").matches) {
+        orientationLandscape = true;
+        $("#landscape-button").children().addClass("glyphicon-folder-close");
+        $("#landscape-button").children().removeClass("glyphicon-file");
+    }
+}
+
+function checkOrientation(){
+    var promptState = $("#prompt-window").css("display") == "none" ? false : true;
+    if(!webApp && /*isMobile &&*/ !orientationLandscape && !promptState){
+        toggleDisplay($("#prompt-window"), true);
+    }    
+    if(promptState && orientationLandscape){
+        toggleDisplay($("#prompt-window"), false);
+    }
+}
+
 var myGame;
 
 $(function(){
     init_i18n();    
     detectDevice();
+    detectFullscreen();
+    detectOrientation();
+    checkOrientation();
+    
+    if(isMobile){
+        toggleDisplay($("#change-mode-button"), true);   
+        if(isChromium){
+            toggleDisplay($("#webApp-hint"), true);      
+        }
+    }
+    
     //definimos los valores por defecto de los sliders de audio
     $("#music-volume-level").prop("value", musicVol);
     $("#sounds-volume-level").prop("value", soundsVol);
+        
+    //detectamos si la web se esta cargando como una web app desde el escritorio android
+    if (matchMedia('(display-mode: standalone)').matches) {
+        webApp = true;
+        fullScreen = true;
+    }  
     
-    //funciones para el modo fullscreen
-    // mozfullscreenerror event handler
-    function errorHandler() {
-       alert('mozfullscreenerror');
-    }
-    document.documentElement.addEventListener('mozfullscreenerror', errorHandler, false);
+    window.addEventListener("resize", function(){
+        detectFullscreen();
+        detectOrientation();     
+        checkOrientation();        
+    }, false);
     
-    // toggle full screen
-    function toggleFullScreen() {
-      if (!document.fullscreenElement &&    // alternative standard method
-          !document.mozFullScreenElement && !document.webkitFullscreenElement) {  // current working methods
+    $("#full-screen").click(function(){
+        toggleFullScreen();       
+    })  
+    
+    $("#change-mode-button").click(function(){
+        //intentamos activar el modo fullscreen
         if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen();
         } else if (document.documentElement.mozRequestFullScreen) {
@@ -148,52 +234,15 @@ $(function(){
         } else if (document.documentElement.webkitRequestFullscreen) {
           document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
         }
-      } else {
-        if (document.cancelFullScreen) {
-          document.cancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        }
-      }
-    }
-    
-    // Listen for orientation changes
-    window.addEventListener("resize", function() {
-      // Announce the new orientation number
-      if (window.matchMedia("(orientation: portrait)").matches) {
-          $("#landscape-button").children().removeClass("glyphicon-folder-close");
-          $("#landscape-button").children().addClass("glyphicon-file");
-        }
-        if (window.matchMedia("(orientation: landscape)").matches) {
-            $("#landscape-button").children().addClass("glyphicon-folder-close");
-            $("#landscape-button").children().removeClass("glyphicon-file");
-        }
-    }, false);
-    
-    if (matchMedia('(display-mode: standalone)').matches) {
-          alert("Thank you for installing our app!");
-        }
-    
-    window.addEventListener('resize', function(){
-        if (document.fullscreenElement ||    // alternative standard method
-          document.mozFullScreenElement || document.webkitFullscreenElement){
-             $("#full-screen").get(0).checked = true;
-        }else{
-             $("#full-screen").get(0).checked = false;
-        }
-    }, false);
-    
-    $("#full-screen").click(function(){
-        toggleFullScreen();       
-    })    
+        //intentamos forcar el modo landscape
+        screen.orientation.lock('landscape');
+    })
     
     $("#1player-button").click(function(){toggleWindow($("#level-window"))});
     $("#level-close-button").click(function(){toggleWindow($("#level-window"))}); 
     
     $("#settings-button").click(toggleSettings);
-    $("#settings-close-button").click(toggleSettings);
+    $("#settings-close-button").click(toggleSettings);   
     
     //listeners para actualizar las variables de audio cuando se cambien los sliders
     $("#music-volume-level").on("change", function(){
@@ -209,6 +258,7 @@ $(function(){
     $("#2players-button").click(function(){toggleWindow($("#2players-window"))});    
     $("#2players-close-button").click(function(){toggleWindow($("#2players-window"))});
     
+    $("#pause-button").click(toggleSettings);
     // Manejador esc para pause
     $(document).keydown(function(e)
     {   
