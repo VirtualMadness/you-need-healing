@@ -3,6 +3,8 @@ var fullscreenElement;
 var musicVol = 80;
 var soundsVol = 80;
 var inMainMenu = true;
+var isMobile = false;
+var isChromium = false;
 
 function toggleSettings(){
     var actualState = $("#settings-window").css("display");    
@@ -108,10 +110,23 @@ function changeLang(but, lang){
     but.children().addClass("language-selected");
 }
 
+function detectDevice(){
+    isChromium = !!window.chrome;
+    /*if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        isMobile = true;        
+    }*/
+    
+    if (/Mobi/.test(navigator.userAgent)) {
+        isMobile = true;
+    }
+    alert("device mobile?: "+isMobile + ", chrome?: "+isChromium);
+}
+
 var myGame;
 
 $(function(){
     init_i18n();    
+    detectDevice();
     //definimos los valores por defecto de los sliders de audio
     $("#music-volume-level").prop("value", musicVol);
     $("#sounds-volume-level").prop("value", soundsVol);
@@ -144,6 +159,17 @@ $(function(){
         }
       }
     }
+    
+    // Listen for orientation changes
+    window.addEventListener("orientationchange", function() {
+      // Announce the new orientation number
+      if (window.matchMedia("(orientation: portrait)").matches) {
+           alert("Estas en modo portrait");
+        }
+        if (window.matchMedia("(orientation: landscape)").matches) {
+            alert("Estas en modo landscape");
+        }
+    }, false);
     
     window.addEventListener('resize', function(){
         if (document.fullscreenElement ||    // alternative standard method
