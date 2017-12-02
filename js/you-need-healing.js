@@ -172,8 +172,8 @@ $(function(){
         }
     }, false);
     
-    if (window.matchMedia('(display-mode: fullscreen)').matches) {
-          console.log("Thank you for installing our app!");
+    if (matchMedia('(display-mode: standalone)').matches) {
+          alert("Thank you for installing our app!");
         }
     
     window.addEventListener('resize', function(){

@@ -19,6 +19,6 @@
     }
   ],    
     //"start_url": "https://github.com/VirtualMadness/you-need-healing/blob/master/YouNeedHealing.html",
-    "display":      "fullscreen", /* Could be "fullscreen", "standalone", "minimal-ui", or "browser" */
+    "display":      "standalone", /* Could be "fullscreen", "standalone", "minimal-ui", or "browser" */
     "orientation":  "landscape" /* Could be "landscape" or "portrait" */  
 }

@@ -71,9 +71,9 @@ input, button:hover{
 
 .menu-image{
     min-height: 150px;
-    height: calc(100vh);
+    height: 100%;
     min-width: 50px;
-    width: calc(100%);
+    width: 100%;
 }
 
 .menu-btn{
