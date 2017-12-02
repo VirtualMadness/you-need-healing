@@ -153,6 +153,17 @@ input, button:hover{
     padding: auto;
 }
 
+.floating-background{
+    position: absolute;
+    width: 95%;
+    height: 63%;    
+    left: 2.5%;
+    top: 27%;
+    background-color: var(--dark-blue);
+    opacity: 0.4;
+    border-radius: 30px;
+}
+
 .settings-title{
     font-size:1.6em;
     font-weight: bold;
@@ -359,7 +370,7 @@ input[type=checkbox]{
     width: 100%;
     height: 100%;
     z-index: 30;
-    background: url("../assets/bg.png") center center no-repeat;
+    background: url("../assets/bg_portrait.png") center center no-repeat;
     background-size: 100% 100%;
     display:none;
 }

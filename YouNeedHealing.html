@@ -110,6 +110,7 @@
         <section id="credits-window" class ="settings-menu" style="width:74%; left:13%;">            
             <button id="credits-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
             <div class="container" style="height:100%; width:100%;">
+                <div class="floating-background"></div>
                 <div class="row-fluid" style="height:14%">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: table;">
                         <span title="creditos" class="traducible" style="display:table-cell; vertical-align:middle; font-size: 3vw">Créditos</span>
@@ -122,7 +123,7 @@
                     </div>
                 </div>                
                 <div class="row-fluid" style="height:22%">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; text-align:center; display:flex; align-items:center;">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; text-align:center; display:flex; align-items:center; padding:0px;">
                         <div style="display:flex; flex-direction:column; margin:auto">
                             <div style="font-size:1.8vw; margin-bottom:2%">sergio De Frutos López</div>          
                             <div title="programador_artista2D" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Programador / Artista 2D</div>
@@ -142,14 +143,14 @@
                             <div title="diseñador" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Diseñador</div>
                         </div>    
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; display:flex; align-items:center;">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; display:flex; align-items:center;padding:0px;">
                         <div style="display:flex; flex-direction:column; margin:auto">
                             <div style="font-size:1.8vw; margin-bottom:2%;">Gabriel sevilla Camacho</div>   
                             <div title="artista2D" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Artista 2D</div>
                         </div>    
                     </div>
                 </div>
-                 <div class="row-fluid" style="height:22%">   
+                 <div class="row-fluid" style="height:21%">   
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%;  display:flex; align-items:center;">
                         <div style="display:flex; flex-direction:column; margin:auto">
                             <div style="font-size:1.8vw; margin-bottom:2%;">sergio Martín León</div>   
@@ -158,8 +159,8 @@
                     </div>
                 </div>
                 <div class="row-fluid" style="height:9%">  
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%;  display:flex; align-items:center;">
-                        <div style="font-size:1.2vw; margin:auto; color:white; margin-bottom:1%">(C) 2017, Virtual Madness<img src="assets/logoVM.png" height="8%" width="8%" style="margin-left:5%"/></div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%; padding-top:0.6vh">
+                        <div style="font-size:1.2vw; margin:auto 0px; color:white; height:100%">(C) 2017, Virtual Madness<img src="assets/logoVM.png" style="margin-left:5%; margin-bottom:5px; width:3.5%; min-width:20px"/></div>
                     </div>
                 </div>
             </div>
@@ -241,14 +242,14 @@
         </section>
         
         <!--VENTANA DE AVISO PORTRAIT************************************************************************ -->
-        <section id="prompt-window" class="prompt-window" style="display:none">
+        <section id="prompt-window" class="prompt-window" style="display:block">
             <div class="size100 vertical" style="padding:4%">
                 <span class="glyphicon glyphicon-warning-sign" style="font-size:20vw"></span><br>
-                <span title="aviso_portrait" class="traducible" style="font-size:5vw;">Este juego esta diseñado para mostrarse en modo apaisado.</span>
+                <span title="aviso_portrait" class="traducible" style="font-size:5vw; margin:4% 0px;">Este juego esta diseñado para mostrarse en modo apaisado.</span>
                 <br>
                 <button id="change-mode-button" title="cambiar" class="exit-btn traducible" style="height:8%; font-size:calc(12px + 2vw); display:none">Cambiar</button>
                 <br>
-                <span id="webApp-hint" title="aviso_webapp" class="traducible" style="font-size:3.2vw; color:white; display:none">Puedes añadir este juego a tu pantalla de inicio gracias a la tecnología 'Progressive Web App'.</span>
+                <span id="webApp-hint" title="aviso_webapp" class="traducible" style="font-size:3.2vw; color:white; display:none; margin:3% 0px;">Puedes añadir este juego a tu pantalla de inicio gracias a la tecnología 'Progressive Web App'.</span>
             </div>
         </section>
         

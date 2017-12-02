@@ -163,6 +163,10 @@ function detectFullscreen(){
          $("#full-screen").get(0).checked = false;
         fullScreen = false;
     }
+    if(fullScreen && isMobile){
+        //intentamos forcar el modo landscape
+        screen.orientation.lock('landscape');
+    }
 }
 
 function detectOrientation(){
@@ -233,9 +237,7 @@ $(function(){
           document.documentElement.mozRequestFullScreen();
         } else if (document.documentElement.webkitRequestFullscreen) {
           document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-        }
-        //intentamos forcar el modo landscape
-        screen.orientation.lock('landscape');
+        }       
     })
     
     $("#1player-button").click(function(){toggleWindow($("#level-window"))});
