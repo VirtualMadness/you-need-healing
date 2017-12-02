@@ -119,7 +119,6 @@ function detectDevice(){
     if (/Mobi/.test(navigator.userAgent)) {
         isMobile = true;
     }
-    alert("device mobile?: "+isMobile + ", chrome?: "+isChromium);
 }
 
 var myGame;
@@ -161,15 +160,21 @@ $(function(){
     }
     
     // Listen for orientation changes
-    window.addEventListener("orientationchange", function() {
+    window.addEventListener("resize", function() {
       // Announce the new orientation number
       if (window.matchMedia("(orientation: portrait)").matches) {
-           alert("Estas en modo portrait");
+          $("#landscape-button").children().removeClass("glyphicon-folder-close");
+          $("#landscape-button").children().addClass("glyphicon-file");
         }
         if (window.matchMedia("(orientation: landscape)").matches) {
-            alert("Estas en modo landscape");
+            $("#landscape-button").children().addClass("glyphicon-folder-close");
+            $("#landscape-button").children().removeClass("glyphicon-file");
         }
     }, false);
+    
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+          console.log("Thank you for installing our app!");
+        }
     
     window.addEventListener('resize', function(){
         if (document.fullscreenElement ||    // alternative standard method
