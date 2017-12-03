@@ -1,5 +1,5 @@
 var started = false;
-var fullscreenElement;
+//var fullscreenElement;
 var musicVol = 80;
 var soundsVol = 80;
 var inMainMenu = true;
@@ -8,6 +8,21 @@ var isChromium = false;
 var webApp = false;
 var fullScreen = false;
 var orientationLandscape = true;
+var scene;
+var gameLoop;
+var ctx;
+var id = 0;
+
+//resource variables
+let sprND = new SpriteD(["assets/game/textures/cajaNoDestruible.png"], -1, Victor(-60, -60));      //sprite de los bloques normales
+let sprDMG = new Animation(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -1, Victor(-60, -60));       //sprite animado de los bloques con daño
+let col = new RectCollider(120, 120, Victor(-60, -60, 0));  //collider estandar de los bloques normales y daño
+
+function randomId(){
+    id++;
+    return id;
+    //return new Date().getTime();
+}
 
 function toggleSettings(){
     var actualState = $("#settings-window").css("display");    
@@ -17,9 +32,13 @@ function toggleSettings(){
     if(started){
         $(".menu-subtitle").css({"height": "18%"})
         $(".subtitle-sm").css({"height": "14%"})
+        if(!actualState){
+            scene.pause();
+        }else{
+            scene.play();
+        }
         toggleDisplay($("#exit-button"), true);
-        toggleBlur($("#playground"), !actualState);
-        //myGame.pause();
+        toggleBlur($("#playground"), !actualState);        
     }else{
         $(".menu-subtitle").css({"height": "20%"})
         $(".subtitle-sm").css({"height": "14%"})
@@ -91,9 +110,24 @@ function play(level){
     toggleBlur($("#menu-window"), false);
     toggleDisplay($("#level-window"), false);
     toggleDisplay($("#menu-window"), false);
-    toggleDisplay($("#game-window"), true);
-    //myGame = new Game();
+    toggleDisplay($("#game-window"), true); 
+    
+    //inicializamos el canvas
+    ctx = $("#playground").get(0).getContext("2d");
+    ctx.webkitImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
+    ctx.imageSmoothingEnabled = false;
+    const C_WIDTH = parseInt(ctx.canvas.getAttribute("width"));
+    const C_HEIGHT = parseInt(ctx.canvas.getAttribute("height"));
+    //creamos la escena
+    scene = new Scene("main", 1240, 800, C_WIDTH, C_HEIGHT);    
+    //scene.debug = true;
+    scene.margin = 60;
     started = true;
+    gameLoop = new GameLoop(scene);    
+    loadLevel(level);    
+    scene.start();
+    gameLoop.loop();
 }
 
 function resetLanguageButtons(){
@@ -187,21 +221,25 @@ function checkOrientation(){
     var promptState = $("#prompt-window").css("display") == "none" ? false : true;
     if(!webApp && /*isMobile &&*/ !orientationLandscape && !promptState){
         toggleDisplay($("#prompt-window"), true);
+        if(started && scene != null){
+            scene.pause();
+        }        
     }    
     if(promptState && orientationLandscape){
         toggleDisplay($("#prompt-window"), false);
+        if(started && scene != null){
+            scene.play();
+        } 
     }
 }
 
-var myGame;
-
 $(function(){
+    //inicializacion
     init_i18n();    
     detectDevice();
     detectFullscreen();
     detectOrientation();
-    checkOrientation();
-    
+    checkOrientation();    
     if(isMobile){
         toggleDisplay($("#change-mode-button"), true);   
         if(isChromium){
@@ -271,7 +309,7 @@ $(function(){
     
     //manejador boton salir del juego
     $("#exit-button").click(function(){
-        toggleBlur($("#game-window"), false);
+        toggleBlur($("#playground"), false);
         toggleDisplay($("#level-window"), false);
         toggleDisplay($("#menu-window"), true);
         toggleDisplay($("#game-window"), false);
@@ -279,7 +317,9 @@ $(function(){
         toggleDisplay($("#credits-window"), false);
         changeButtonsState($(".menu-btn"), false);
         inMainMenu = true;
-        //myGame.end();
+        gameLoop = null;
+        scene.stop();
+        scene = null;                
         started = false;
     });
     
@@ -289,4 +329,337 @@ $(function(){
     $("#bt-fr").click(function (){changeLang($(this), "fr")});
     $("#bt-de").click(function (){changeLang($(this), "de")});
     $("#bt-it").click(function (){changeLang($(this), "it")});    
-})
+});
+
+class GameLoop{    
+    constructor(currentScene){
+        var self = this;
+        this.nt = new Date().getTime();
+        this.t = new Date().getTime();
+        this.dt = 0;
+        this.scene = currentScene;
+    };
+    
+    loop(){
+        this.scene.getInput().earlyUpdate();
+        this.nt = new Date().getTime();
+        this.dt = (this.nt - this.t) * 0.001;
+        
+        // Bucle
+        this.scene.update(this.dt);
+        this.scene.render(ctx);
+        this.scene.checkPause();
+
+        // Render
+        requestAnimationFrame(function(){if(gameLoop != null) gameLoop.loop()});
+
+        this.t = this.nt;
+
+        // Manages input
+        this.scene.getInput().lateUpdate();
+    }    
+}
+
+//#region Behaviours
+//#region Camera
+var cameraCreate = (e, m)=>
+{
+    m.set("target", "nin");
+    m.set("smoothing", 0.1);
+};
+
+var follow = (e, m)=>
+{
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null) 
+        return;
+
+    let smoothing = m.get("smoothing");
+    let t = e.getComponent(ComponentType.Transform);
+
+    let target_pos = target.getComponent(ComponentType.Transform).position;
+    let target_rot = target.getComponent(ComponentType.Transform).rotation;
+
+    t.position = Victor(lerp(t.position.x, target_pos.x, smoothing), lerp(t.position.y, target_pos.y, smoothing));
+    t.rotation = target_rot;
+};
+
+/*var followCam = (e, m)=>
+{
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null) 
+        return;
+
+    let smoothing = m.get("smoothing");
+    let t = e.getComponent(ComponentType.Transform);
+
+    let target_pos = target.getComponent(ComponentType.Transform).position;
+    let target_rot = target.getComponent(ComponentType.Transform).rotation;
+
+    t.position.x = clamp(lerp(t.position.x, target_pos.x, smoothing), e.scene.canvas_width/2, e.scene.width - e.scene.canvas_width/2);
+    t.position.y = clamp(lerp(t.position.y, target_pos.y, smoothing), e.scene.canvas_height/2, e.scene.height - e.scene.canvas_height/2);
+    t.rotation = target_rot;
+};*/
+
+
+//#endregion
+
+//#region Nin
+var ninCreate = (e, m) =>
+{
+    m.set("energy", 5);
+    m.set("hp", 3);
+    m.set("base_speed", 100);
+    m.set("press_count", 0);
+};
+
+var ninUpdate = (e, m) =>
+{
+    // Params
+    let dir = m.get("direction");
+    let spd = m.get("base_speed");
+    
+    // Input
+    let input = e.scene.getInput();
+
+    // Components
+    let k = e.getComponent(ComponentType.Kinematic);
+    let t = e.getComponent(ComponentType.Transform);
+    let c = e.getComponent(ComponentType.Collider);
+
+    let base_spd_w_dir = Victor(spd, 0).rotateBy(k.speed.horizontalAngle());
+    let actualSpeed = k.speed.clone().multiply(Victor(gameLoop.dt, gameLoop.dt));
+    let nextPosition = t.position.clone().add(actualSpeed);
+    
+    //check for collisions
+    let obj = c.placeMeeting(nextPosition, Tag.Solid, -1);
+        if(obj != null)
+        {       
+            //variables usadas para calcular la normal del impacto, se usa la funcion rayCollision que necesita 2 esquinas opuestas del collider total (sumando el ancho y alto de cada collider), la direccion y el punto de origen.
+            let otherC = obj[0].getComponent(ComponentType.Collider);
+            let otherT = obj[0].getComponent(ComponentType.Transform);            
+            let minCorner = Victor(otherT.position.x - ((c.width + otherC.width)/2),otherT.position.y - ((c.height + otherC.height)/2));
+            let maxCorner = Victor(otherT.position.x + ((c.width + otherC.width)/2),otherT.position.y + ((c.height + otherC.height)/2));
+            let coll = rayCollision(actualSpeed.normalize(), nextPosition, minCorner, maxCorner); 
+            //la funcion devuelve un array donde la pos 0 indica si se ha producido collision 
+            //(en este caso sera siempre true ya que la collision se ha chequeado antes) y la pos 1 es un vector con la normal
+            if(coll[1] != null){
+                k.speed = reflect(k.speed.clone(), coll[1]);
+                t.rotation = k.speed.horizontalAngleDeg();
+            }
+            if(e.scene.debug){
+                console.log("collision with " + obj[0].id);
+                console.log("normal "+coll[1]);
+            }
+            if(obj[0].id.search("dmg") != -1){
+                console.log("vida perdida");
+                //el objeto es una caja dañina
+                let hp = m.get("hp");
+                m.set("hp", hp--);
+                scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
+            }
+        }
+    k.speed = Victor(lerp(k.speed.x, base_spd_w_dir.x, 0.1), lerp(k.speed.y, base_spd_w_dir.y, 0.1));
+    
+    if(input.getMouseDown(MouseButton.Left))
+    {
+        m.set("i_mp", input.mouseCanvasPosition);
+        m.set("ready", false);
+    }
+
+    if(input.getMousePressed(MouseButton.Left))
+    {
+        let pc = m.get("press_count");
+
+        if(pc == 10)
+        {
+            m.set("ready", true);
+            if(e.scene.debug)
+                console.log("Stage 1");
+        }
+        if(pc == 30)
+        {   
+            if(e.scene.debug)
+                console.log("Stage 2");
+        }
+        if(pc == 60)
+        {   
+            if(e.scene.debug)
+                console.log("Stage 3");
+        }
+
+        m.set("press_count", pc+1);
+    }
+
+    if(input.getMouseUp(MouseButton.Left))
+    {
+        if(m.get("ready") === true)
+        {
+            if(e.scene.debug)
+                console.log("Dash");
+            
+            let i_mp = m.get("i_mp");
+            let pc = m.get("press_count");
+            let new_spd = spd;
+
+            if(pc > 60)
+            {
+                new_spd *= 2;
+            }
+            if(pc > 30)
+            {
+                new_spd *= 1.5;
+            }
+            new_spd *= 5;
+
+            k.speed = input.mouseCanvasPosition.clone().subtract(i_mp).normalize().multiply(Victor(new_spd, new_spd));
+            t.rotation = k.speed.horizontalAngleDeg();
+        }
+        else
+        {   if(e.scene.debug)
+                console.log("Slash");
+        }
+        m.set("press_count", 0);
+        
+    }
+    // Lerp Speed
+};
+
+var uiLifeUpdate = (e, m) =>{
+    let t = e.getComponent(ComponentType.Transform);
+    let image_index = e.getComponent(ComponentType.Sprite).image_index;
+    let scene_ = e.scene;
+    t.position = (Victor(scene_.view_x + scene_.canvas_width - 25, scene_.view_y + scene_.canvas_height - 10));
+    
+    if(m.get("damaged") === true){
+        e.getComponent(ComponentType.Sprite).setImageIndex(image_index+1);
+        m.set("dmg_counter", 20);
+        m.set("damaged", false);
+    }   
+    let count = m.get("dmg_counter");
+    if(count > 0){
+        if (count == 1){
+            e.getComponent(ComponentType.Sprite).setImageIndex(image_index+1);
+        }
+        m.set("dmg_counter", count-1);
+    }
+    
+}
+//#endregion
+
+function loadLevel(level){
+    let mar = scene.margin;
+    let w = scene.width;
+    let h = scene.height;
+    //background
+    loadBg();    
+    let spritesPath = "assets/game/sprites/";
+    var nin = new Entity("nin", scene, Tag.Player, new Transform(Victor(580, 360), 0, Victor(1, 1)));
+    nin.addComponent(new SpriteD([spritesPath + "nin.png"], -0.5, Victor(-20, -20)));
+    nin.addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
+    nin.addComponent(new RectCollider(40, 40, Victor(-20, -20, 0)));
+    nin.addComponent(new Behaviour([ninCreate], [ninUpdate], []));
+
+    var shadow = new Entity("nin-shadow", scene, Tag.Default, new Transform(Victor(50, 50), 0, Victor(1, 1)));
+    shadow.addComponent(new Sprite([spritesPath + "nin-shadow.png"], 0, Victor(-20, -20)));
+    shadow.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 1)));
+    
+    var cam = new Entity("camera", scene, Tag.Camera, new Transform(Victor(580, 360), 0, Victor(0.1, 0.1)));
+    cam.addComponent(new Sprite([spritesPath + "robola.png"], -2, Victor(0, 0)));
+    cam.addComponent(new Behaviour([cameraCreate], [follow], []));    
+    
+    scene.addEntity(nin);
+    scene.addEntity(shadow);
+
+    scene.addEntity(cam);
+    scene.setCamera(cam);
+    
+    let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(0.5, 0.5)));
+    uiLife.addComponent(new Animation([spritesPath + "health1.png", spritesPath + "health2.png", spritesPath + "health3.png", spritesPath + "health4.png", spritesPath + "health5.png", spritesPath + "health6.png", spritesPath + "health7.png"], 0, -100, Victor(-20, -80)));
+    uiLife.addComponent(new Behaviour([], [uiLifeUpdate], []));
+    scene.addEntity(uiLife);
+
+    scene.setInput(new Input(), ctx.canvas);
+    
+    if(level == 1){
+        $.each(lvl1, function(index, ent){
+             if(ent.type == "nd"){                               
+                createND(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));
+            }else if(ent.type == "dmg"){
+                createDMG(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
+            }   
+        });      
+    }
+}
+
+function createND(scene_, pos, rot, scale){
+    let e = new Entity("b#"+randomId(), scene, Tag.Solid);
+    e.addComponent(sprND);
+    e.addComponent(new Transform(pos, rot, scale));
+    e.addComponent(col);
+    scene_.addEntity(e); 
+}
+
+function createDMG(scene_, pos, rot, scale){
+    let e = new Entity("dmg#"+randomId(), scene, Tag.Solid);
+    e.addComponent(sprDMG);
+    e.addComponent(new Transform(pos, rot, scale));
+    e.addComponent(col);
+    scene_.addEntity(e); 
+}
+
+function loadBg(){
+    let mar = scene.margin;
+    let w = scene.width;
+    let h = scene.height;
+    let bg = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg.addComponent(new Sprite(["assets/game/textures/bg.png"], 1));
+    bg.addComponent(new Transform(Victor(mar, mar)));
+    scene.addEntity(bg);    
+    //borders
+    let bg2 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg2.addComponent(new Sprite(["assets/game/textures/bordeAncho0.png"], 0, Victor(-560, -10)));
+    bg2.addComponent(new Transform(Victor(w/2, mar-10)));    
+    bg2.addComponent(new RectCollider(1120, 20, Victor(-560, -10, 0)));
+    scene.addEntity(bg2);
+    let bg2b = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg2b.addComponent(new SpriteD(["assets/game/textures/bordeAncho1.png"], -5, Victor(-560, -30)));
+    bg2b.addComponent(new Transform(Victor(w/2, mar-5), 0, Victor(1, 1)));
+    scene.addEntity(bg2b);
+    
+    let bg3 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg3.addComponent(new SpriteD(["assets/game/textures/bordeAncho.png"], 0, Victor(-560, -10)));
+    bg3.addComponent(new Transform(Victor(w/2, h-mar+10), 180));
+    bg3.addComponent(new RectCollider(1120, 20, Victor(-560, -10, 0)));
+    scene.addEntity(bg3);    
+    
+    let bg4 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg4.addComponent(new SpriteD(["assets/game/textures/bordeAlto.png"], 0, Victor(-10, -340) ));
+    bg4.addComponent(new Transform(Victor(mar-10, h/2)));
+    bg4.addComponent(new RectCollider(20, 680, Victor(-10, -340)));
+    scene.addEntity(bg4);
+    
+    let bg5 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg5.addComponent(new SpriteD(["assets/game/textures/bordeAlto.png"], 0, Victor(-10, -340)));
+    bg5.addComponent(new Transform(Victor(w-mar+10, h/2), 180));
+    bg5.addComponent(new RectCollider(20, 680, Victor(-10, -340)));
+    scene.addEntity(bg5);
+    
+    //corners
+    let bg6 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg6.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg6.addComponent(new Transform(Victor(mar-10, mar-10), 90));
+    scene.addEntity(bg6);
+    let bg7 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg7.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg7.addComponent(new Transform(Victor(mar-10, h-mar+10), 0));
+    scene.addEntity(bg7);
+    let bg8 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg8.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg8.addComponent(new Transform(Victor(w-mar+10, mar-10), 180));screenTop
+    scene.addEntity(bg8);
+    let bg9 = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg9.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg9.addComponent(new Transform(Victor(w-mar+10, h-mar+10), 270));
+    scene.addEntity(bg9);
+}

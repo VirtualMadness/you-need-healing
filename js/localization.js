@@ -46,6 +46,13 @@ var literals = {
             "salir": "Exit",
             "proximamente": "Coming Soon",
             "creado_por": "Created by:",
+            "programador_artista2D"  : "Programmer / 2D Artist",
+            "programador": "Programmer",
+            "diseñador": "Designer",
+            "artista2D": "2D Artist",
+            "aviso_portrait": "This game has been designed for being played in landscape mode.", 
+            "cambiar": "Change",
+            "aviso_webapp": "You can add this game to your home screen thanks to 'Progressive Web App' tecnology.",
           }
         },
         fr: {
@@ -65,6 +72,14 @@ var literals = {
             "volumen_efectos": "Volume d'effets",
             "salir": "sortir",
             "proximamente": "Comming soon",
+            "creado_por": "Créé par:",
+            "programador_artista2D"  : "Programmeur / Artiste 2D ",
+            "programador": "Programmeur",
+            "diseñador": "Concepteur",
+            "artista2D": "Artiste 2D",
+            "aviso_portrait": "Ce jeu a été conçu pour être joué en mode paysage.", 
+            "cambiar": "Changer",
+            "aviso_webapp": "Vous pouvez ajouter ce jeu à votre écran d'accueil grâce à la technologie 'Progressive Web App'.",
           }
         },
         de: {
@@ -84,6 +99,14 @@ var literals = {
             "volumen_efectos": "Lautstärke der Effekte",
             "salir": "Herausgehen",
             "proximamente": "Arrive Bientôt",
+            "creado_por": "Erstellt von:",
+            "programador_artista2D"  : "Programmierer / 2D-Künstler ",
+            "programador": "Programmierer",
+            "diseñador": "Designer",
+            "artista2D": "2D-Künstler",
+            "aviso_portrait": "Dieses spiel wurde für die Wiedergabe im Querformat entwickelt.", 
+            "cambiar": "Ändern",
+            "aviso_webapp": "sie können dieses spiel dank der Technologie zu Ihrem startbildschirm hinzufügen 'Progressive Web App'.",
           }
         },
         it: {
@@ -103,6 +126,14 @@ var literals = {
             "volumen_efectos": "Volume di Effetti",
             "salir": "Vieni Fuori",
             "proximamente": "Prossimamente",
+            "creado_por": "Creato da:",
+            "programador_artista2D"  : "Programmatore / Artista 2D",
+            "programador": "Programmatore",
+            "diseñador": "Disegnatore",
+            "artista2D": "Artista 2D",
+            "aviso_portrait": "Questo gioco è stato progettato per essere giocato in modalità orizzontale.", 
+            "cambiar": "Modificare",
+            "aviso_webapp": "È possibile aggiungere questo gioco alla schermata iniziale grazie alla tecnologia 'Progressive Web App'.",
           }
         }
           

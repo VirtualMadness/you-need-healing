@@ -192,7 +192,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                       <div class="title-sm" style="height:50%"><span title="facil" class="traducible">Nivel 1 - Fácil</span></div>
-                        <button class="play-button" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
+                        <button class="play-button" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
                     </div>
                   </div>
                 </div>
@@ -201,7 +201,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="medio" class="traducible">Nivel 2 - Normal</span></div>                      
-                      <button class="play-button" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
+                      <button class="play-button" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
                     </div>
                   </div>
                 </div>
@@ -210,7 +210,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="dificil" class="traducible">Nivel 3 - Dificil</span></div>                       
-                        <button class="play-button" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
+                        <button class="play-button" onclick="play(3)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
                     </div>
                   </div>
                 </div>                 
@@ -238,7 +238,7 @@
          <!--VENTANA DE JUEGO ****************************************************************************** -->
         <section id="game-window" class = "game-window">
             <button id="pause-button" class="pause-button"><span class="glyphicon glyphicon-pause"></span></button>
-            <canvas id="playground" height=640px width=360px/>
+            <canvas class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" id="playground" width=640 height=360></canvas>
         </section>
         
         <!--VENTANA DE AVISO PORTRAIT************************************************************************ -->
@@ -255,8 +255,11 @@
         
         
         <!-- importamos las librerias necesarias al final del body para aligerar la carga de la pagina -->        
-        <script src=js/i18nextBrowserLanguageDetector.min.js></script>
+        <script src=js/lib/i18nextBrowserLanguageDetector.min.js></script>
         <script src="https://unpkg.com/i18next/i18next.min.js"></script>
+        <script src=js/lib/victor.min.js></script>
+         <script src=js/levels.js></script>
+        <script src=js/vm-engine.js></script>
         <script src="https://code.jquery.com/jquery-latest.min.js"></script>
         <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="js/localization.js"></script>
