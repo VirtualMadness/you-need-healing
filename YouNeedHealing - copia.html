@@ -16,34 +16,9 @@
       <link href="css/youNeedHealing.css" rel="stylesheet">
     </head>
     <body>    
-        <!--<button id="landscape-button" class="close-button" onClick="screen.orientation.lock('landscape');" style="width: 8vmin; height: 8vmin"><span class="glyphicon"/></button>
+        <button id="landscape-button" class="close-button" onClick="screen.orientation.lock('landscape');" style="width: 8vmin; height: 8vmin"><span class="glyphicon"/></button>
         <!--<section id= "menu-window" class="main-menu" style="height:100%; padding:auto">-->            
             <div id="menu-window" class="container main-menu">
-                <div class= "container pull-left" style="height:100%; width:30%">
-                    <img class="menu-image" src="assets/bg_roll3.png">
-                </div>
-                <div class="container pull-right" style="height:100%; width:70%">
-                    <div class="pull-left" style="height:15%; width:100%">
-                        <p class="pull-left title" style="margin-left:-10%;"><nobr>You Need Healing</nobr></p>
-                    </div>
-                    <div style="height:85%; width:100%; text-align: left; margin-left: -6%">
-                        <button id="1player-button" class="menu-btn" style="padding-bottom: 3%; margin:0px; background-image: url('assets/btn1.png')">
-                                <nobr><span title="1_jugador" class="traducible">1 Jugador</span></nobr></button>
-                            
-                            <button id="2players-button" class="menu-btn" style="margin-top:0px; margin-left:8%; height:16%; background-image: url('assets/btn5.png')">
-                                <nobr><span title="2_jugadores" class="traducible" style="vertical-align: middle;">2 Jugadores</span></nobr></button>
-                            
-                             <button id="highscore-button" class="menu-btn" style="height:16%; margin-left:13%; background-image: url('assets/btn4.png')">
-                                 <nobr>Highscore</nobr></button>
-                            
-                             <button id="settings-button" class="menu-btn" style="margin-left:8%; margin-bottom:0%; height:16%; background-image: url('assets/btn2.png')">
-                                <nobr><span title="ajustes" class="traducible" >Ajustes</span></nobr></button> 
-                            
-                             <button id="credits-button" class="menu-btn" style="padding-top: 2%; margin:0px; background-image: url('assets/btn3.png')">
-                                <nobr><span title="creditos" class="traducible">Créditos</span></nobr></button>
-                    </div>
-                </div>    
-                <!--
                 <div class="row-fluid" style="height: calc(15vh)">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 span4">
                       <img class="menu-image" src="assets/bg_roll3.png">
@@ -71,12 +46,12 @@
                                 <nobr><span title="creditos" class="traducible">Créditos</span></nobr></button>
                         </div>
                     </div>
-                </div>-->
+                </div>
             </div>
         
-        <!--VENTANA DE AJUSTES *******************************************************************************-->
+        <!--VENTANA DE AJUSTES *******************************************************************************  -->
         <section id="settings-window" class ="settings-menu">
-            <button id="settings-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
+            <button id="settings-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
             <div class="settings-title" ><span title="ajustes" class=traducible >Ajustes</span></div>
             
             <div class="menu-subtitle">
@@ -108,9 +83,8 @@
         
         <!--VENTANA DE CREDITOS *******************************************************************************  -->
         <section id="credits-window" class ="settings-menu" style="width:74%; left:13%;">            
-            <button id="credits-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
+            <button id="credits-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
             <div class="container" style="height:100%; width:100%;">
-                <div class="floating-background"></div>
                 <div class="row-fluid" style="height:14%">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: table;">
                         <span title="creditos" class="traducible" style="display:table-cell; vertical-align:middle; font-size: 3vw">Créditos</span>
@@ -123,7 +97,7 @@
                     </div>
                 </div>                
                 <div class="row-fluid" style="height:22%">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; text-align:center; display:flex; align-items:center; padding:0px;">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; text-align:center; display:flex; align-items:center;">
                         <div style="display:flex; flex-direction:column; margin:auto">
                             <div style="font-size:1.8vw; margin-bottom:2%">sergio De Frutos López</div>          
                             <div title="programador_artista2D" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Programador / Artista 2D</div>
@@ -143,14 +117,14 @@
                             <div title="diseñador" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Diseñador</div>
                         </div>    
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; display:flex; align-items:center;padding:0px;">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="height:100%; display:flex; align-items:center;">
                         <div style="display:flex; flex-direction:column; margin:auto">
                             <div style="font-size:1.8vw; margin-bottom:2%;">Gabriel sevilla Camacho</div>   
                             <div title="artista2D" class="traducible" style="font-size: 1.3vw; font-weight:normal; color:var(--text-light-blue);">Artista 2D</div>
                         </div>    
                     </div>
                 </div>
-                 <div class="row-fluid" style="height:21%">   
+                 <div class="row-fluid" style="height:22%">   
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%;  display:flex; align-items:center;">
                         <div style="display:flex; flex-direction:column; margin:auto">
                             <div style="font-size:1.8vw; margin-bottom:2%;">sergio Martín León</div>   
@@ -159,8 +133,8 @@
                     </div>
                 </div>
                 <div class="row-fluid" style="height:9%">  
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%; padding-top:0.6vh">
-                        <div style="font-size:1.2vw; margin:auto 0px; color:white; height:100%">(C) 2017, Virtual Madness<img src="assets/logoVM.png" style="margin-left:5%; margin-bottom:5px; width:3.5%; min-width:20px"/></div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height:100%;  display:flex; align-items:center;">
+                        <div style="font-size:1.2vw; margin:auto; color:white; margin-bottom:1%">(C) 2017, Virtual Madness<img src="assets/logoVM.png" height="8%" width="8%" style="margin-left:5%"/></div>
                     </div>
                 </div>
             </div>
@@ -171,7 +145,7 @@
         
         <!--VENTANA DE 1 JUGADOR ****************************************************************************** -->
         <section id="level-window" class="settings-menu">            
-            <button id="level-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
+            <button id="level-close-button" class="close-button"><span class="glyphicon glyphicon-remove"/></button>
             <div style="padding-top:1%; margin: auto 0px; height:15%; width:100%;">
                 <span title="dificultad" class="traducible title-md">Dificultad</span>
             </div>
@@ -192,7 +166,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                       <div class="title-sm" style="height:50%"><span title="facil" class="traducible">Nivel 1 - Fácil</span></div>
-                        <button class="play-button" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
+                        <button class="play-button" onclick="play(0)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
                     </div>
                   </div>
                 </div>
@@ -201,7 +175,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="medio" class="traducible">Nivel 2 - Normal</span></div>                      
-                      <button class="play-button" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
+                      <button class="play-button" onclick="play(1)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
                     </div>
                   </div>
                 </div>
@@ -210,7 +184,7 @@
                   <div class="container">
                     <div class="carousel-caption">
                         <div class="title-sm" style="height:50%"><span title="dificil" class="traducible">Nivel 3 - Dificil</span></div>                       
-                        <button class="play-button" onclick="play(3)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"></span></button>
+                       <button class="play-button" onclick="play(2)"><span title="jugar" class="traducible">JUGAR</span><span class="glyphicon glyphicon-play" style="margin-left:1vw; font-size:1.5vw"/></button>
                     </div>
                   </div>
                 </div>                 
@@ -229,7 +203,7 @@
         
          <!--VENTANA DE 2 JUGADORES *******************************************************************************  -->
         <section id="2players-window" class ="settings-menu">
-            <button id="2players-close-button" class="close-button"><span class="glyphicon glyphicon-remove"></span></button>
+            <button id="2players-close-button" class="close-button">x</button>
             <div class="settings-title" ><span title="2_jugadores" class=traducible>2 Jugadores</span></div>
             <div class="settings-title" style="margin-top: 15%;"><span title="proximamente" class=traducible>Próximamente</span></div>
             
@@ -237,29 +211,13 @@
         
          <!--VENTANA DE JUEGO ****************************************************************************** -->
         <section id="game-window" class = "game-window">
-            <button id="pause-button" class="pause-button"><span class="glyphicon glyphicon-pause"></span></button>
-            <canvas class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" id="playground" width=640 height=360></canvas>
-        </section>
-        
-        <!--VENTANA DE AVISO PORTRAIT************************************************************************ -->
-        <section id="prompt-window" class="prompt-window" style="display:block">
-            <div class="size100 vertical" style="padding:4%">
-                <span class="glyphicon glyphicon-warning-sign" style="font-size:20vw"></span><br>
-                <span title="aviso_portrait" class="traducible" style="font-size:5vw; margin:4% 0px;">Este juego esta diseñado para mostrarse en modo apaisado.</span>
-                <br>
-                <button id="change-mode-button" title="cambiar" class="exit-btn traducible" style="height:8%; font-size:calc(12px + 2vw); display:none">Cambiar</button>
-                <br>
-                <span id="webApp-hint" title="aviso_webapp" class="traducible" style="font-size:3.2vw; color:white; display:none; margin:3% 0px;">Puedes añadir este juego a tu pantalla de inicio gracias a la tecnología 'Progressive Web App'.</span>
-            </div>
+            <canvas id="playground" height=640px width=360px/>
         </section>
         
         
         <!-- importamos las librerias necesarias al final del body para aligerar la carga de la pagina -->        
-        <script src=js/lib/i18nextBrowserLanguageDetector.min.js></script>
+        <script src=js/i18nextBrowserLanguageDetector.min.js></script>
         <script src="https://unpkg.com/i18next/i18next.min.js"></script>
-        <script src=js/lib/victor.min.js></script>
-         <script src=js/levels.js></script>
-        <script src=js/vm-engine.js></script>
         <script src="https://code.jquery.com/jquery-latest.min.js"></script>
         <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="js/localization.js"></script>
