@@ -12,6 +12,7 @@ var scene;
 var gameLoop;
 var ctx;
 var id = 0;
+var energyRec = null;
 
 //resource variables
 let sprND = new SpriteD(["assets/game/textures/cajaNoDestruible.png"], -1, Victor(-60, -60));      //sprite de los bloques normales
@@ -22,6 +23,24 @@ function randomId(){
     id++;
     return id;
     //return new Date().getTime();
+}
+
+function recoveryEnergy(){
+   let ninM = scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory;
+    let energy = ninM.get("energy");
+    if (energy < 5){
+        ninM.set("energy", energy+1)
+        let memo = scene.getEntity("HUD-energy").getComponent(ComponentType.Behaviour).memory;
+        memo.set("energy", energy+1);
+        memo.set("recover", true);            
+    }   
+}
+
+function setEnergyRec(){
+    if(energyRec != null){       
+        clearInterval(energyRec); 
+    }           
+    energyRec = setInterval(recoveryEnergy, 3000);
 }
 
 function toggleSettings(){
@@ -121,13 +140,14 @@ function play(level){
     const C_HEIGHT = parseInt(ctx.canvas.getAttribute("height"));
     //creamos la escena
     scene = new Scene("main", 1240, 800, C_WIDTH, C_HEIGHT);    
-    //scene.debug = true;
+    scene.debug = true;
     scene.margin = 60;
     started = true;
     gameLoop = new GameLoop(scene);    
     loadLevel(level);    
     scene.start();
     gameLoop.loop();
+    setEnergyRec();
 }
 
 function resetLanguageButtons(){
@@ -418,6 +438,8 @@ var ninUpdate = (e, m) =>
     // Params
     let dir = m.get("direction");
     let spd = m.get("base_speed");
+    let energy = m.get("energy");
+    let hp = m.get("hp");
     
     // Input
     let input = e.scene.getInput();
@@ -453,8 +475,7 @@ var ninUpdate = (e, m) =>
             }
             if(obj[0].id.search("dmg") != -1){
                 console.log("vida perdida");
-                //el objeto es una caja dañina
-                let hp = m.get("hp");
+                //el objeto es una caja dañina                
                 m.set("hp", hp--);
                 scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
             }
@@ -464,14 +485,14 @@ var ninUpdate = (e, m) =>
     if(input.getMouseDown(MouseButton.Left))
     {
         m.set("i_mp", input.mouseCanvasPosition);
-        m.set("ready", false);
+        m.set("ready", false);        
     }
 
     if(input.getMousePressed(MouseButton.Left))
     {
         let pc = m.get("press_count");
 
-        if(pc == 10)
+        if(pc == 8)
         {
             m.set("ready", true);
             if(e.scene.debug)
@@ -479,15 +500,22 @@ var ninUpdate = (e, m) =>
         }
         if(pc == 30)
         {   
-            if(e.scene.debug)
+            if(energy >= 2){
+                if(e.scene.debug)
                 console.log("Stage 2");
+            }else{
+                pc--;
+            }            
         }
         if(pc == 60)
         {   
-            if(e.scene.debug)
+            if(energy >= 3){
+                if(e.scene.debug)
                 console.log("Stage 3");
+            }else{
+                pc--;
+            }            
         }
-
         m.set("press_count", pc+1);
     }
 
@@ -500,27 +528,44 @@ var ninUpdate = (e, m) =>
             
             let i_mp = m.get("i_mp");
             let pc = m.get("press_count");
-            let new_spd = spd;
-
+            let new_spd = spd;            
+            let wastedEnergy = 1;
             if(pc > 60)
             {
                 new_spd *= 2;
-            }
+                wastedEnergy++;               
+            }            
             if(pc > 30)
             {
                 new_spd *= 1.5;
-            }
+                wastedEnergy++;
+            } 
+            wasteEnergy(wastedEnergy);
             new_spd *= 5;
-
             k.speed = input.mouseCanvasPosition.clone().subtract(i_mp).normalize().multiply(Victor(new_spd, new_spd));
             t.rotation = k.speed.horizontalAngleDeg();
         }
         else
         {   if(e.scene.debug)
                 console.log("Slash");
+            if(energy > 1){
+                wasteEnergy(1);
+            }
         }
-        m.set("press_count", 0);
-        
+        m.set("press_count", 0);        
+    }
+    
+    function wasteEnergy(value){
+        let energy_ = m.get("energy");
+        energy_ = clamp(energy-value, 1, 5);
+        if(scene.debug){
+            console.log("wasting energy "+value);
+        }        
+        m.set("energy", energy_);
+        let memo = scene.getEntity("HUD-energy").getComponent(ComponentType.Behaviour).memory;
+        memo.set("changed", true);
+        memo.set("energy", energy_);
+        setEnergyRec();        
     }
     // Lerp Speed
 };
@@ -529,7 +574,7 @@ var uiLifeUpdate = (e, m) =>{
     let t = e.getComponent(ComponentType.Transform);
     let image_index = e.getComponent(ComponentType.Sprite).image_index;
     let scene_ = e.scene;
-    t.position = (Victor(scene_.view_x + scene_.canvas_width - 25, scene_.view_y + scene_.canvas_height - 10));
+    t.position = (Victor(scene_.view_x + scene_.canvas_width - 32, scene_.view_y + scene_.canvas_height - 10));
     
     if(m.get("damaged") === true){
         e.getComponent(ComponentType.Sprite).setImageIndex(image_index+1);
@@ -542,8 +587,85 @@ var uiLifeUpdate = (e, m) =>{
             e.getComponent(ComponentType.Sprite).setImageIndex(image_index+1);
         }
         m.set("dmg_counter", count-1);
-    }
+    }    
+}
+
+var uiEnergyUpdate = (e, m) =>{
+    let energy = m.get("energy");
+    let image_index = e.getComponent(ComponentType.Sprite).image_index;
     
+    let t = e.getComponent(ComponentType.Transform);
+    let scene_ = e.scene;
+    t.position = (Victor(scene_.view_x + scene_.canvas_width - 8, scene_.view_y + scene_.canvas_height - 10));
+    
+    if(m.get("changed") === true){
+        switch (energy){
+            case 4: 
+                e.getComponent(ComponentType.Sprite).setImageIndex(1);
+                m.set("energy_counter", 15);
+                break;   
+            case 3: 
+                e.getComponent(ComponentType.Sprite).setImageIndex(3);
+                m.set("energy_counter", 15);
+                break;     
+            case 2: 
+                e.getComponent(ComponentType.Sprite).setImageIndex(5);
+                m.set("energy_counter", 15);
+                break;  
+            case 1: 
+                if(image_index != 8){
+                    e.getComponent(ComponentType.Sprite).setImageIndex(7);
+                    m.set("energy_counter", 15);
+                }else{
+                    e.getComponent(ComponentType.Sprite).setImageIndex(9);
+                    m.set("energy_counter", 15);
+                }                
+                break; 
+            }        
+        m.set("changed", false);
+    }else{
+        if(m.get("recover") === true){
+        switch (energy){
+            case 5: 
+                e.getComponent(ComponentType.Sprite).setImageIndex(1);
+                m.set("recovery_counter", 15);
+                break;   
+            case 4: 
+                e.getComponent(ComponentType.Sprite).setImageIndex(3);
+                m.set("recovery_counter", 15);
+                break;     
+            case 3: 
+                e.getComponent(ComponentType.Sprite).setImageIndex(5);
+                m.set("recovery_counter", 15);
+                break;  
+            case 2: 
+                e.getComponent(ComponentType.Sprite).setImageIndex(7);
+                m.set("recovery_counter", 15);
+                break; 
+            }        
+        m.set("recover", false);
+        } 
+    }    
+
+    let count = m.get("energy_counter");
+    if(count > 0){
+        if (count == 1){
+            if(image_index != 9){
+                e.getComponent(ComponentType.Sprite).setImageIndex(image_index+1);
+            }else{
+                e.getComponent(ComponentType.Sprite).setImageIndex(8);
+            }            
+        }
+        m.set("energy_counter", count-1);
+    }else{
+        let countRec = m.get("recovery_counter");
+        if(countRec > 0){
+            if (countRec == 1){
+                e.getComponent(ComponentType.Sprite).setImageIndex(image_index-1);
+            }
+            m.set("recovery_counter", countRec-1);
+        }
+    }  
 }
 //#endregion
 
@@ -565,7 +687,7 @@ function loadLevel(level){
     shadow.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 1)));
     
     var cam = new Entity("camera", scene, Tag.Camera, new Transform(Victor(580, 360), 0, Victor(0.1, 0.1)));
-    cam.addComponent(new Sprite([spritesPath + "robola.png"], -2, Victor(0, 0)));
+    //cam.addComponent(new Sprite([spritesPath + "robola.png"], -2, Victor(0, 0)));
     cam.addComponent(new Behaviour([cameraCreate], [follow], []));    
     
     scene.addEntity(nin);
@@ -574,10 +696,15 @@ function loadLevel(level){
     scene.addEntity(cam);
     scene.setCamera(cam);
     
-    let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(0.5, 0.5)));
-    uiLife.addComponent(new Animation([spritesPath + "health1.png", spritesPath + "health2.png", spritesPath + "health3.png", spritesPath + "health4.png", spritesPath + "health5.png", spritesPath + "health6.png", spritesPath + "health7.png"], 0, -100, Victor(-20, -80)));
+    let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
+    uiLife.addComponent(new Animation([spritesPath + "health1.png", spritesPath + "health2.png", spritesPath + "health3.png", spritesPath + "health4.png", spritesPath + "health5.png", spritesPath + "health6.png", spritesPath + "health7.png"], 0, -100, Victor(-20, -81)));
     uiLife.addComponent(new Behaviour([], [uiLifeUpdate], []));
     scene.addEntity(uiLife);
+    
+    let uiEnergy = new Entity("HUD-energy", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
+    uiEnergy.addComponent(new Animation([spritesPath + "power1.png", spritesPath + "power2.png", spritesPath + "power3.png", spritesPath + "power4.png", spritesPath + "power5.png", spritesPath + "power6.png", spritesPath + "power7.png", spritesPath + "power8.png", spritesPath + "power9.png", spritesPath + "power10.png", spritesPath + "power11.png"], 0, -100, Victor(-20, -81)));
+    uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
+    scene.addEntity(uiEnergy);
 
     scene.setInput(new Input(), ctx.canvas);
     
@@ -623,8 +750,10 @@ function loadBg(){
     bg2.addComponent(new RectCollider(1120, 20, Victor(-560, -10, 0)));
     scene.addEntity(bg2);
     let bg2b = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg2b.addComponent(new SpriteD(["assets/game/textures/bordeAncho1.png"], -5, Victor(-560, -30)));
-    bg2b.addComponent(new Transform(Victor(w/2, mar-5), 0, Victor(1, 1)));
+    //let sprB = new SpriteD(["assets/game/textures/bordeAncho1.png"], -2.5, Victor(-560, -30), true);
+    //sprB.constraint_x = true;
+    bg2b.addComponent(new SpriteD(["assets/game/textures/bordeAncho1.png"], -2.5, Victor(-560, -30), true));
+    bg2b.addComponent(new Transform(Victor(w/2, mar-20), 0, Victor(1, 1)));
     scene.addEntity(bg2b);
     
     let bg3 = new Entity("bg#"+randomId(), scene, Tag.Solid);
@@ -656,7 +785,7 @@ function loadBg(){
     scene.addEntity(bg7);
     let bg8 = new Entity("bg#"+randomId(), scene, Tag.Solid);
     bg8.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
-    bg8.addComponent(new Transform(Victor(w-mar+10, mar-10), 180));screenTop
+    bg8.addComponent(new Transform(Victor(w-mar+10, mar-10), 180));
     scene.addEntity(bg8);
     let bg9 = new Entity("bg#"+randomId(), scene, Tag.Solid);
     bg9.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));

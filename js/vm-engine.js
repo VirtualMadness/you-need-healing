@@ -1176,9 +1176,11 @@ class SpriteD extends Sprite
      * @param {number} depth
      * @memberof Sprite
      */
-    constructor(src, depth, offset = new Victor(0, 0))
+    constructor(src, depth, offset = new Victor(0, 0), constraint_x = false, constraint_y = false)
     {
         super(src, depth, offset);
+        this.constraint_x = constraint_x;
+        this.constraint_y = constraint_y;
     }
 
     /**
@@ -1190,7 +1192,7 @@ class SpriteD extends Sprite
      */
     clone()
     {
-        return new SpriteD(this.src, this.depth, this.offset.clone());
+        return new SpriteD(this.src, this.depth, this.offset.clone(), this.constraint_x, this.constraint_y);
     }
 
     render(ctx)
@@ -1201,10 +1203,9 @@ class SpriteD extends Sprite
         let cam_pos = Victor(scene.view_x + scene.canvas_width*0.5, scene.view_y + scene.canvas_height*0.5);
         let depth_offset = Victor((cam_pos.x - pos.x)*0.05*this.depth, (cam_pos.y - pos.y)*0.05*this.depth);
 
-
         ctx.save();
 
-        let tran = Victor(pos.x + depth_offset.x, pos.y + depth_offset.y);
+        let tran = Victor(pos.x + (depth_offset.x * (this.constraint_x ? 0: 1)), pos.y + (depth_offset.y * (this.constraint_y ? 0: 1)));
         
         if (this.entity.scene.debug){     
             let c = this.entity.getComponent(ComponentType.Collider);
@@ -1221,7 +1222,7 @@ class SpriteD extends Sprite
         ctx.drawImage(this.image,
             0,                                              0, 
             this.image.width,                               this.image.height, 
-            pos.x + this.offset.x + depth_offset.x,         pos.y + this.offset.y + depth_offset.y, 
+            this.offset.x + tran.x,         this.offset.y + tran.y, 
             this.image.width*transform.scale.x * clamp((-this.depth)*2/15, 1, 1.8),  this.image.height*transform.scale.y * clamp((-this.depth)*2/15, 1, 1.8)
         );
         
