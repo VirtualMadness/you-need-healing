@@ -1518,7 +1518,6 @@ class Input
         });
 
 
-
         // Touch
         // Bloquea el scroll al tocar el canvas
         window.blockMenuHeaderScroll = false;
@@ -1537,7 +1536,8 @@ class Input
                 window.blockMenuHeaderScroll = true;
             }
 
-            this.setMousePosition(e.clientX, e.clientY, target);
+            //this.setMousePosition(e.clientX, e.clientY, target);
+            this.setMousePosition(e.changedTouches[0].clientX, e.changedTouches[0].clientY, target);
         });
 
         target.addEventListener("touchend", () =>
@@ -1553,9 +1553,10 @@ class Input
 
         target.addEventListener("touchmove", e =>
         {
-            this.setMousePosition(e.clientX, e.clientY, target);
-            
-            //console.log(this.mousePosition);
+            //console.log(e);             
+            //this.setMousePosition(e.clientX, e.clientY, target);      
+            this.setMousePosition(e.changedTouches[0].clientX, e.changedTouches[0].clientY, target);            
+            console.log(this.mousePosition);  
             if (window.blockMenuHeaderScroll)
             {
                 e.preventDefault();

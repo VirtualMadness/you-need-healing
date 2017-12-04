@@ -621,7 +621,7 @@ var uiEnergyUpdate = (e, m) =>{
                 m.set("energy_counter", 15);
                 break;  
             case 1: 
-                if(image_index != 8){
+                if(image_index < 7){
                     e.getComponent(ComponentType.Sprite).setImageIndex(7);
                     m.set("energy_counter", 15);
                 }else{
