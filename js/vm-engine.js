@@ -1357,10 +1357,96 @@ class Animation extends Sprite
         if(aux != this.image_index)    
             this.setImageSource(this.src, this.image_index);
 
+    }    
+}
+
+class AnimationD extends SpriteD
+{
+    /**
+     * Creates an instance of AnimationD.
+     * @param {string[]} src Rutas de las imágenes fuente.
+     * @param {number} image_speed Velocidad de la animación: 
+     * 
+     * | image_speed | Efecto                             |
+     * |:-----------:|:-----------------------------------|
+     * |      1      |    Cambia de imagen cada frame.    |
+     * |     0.33    | Cambia de imagen cada ~= 3 frames. |
+     * |     0.2     |   Cambia de imagen cada 5 frames.  |
+     * |      0      |        No cambia de imagen.        |
+     * 
+     * @param {Victor} origin Centro de la imagen en coordenadas relativas.
+     * @param {number} depth Capa en la que se renderiza la animación.
+     * @memberof AnimationD
+     */
+    constructor(src, image_speed, depth, offset = new Victor(0, 0))
+    {
+        super(src[0], depth, offset);
+        this.entity = undefined;
+
+        this.src = src;
+        this.image_speed = image_speed;
+
+        this.anim_controller = 0;
+        this.image_index = 0;
+        this.frame_length = this.src.length;
     }
 
-    
+    /**
+     * Devuelve una copia de este componente (`Animation`) con los mismos valores.
+     * 
+     * @param {Entity} entity Entidad (`Entity`) asociada a la copia del componente (orientativa, se determina definitivamente al añadirlo).
+     * @returns {Animation} Copia de este componente `Animation`.
+     * @memberof Animation
+     */
+    clone()
+    {
+        return new AnimationD(this.src, this.image_speed, this.depth, this.offset.clone());
+    }    
+    setImageIndex(image_index)
+    {
+        if(image_index >= this.frame_length){
+            this.image_index = 0;
+        }else{
+             this.image_index = image_index;
+        }       
+        this.setImageSource(this.src, this.image_index);
+    }
+    /**
+     * 
+     * 
+     * @param {any} ctx 
+     * @memberof Animation
+     */
+    render(ctx)
+    {
+        super.render(ctx);
+
+        // Asigna el frame correspondiente a la imagen.
+        let aux = this.image_index;
+
+        this.anim_controller += this.image_speed;
+        
+        if(this.anim_controller >= 1)
+        {
+            this.image_index += Math.sign(this.anim_controller);
+            this.image_index %= this.frame_length;
+
+            this.anim_controller = this.anim_controller % 1;
+        }
+        else if(this.anim_controller <= -1)
+        {
+            this.image_index += Math.ceil(this.anim_controller);
+            this.image_index = this.image_index < 0 ? this.frame_length + Math.ceil(this.anim_controller) : this.image_index;
+
+            this.anim_controller = this.anim_controller % 1;
+        }
+
+        if(aux != this.image_index)    
+            this.setImageSource(this.src, this.image_index);
+
+    }
 }
+//#endregion
 //#endregion
 
 //#region input
@@ -1583,6 +1669,30 @@ class Input
     getMousePressed(mouseButton)
     {
         return this.mousePressed.get(mouseButton);
+    }
+}
+//#endregion
+
+//#region sound
+class SoundManager
+{
+    constructor(soundsObject, src = [])
+    {
+        this.sounds = soundsObject;
+        this.src = src;
+        this.setup();
+        this.loaded = false;
+    }
+
+    setup()
+    {
+        this.sounds.load(this.src);
+        this.sounds.whenLoaded = ()=>{this.loaded = true;};
+    }
+
+    getSound(src)
+    {
+        return this.sounds[src];
     }
 }
 //#endregion
@@ -1819,5 +1929,11 @@ class Scene
     setCamera(cam)
     {
         this.camera = cam;
+    }   
+    
+    // Sound
+    setSoundManager(sm)
+    {
+        this.sound_manager = sm;
     }
 }

@@ -16,8 +16,16 @@ var energyRec = null;
 
 //resource variables
 let sprND = new SpriteD(["assets/game/textures/cajaNoDestruible.png"], -1, Victor(-60, -60));      //sprite de los bloques normales
-let sprDMG = new Animation(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -1, Victor(-60, -60));       //sprite animado de los bloques con daño
+let sprDMG = new AnimationD(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -1, Victor(-60, -60));       //sprite animado de los bloques con daño
 let col = new RectCollider(120, 120, Victor(-60, -60, 0));  //collider estandar de los bloques normales y daño
+
+//#region Sonidos
+var snd_draw = "assets/game/snd/sfx/nin/draw-1.ogg";
+var sounds_to_load = 
+[
+    snd_draw, 
+];
+//#endregion
 
 function randomId(){
     id++;
@@ -140,7 +148,7 @@ function play(level){
     const C_HEIGHT = parseInt(ctx.canvas.getAttribute("height"));
     //creamos la escena
     scene = new Scene("main", 1240, 800, C_WIDTH, C_HEIGHT);    
-    scene.debug = true;
+    //scene.debug = true;
     scene.margin = 60;
     started = true;
     gameLoop = new GameLoop(scene);    
@@ -548,9 +556,9 @@ var ninUpdate = (e, m) =>
         else
         {   if(e.scene.debug)
                 console.log("Slash");
-            if(energy > 1){
-                wasteEnergy(1);
-            }
+            wasteEnergy(1);
+            let draw = e.scene.sound_manager.getSound(snd_draw);
+            draw.play();
         }
         m.set("press_count", 0);        
     }
@@ -695,6 +703,9 @@ function loadLevel(level){
 
     scene.addEntity(cam);
     scene.setCamera(cam);
+    scene.setInput(new Input(), ctx.canvas);
+    // Sound
+    scene.setSoundManager(new SoundManager(sounds, sounds_to_load));
     
     let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
     uiLife.addComponent(new Animation([spritesPath + "health1.png", spritesPath + "health2.png", spritesPath + "health3.png", spritesPath + "health4.png", spritesPath + "health5.png", spritesPath + "health6.png", spritesPath + "health7.png"], 0, -100, Victor(-20, -81)));
@@ -706,7 +717,7 @@ function loadLevel(level){
     uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
     scene.addEntity(uiEnergy);
 
-    scene.setInput(new Input(), ctx.canvas);
+    
     
     if(level == 1){
         $.each(lvl1, function(index, ent){
