@@ -17,12 +17,58 @@ var energyRec = null;
 //resource variables
 let sprND = new SpriteD(["assets/game/textures/cajaNoDestruible.png"], -1, Victor(-60, -60));      //sprite de los bloques normales
 let sprDMG = new AnimationD(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -1, Victor(-60, -60));       //sprite animado de los bloques con daño
+let sprArrowNull = new Sprite(["assets/game/sprites/null.png"], -10, Victor(0, -9));
+let sprArrow = new Sprite(["assets/game/sprites/arrow.png"], -10, Victor(0, -9));
+let sprChargeNull = new Animation(["assets/game/sprites/null.png"],0, 0.5, Victor(-50, -50));
+let sprCharge = new Animation([
+    "assets/game/sprites/charge_frames/charge1.png",
+    "assets/game/sprites/charge_frames/charge2.png",
+    "assets/game/sprites/charge_frames/charge3.png",
+    "assets/game/sprites/charge_frames/charge4.png",
+    "assets/game/sprites/charge_frames/charge5.png",
+    "assets/game/sprites/charge_frames/charge6.png",
+    "assets/game/sprites/charge_frames/charge7.png",
+    "assets/game/sprites/charge_frames/charge8.png",
+    "assets/game/sprites/charge_frames/charge9.png",
+    "assets/game/sprites/charge_frames/charge10.png",
+    "assets/game/sprites/charge_frames/charge11.png",
+    "assets/game/sprites/charge_frames/charge12.png",
+    "assets/game/sprites/charge_frames/charge13.png",
+    "assets/game/sprites/charge_frames/charge14.png",
+    "assets/game/sprites/charge_frames/charge15.png",
+    "assets/game/sprites/charge_frames/charge16.png",
+    "assets/game/sprites/charge_frames/charge17.png",
+    "assets/game/sprites/charge_frames/charge18.png",
+    "assets/game/sprites/charge_frames/charge19.png",
+    "assets/game/sprites/charge_frames/charge20.png",
+    "assets/game/sprites/charge_frames/charge21.png",
+    "assets/game/sprites/charge_frames/charge22.png",
+    "assets/game/sprites/charge_frames/charge23.png",
+    "assets/game/sprites/charge_frames/charge24.png",
+    "assets/game/sprites/charge_frames/charge25.png",
+    "assets/game/sprites/charge_frames/charge26.png",
+    "assets/game/sprites/charge_frames/charge27.png",
+    "assets/game/sprites/charge_frames/charge28.png",    
+    "assets/game/sprites/charge_frames/charge29.png",
+    "assets/game/sprites/charge_frames/charge30.png",
+    "assets/game/sprites/charge_frames/charge31.png",
+    "assets/game/sprites/charge_frames/charge32.png",
+    "assets/game/sprites/charge_frames/charge33.png",
+    "assets/game/sprites/charge_frames/charge34.png",
+    "assets/game/sprites/charge_frames/charge35.png",
+    "assets/game/sprites/charge_frames/charge36.png",
+    "assets/game/sprites/charge_frames/charge37.png",
+    "assets/game/sprites/charge_frames/charge38.png",
+    "assets/game/sprites/charge_frames/charge39.png"], 0.35, 0.5, Victor(-50, -50));
+
 let col = new RectCollider(120, 120, Victor(-60, -60, 0));  //collider estandar de los bloques normales y daño
 
 //#region Sonidos
 var snd_draw = "assets/game/snd/sfx/nin/draw-1.ogg";
+var game_music = "assets/game/snd/music/boss.ogg";
 var sounds_to_load = 
 [
+    game_music,
     snd_draw, 
 ];
 //#endregion
@@ -154,7 +200,7 @@ function play(level){
     gameLoop = new GameLoop(scene);    
     loadLevel(level);    
     scene.start();
-    gameLoop.loop();
+    gameLoop.loop();    
     setEnergyRec();
 }
 
@@ -336,7 +382,7 @@ $(function(){
     });
     
     //manejador boton salir del juego
-    $("#exit-button").click(function(){
+    $("#exit-button").click(function(){        
         toggleBlur($("#playground"), false);
         toggleDisplay($("#level-window"), false);
         toggleDisplay($("#menu-window"), true);
@@ -465,7 +511,8 @@ var ninUpdate = (e, m) =>
     let obj = c.placeMeeting(nextPosition, Tag.Solid, -1);
         if(obj != null)
         {       
-            //variables usadas para calcular la normal del impacto, se usa la funcion rayCollision que necesita 2 esquinas opuestas del collider total (sumando el ancho y alto de cada collider), la direccion y el punto de origen.
+            //variables usadas para calcular la normal del impacto, se usa la funcion rayCollision que necesita 2 
+            //esquinas opuestas del collider total (sumando el ancho y alto de cada collider), la direccion y el punto de origen.
             let otherC = obj[0].getComponent(ComponentType.Collider);
             let otherT = obj[0].getComponent(ComponentType.Transform);            
             let minCorner = Victor(otherT.position.x - ((c.width + otherC.width)/2),otherT.position.y - ((c.height + otherC.height)/2));
@@ -502,6 +549,8 @@ var ninUpdate = (e, m) =>
 
         if(pc == 8)
         {
+            scene.getEntity("arrow").addComponent(sprArrow.clone());
+            scene.getEntity("charge").addComponent(sprCharge.clone());
             m.set("ready", true);
             if(e.scene.debug)
                 console.log("Stage 1");
@@ -524,6 +573,16 @@ var ninUpdate = (e, m) =>
                 pc--;
             }            
         }
+        if(pc >= 8){
+            //movemos la flecha y la carga
+            let i_mp = m.get("i_mp");
+            var mouseDir = input.mouseCanvasPosition.clone().subtract(i_mp).normalize();
+            let arrowT = scene.getEntity("arrow").getComponent(ComponentType.Transform);
+            let chargeT = scene.getEntity("charge").getComponent(ComponentType.Transform);
+            arrowT.rotation = mouseDir.horizontalAngleDeg();
+            arrowT.position = t.position;
+            chargeT.position = t.position;
+        }
         m.set("press_count", pc+1);
     }
 
@@ -532,8 +591,9 @@ var ninUpdate = (e, m) =>
         if(m.get("ready") === true)
         {
             if(e.scene.debug)
-                console.log("Dash");
-            
+                console.log("Dash"); 
+            let arrow = scene.getEntity("arrow").addComponent(sprArrowNull.clone());
+            let charge = scene.getEntity("charge").addComponent(sprChargeNull.clone());
             let i_mp = m.get("i_mp");
             let pc = m.get("press_count");
             let new_spd = spd;            
@@ -683,29 +743,45 @@ function loadLevel(level){
     let h = scene.height;
     //background
     loadBg();    
-    let spritesPath = "assets/game/sprites/";
+    let spritesPath = "assets/game/sprites/";    
+    //Ninja
     var nin = new Entity("nin", scene, Tag.Player, new Transform(Victor(580, 360), 0, Victor(1, 1)));
-    nin.addComponent(new SpriteD([spritesPath + "nin.png"], -0.5, Victor(-20, -20)));
+    nin.addComponent(new SpriteD([spritesPath + "nin.png"], -0.5, Victor(-30, -20)));
     nin.addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
-    nin.addComponent(new RectCollider(40, 40, Victor(-20, -20, 0)));
+    nin.addComponent(new RectCollider(30, 30, Victor(-15, -15, 0)));
     nin.addComponent(new Behaviour([ninCreate], [ninUpdate], []));
-
-    var shadow = new Entity("nin-shadow", scene, Tag.Default, new Transform(Victor(50, 50), 0, Victor(1, 1)));
+    scene.addEntity(nin);
+    
+    var shadow = new Entity("nin-shadow", scene, Tag.Default, new Transform(Victor(560, 340), 0, Victor(1, 1)));
     shadow.addComponent(new Sprite([spritesPath + "nin-shadow.png"], 0, Victor(-20, -20)));
     shadow.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 1)));
+    scene.addEntity(shadow);
     
+    var arrow = new Entity("arrow", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
+    arrow.addComponent(sprArrowNull.clone());
+    arrow.addComponent(new Behaviour([], [], [],));
+    scene.addEntity(arrow);
+    
+    var charge = new Entity("charge", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
+    charge.addComponent(sprChargeNull.clone());
+    charge.addComponent(new Behaviour([], [], [],));
+    scene.addEntity(charge);
+    
+    //Camara
     var cam = new Entity("camera", scene, Tag.Camera, new Transform(Victor(580, 360), 0, Victor(0.1, 0.1)));
     //cam.addComponent(new Sprite([spritesPath + "robola.png"], -2, Victor(0, 0)));
-    cam.addComponent(new Behaviour([cameraCreate], [follow], []));    
-    
-    scene.addEntity(nin);
-    scene.addEntity(shadow);
-
+    cam.addComponent(new Behaviour([cameraCreate], [follow], []));
     scene.addEntity(cam);
     scene.setCamera(cam);
+    
     scene.setInput(new Input(), ctx.canvas);
-    // Sound
-    scene.setSoundManager(new SoundManager(sounds, sounds_to_load));
+    // Sound    
+    scene.setSoundManager(new SoundManager(sounds, sounds_to_load, ()=>{        
+        let bso = scene.sound_manager.getSound(game_music);
+        bso.play();  
+        bso.fadeIn(1);
+        bso.loop = true;
+    }));
     
     let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
     uiLife.addComponent(new Animation([spritesPath + "health1.png", spritesPath + "health2.png", spritesPath + "health3.png", spritesPath + "health4.png", spritesPath + "health5.png", spritesPath + "health6.png", spritesPath + "health7.png"], 0, -100, Victor(-20, -81)));
@@ -716,8 +792,6 @@ function loadLevel(level){
     uiEnergy.addComponent(new Animation([spritesPath + "power1.png", spritesPath + "power2.png", spritesPath + "power3.png", spritesPath + "power4.png", spritesPath + "power5.png", spritesPath + "power6.png", spritesPath + "power7.png", spritesPath + "power8.png", spritesPath + "power9.png", spritesPath + "power10.png", spritesPath + "power11.png"], 0, -100, Victor(-20, -81)));
     uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
     scene.addEntity(uiEnergy);
-
-    
     
     if(level == 1){
         $.each(lvl1, function(index, ent){
@@ -732,7 +806,7 @@ function loadLevel(level){
 
 function createND(scene_, pos, rot, scale){
     let e = new Entity("b#"+randomId(), scene, Tag.Solid);
-    e.addComponent(sprND);
+    e.addComponent(sprND.clone());
     e.addComponent(new Transform(pos, rot, scale));
     e.addComponent(col);
     scene_.addEntity(e); 
@@ -740,7 +814,7 @@ function createND(scene_, pos, rot, scale){
 
 function createDMG(scene_, pos, rot, scale){
     let e = new Entity("dmg#"+randomId(), scene, Tag.Solid);
-    e.addComponent(sprDMG);
+    e.addComponent(sprDMG.clone());
     e.addComponent(new Transform(pos, rot, scale));
     e.addComponent(col);
     scene_.addEntity(e); 

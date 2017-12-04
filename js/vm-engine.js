@@ -1553,10 +1553,8 @@ class Input
 
         target.addEventListener("touchmove", e =>
         {
-            //console.log(e);             
             //this.setMousePosition(e.clientX, e.clientY, target);      
-            this.setMousePosition(e.changedTouches[0].clientX, e.changedTouches[0].clientY, target);            
-            console.log(this.mousePosition);  
+            this.setMousePosition(e.changedTouches[0].clientX, e.changedTouches[0].clientY, target); 
             if (window.blockMenuHeaderScroll)
             {
                 e.preventDefault();
@@ -1677,18 +1675,24 @@ class Input
 //#region sound
 class SoundManager
 {
-    constructor(soundsObject, src = [])
+    constructor(soundsObject, src = [], whenLoaded = ()=>{})
     {
         this.sounds = soundsObject;
         this.src = src;
-        this.setup();
         this.loaded = false;
+        this.whenLoaded = whenLoaded;
+
+        this.setup();
     }
 
     setup()
     {
         this.sounds.load(this.src);
-        this.sounds.whenLoaded = ()=>{this.loaded = true;};
+        this.sounds.whenLoaded = ()=>
+        {
+            this.loaded = true;
+            this.whenLoaded();
+        };
     }
 
     getSound(src)
