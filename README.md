@@ -25,9 +25,10 @@ You will get xperience points witch each defeated enemy.
 
 
 
+
 ### Credits: 
-**Virtual Madness**
-- Daniel Abad Jaraute - _Programmer
+**Virtual Madness 2017**
+- Daniel Abad Jaraute - _Programmer_
 - Sergio De Frutos López - _Programmer and 2D Artist_
 - Gabriel Ángel Sevilla Camacho - _2D Artist_
 - Sergio Martín León - _Game Designer_
