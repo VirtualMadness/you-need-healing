@@ -22,3 +22,13 @@ You will get xperience points witch each defeated enemy.
 - Destructible Box: you will break it if you hit it.
 - Non Destructible Box: this will bounce you.
 - Damage Box: if you collide with this box it will hurt you.
+
+
+
+### Credits: 
+**Virtual Madness**
+- Daniel Abad Jaraute - _Programmer
+- Sergio De Frutos López - _Programmer and 2D Artist_
+- Gabriel Ángel Sevilla Camacho - _2D Artist_
+- Sergio Martín León - _Game Designer_
+- Javier Peña Moreno - _Game Designer_
