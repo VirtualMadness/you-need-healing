@@ -42,6 +42,17 @@ Victor.lerp = (val, target, factor) =>
     return c;
 };
 
+function shortAngleDist(a0,a1) {
+    var max = 360;
+    var da = (a1 - a0) % max;
+    return 2*da % max - da;
+}
+
+function lerpAngle(val, target, factor) 
+{
+    return val + shortAngleDist(val, target) * factor;
+}
+
 Victor.reflect = (dir, normal) =>{
     normal = normal.normalize();
     dir = dir.normalize();
@@ -372,6 +383,8 @@ class Tag extends Enum
     Tag.Solid = new Tag("Solid");
     Tag.Player = new Tag("Player");
     Tag.UI = new Tag("UI");
+    Tag.Enemy = new Tag("Enemy");
+    Tag.AllyDMG = new Tag("AllyDMG")
 }
 //#endregion
 
@@ -472,7 +485,7 @@ class Entity
             if(this.scene.frame == 0)
                 behaviour.create();
 
-            behaviour.update();
+            behaviour.update(dt);
         }
 
         let kinematic = this.getComponent(ComponentType.Kinematic);
@@ -564,7 +577,7 @@ class Behaviour extends Component
 
     clone()
     {
-        return new Behaviour(this.behaviours["create"], this.behaviours["update"], this.behaviours["destroy"], this.memory);
+        return new Behaviour(this.behaviours["create"], this.behaviours["update"], this.behaviours["destroy"], new Map(this.memory));
     }
 
     create()
@@ -575,11 +588,11 @@ class Behaviour extends Component
         });
     }
 
-    update()
+    update(dt)
     {
         this.behaviours["update"].forEach(behaviour => 
         {
-            behaviour(this.entity, this.memory);
+            behaviour(this.entity, this.memory, dt);
         });
     }
 
@@ -1015,7 +1028,7 @@ class Collider extends Component
      */
     checkCollision(pos, other, other_pos)
     {
-        if(this.constructor.name == "RectCollider" && other.constructor.name == "RectCollider")
+        if(this != undefined && other != undefined && this.constructor.name == "RectCollider" && other.constructor.name == "RectCollider")
         {
             if(pos.x + this.offset.x < other_pos.x + other.width + other.offset.x && 
                 pos.x + this.width + this.offset.x > other_pos.x + other.offset.x && 

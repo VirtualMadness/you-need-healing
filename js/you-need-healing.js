@@ -13,9 +13,27 @@ var gameLoop;
 var ctx;
 var id = 0;
 var energyRec = null;
+var points = 0;
+
+//#region Enums
+class State extends Enum
+{
+    constructor(name)
+    {
+        super(name);
+        this.classname = "State";
+    }
+}
+State.Idle = new State("Idle");
+State.Chase = new State("Chase");
+State.Attack = new State("Shoot");
+State.Surround = new State("Surround");
+State.Wait = new State("Wait");
 
 //resource variables
 let sprND = new SpriteD(["assets/game/textures/cajaNoDestruible.png"], -1, Victor(-60, -60));      //sprite de los bloques normales
+let sprCD = new AnimationD(["assets/game/textures/CajaDestruible1.png", "assets/game/textures/CajaDestruible2.png", "assets/game/textures/CajaDestruible3.png", "assets/game/textures/CajaDestruible4.png"],0 , -1, Victor(-50, -50));      //sprite del bloque destruible
+let sprCD2 = new Sprite(["assets/game/textures/CajaDestruible4.png"], 0.5, Victor(-50, -50));      //sprite de los bloques normales
 let sprDMG = new AnimationD(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -1, Victor(-60, -60));       //sprite animado de los bloques con daño
 let sprArrowNull = new Sprite(["assets/game/sprites/null.png"], -10, Victor(0, -9));
 let sprArrow = new Sprite(["assets/game/sprites/arrow.png"], -10, Victor(0, -9));
@@ -60,9 +78,20 @@ let sprCharge = new Animation([
     "assets/game/sprites/charge_frames/charge37.png",
     "assets/game/sprites/charge_frames/charge38.png",
     "assets/game/sprites/charge_frames/charge39.png",
-    "assets/game/sprites/charge_frames/charge40.png"], 0.35, 0.5, Victor(-50, -50));
+    "assets/game/sprites/charge_frames/charge40.png"], 0.5, 0, Victor(-50, -50));
+
+//enemy Sprites
+let offset = Victor(-20, -20);
+let sprBolaA_S = new Sprite(["assets/game/sprites/enemys/robola-A/robolaS.png"], 0, offset);
+let sprBolaA_Base = new SpriteD(["assets/game/sprites/enemys/robola-A/robola5.png"], -0.2, offset);
+let sprBolaA_ruedas = new SpriteD(["assets/game/sprites/enemys/robola-A/robola4.png"], -0.4, offset);
+let sprBolaA_armadura = new SpriteD(["assets/game/sprites/enemys/robola-A/robola3.png"], -0.6, offset);
+let sprBolaA_cuello = new SpriteD(["assets/game/sprites/enemys/robola-A/robola2.png"], -0.9, offset);
+let sprBolaA_cabeza = new SpriteD(["assets/game/sprites/enemys/robola-A/robola1.png"], -1, offset);
+let sprBullet = new SpriteD(["assets/game/sprites/enemys/robola-A/bullet.png"], -0.5, Victor(-8, -8));
 
 let col = new RectCollider(120, 120, Victor(-60, -60, 0));  //collider estandar de los bloques normales y daño
+let colCD = new RectCollider(80, 80, Victor(-40, -40, 0));  //collider del bloque destruible
 
 //#region Sonidos
 var snd_draw = "assets/game/snd/sfx/nin/draw-1.ogg";
@@ -72,6 +101,26 @@ var sounds_to_load =
     game_music,
     snd_draw, 
 ];
+//#endregion
+
+//#region AI
+function positionToGrid(pos, grid_size)
+{
+    return Victor(Math.floor((pos.x-20)/grid_size.x), Math.floor((pos.y-20)/grid_size.y));
+}
+
+function gridToPosition(grid_pos, grid_size)
+{
+    return Victor(Math.floor(grid_pos.x * grid_size.x + grid_size.x/2 + 20), Math.floor(grid_pos.y * grid_size.y + grid_size.y/2 + 20));
+}
+var easystar = new EasyStar.js();
+var activeLevel = lvl1Grid;
+easystar.setGrid(lvl1Grid);
+easystar.setAcceptableTiles([0]);
+easystar.enableDiagonals();
+easystar.disableCornerCutting();
+
+easystar.setIterationsPerCalculation(200);
 //#endregion
 
 function randomId(){
@@ -151,14 +200,6 @@ function toggleLang(view, state){
     }
 }
 
-/*function toggleLevels(){
-    var actualState = $("#level-window").css("display");
-    actualState = actualState == "none"? false: true;
-    changeButtonsState($(".menu-btn"), !actualState);
-    toggleDisplay($("#level-window"), !actualState);
-    inMainMenu = actualState;
-}*/
-
 function changeButtonsState(container, newState){    
     container.each(function(){
         $(this).prop("disabled", newState);
@@ -201,7 +242,8 @@ function play(level){
     gameLoop = new GameLoop(scene);    
     loadLevel(level);   
     scene.start();
-    gameLoop.loop();    
+    gameLoop.loop();
+    points = 0;
     setEnergyRec();
 }
 
@@ -423,6 +465,7 @@ class GameLoop{
     };
     
     loop(){
+        easystar.calculate();
         this.scene.getInput().earlyUpdate();
         this.nt = new Date().getTime();
         this.dt = (this.nt - this.t) * 0.001;
@@ -450,7 +493,7 @@ var cameraCreate = (e, m)=>
     m.set("smoothing", 0.1);
 };
 
-var follow = (e, m)=>
+/*var follow = (e, m)=>
 {
     let target = e.scene.getEntity(m.get("target"));
     if(target == null) 
@@ -464,6 +507,23 @@ var follow = (e, m)=>
 
     t.position = Victor(lerp(t.position.x, target_pos.x, smoothing), lerp(t.position.y, target_pos.y, smoothing));
     t.rotation = target_rot;
+};*/
+
+var follow = (e, m)=>
+{
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null) 
+        return;
+
+    let pos_smoothing = m.has("pos_smoothing") ? m.get("pos_smoothing") : 1;
+    let rot_smoothing = m.has("rot_smoothing") ? m.get("rot_smoothing") : 1;
+    let t = e.getComponent(ComponentType.Transform);
+
+    let target_pos = target.getComponent(ComponentType.Transform).position;
+    let target_rot = target.getComponent(ComponentType.Transform).rotation;
+
+    t.position = Victor(lerp(t.position.x, target_pos.x, pos_smoothing), lerp(t.position.y, target_pos.y, pos_smoothing));
+    t.rotation = lerpAngle(t.rotation, target_rot, rot_smoothing);
 };
 
 /*var followCam = (e, m)=>
@@ -483,8 +543,205 @@ var follow = (e, m)=>
     t.rotation = target_rot;
 };*/
 
-
 //#endregion
+
+var rayCast = (from, to, tag)=>
+{
+
+};
+
+//intenta acercarse al personaje para dispararle
+var robolaRangedAct = (e, m)=>
+{
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null) 
+        return;
+
+    let t = e.getComponent(ComponentType.Transform);
+    let k = e.getComponent(ComponentType.Kinematic);
+
+    let t_t = target.getComponent(ComponentType.Transform);
+
+    let shoot_dir;
+
+    let head = e.scene.getEntity(m.get("cabeza"));
+    head.getComponent(ComponentType.Transform).rotation = lerpAngle(head.getComponent(ComponentType.Transform).rotation, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), 0.3);
+    switch(m.get("state"))
+    {
+        case State.Surround:
+            chase(e, m);
+            if(t_t.position.clone().distance(t.position) < 160)
+            {
+                m.set("state", State.Shoot);
+            }
+            break;
+
+        case State.Shoot:            
+            shoot_dir = t_t.position.clone().subtract(t.position).horizontalAngleDeg();
+            
+            k.speed = Victor(-10, 0).rotateByDeg(shoot_dir);
+            createBala(Math.random()*10000, t.position.clone(), e.scene, shoot_dir, 200);
+
+            m.set("state", State.Wait);
+            m.set("wait_time", 20);
+            break;
+
+        case State.Wait:
+            if(m.get("wait_time") <= 0)
+                m.set("state", State.Surround);
+            else
+                m.set("wait_time", m.get("wait_time")-1);
+    }
+};
+
+var lagartoAct = (e, m, dt)=>
+{
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null)
+        return;
+
+    let t = e.getComponent(ComponentType.Transform);
+    let k = e.getComponent(ComponentType.Kinematic);
+    let c;
+    let t_t = target.getComponent(ComponentType.Transform);
+
+    let charge_dir;
+
+    switch(m.get("state"))
+    {
+        case State.Chase:
+            //console.log("chasing");
+            chase(e, m);
+            if(t_t.position.clone().distance(t.position) < 220)
+            {
+                console.log("CHARGE");
+                m.set("state", State.Charge);
+                charge_dir = t_t.position.clone().subtract(t.position).horizontalAngleDeg();
+                k.speed = Victor(330, 0).rotateByDeg(charge_dir);
+                t.rotation = charge_dir;
+            }
+            break;
+
+        case State.Charge:
+            //console.log("charging");
+            c = e.scene.getEntity(m.get("collider_holder")).getComponent(ComponentType.Collider);
+
+            if(c.placeMeeting(t.position.clone().add(k.speed.clone().multiply(Victor(dt, dt))), Tag.Solid, -1) !== null)
+            {
+                while(c.placeMeeting(t.position.clone().add(k.speed.clone().normalize().multiply(Victor(dt, dt))), Tag.Solid, -1) === null)
+                {
+                    t.position.add(k.speed.clone().normalize().multiply(Victor(dt, dt)));
+                }               
+                
+                k.speed = Victor(0, 0);
+                m.set("state", State.Wait);
+                console.log("WAIT");
+                m.set("wait_time", 80);
+            }
+            break;
+
+        case State.Wait:
+            //console.log("waiting");
+            if(m.get("wait_time") <= 0)
+            {
+                m.set("state", State.Chase);
+                console.log("CHASE");
+            }
+            else
+            {
+                m.set("wait_time", m.get("wait_time")-1);
+                t.rotation = lerpAngle(t.rotation, t.rotation + Math.sin(m.get("wait_time")*0.01) * 120, 0.4);
+            }
+            break;
+    }
+};
+
+var chase = (e, m)=>
+{
+    // Get variables
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null) 
+        return;
+
+    let t = e.getComponent(ComponentType.Transform);
+    let k = e.getComponent(ComponentType.Kinematic);
+
+    let pos_smoothing = m.has("pos_smoothing") ? m.get("pos_smoothing") : 1;
+    let rot_smoothing = m.has("rot_smoothing") ? m.get("rot_smoothing") : 1;
+    
+    
+    // Approach to next step
+    let next_pos = m.has("next_pos") ? m.get("next_pos") : t.position;
+    
+    let next_speed = next_pos.clone().subtract(t.position).normalize().multiply(Victor(m.get("speed"), m.get("speed")));
+    let next_rot = next_speed.clone().horizontalAngleDeg();
+    
+    t.rotation = lerpAngle(t.rotation, next_rot, rot_smoothing);
+
+    k.speed = Victor(lerp(k.speed.x, next_speed.x, pos_smoothing), lerp(k.speed.y, next_speed.y, pos_smoothing));
+    //k.speed = next_speed;
+    //if(Math.random()>0.99) console.log(k.speed);
+    
+    // Find next point
+    let target_position = target.getComponent(ComponentType.Transform).position.clone();
+    let spd_to_add = 0;
+    let aux;
+    let aux_grid_pos;
+    let past;
+
+    switch(m.get("state"))
+    {
+        case State.Chase:
+            target_position = Victor(clamp(target_position.x, 50, e.scene.width-50), clamp(target_position.y, 50, e.scene.height-50));
+            break;
+        
+        case State.Surround:
+            spd_to_add = target.getComponent(ComponentType.Kinematic).speed.clone().normalize().multiply(Victor(120, 120));
+            aux = target_position.clone().add(spd_to_add);
+            aux_grid_pos = positionToGrid(aux, Victor(40, 40));
+
+            aux_grid_pos.x = clamp(aux_grid_pos.x, 0, activeLevel[0].length-1);
+            aux_grid_pos.y  = clamp(aux_grid_pos.y, 0, activeLevel.length-1);
+
+            while(activeLevel[aux_grid_pos.y][aux_grid_pos.x] === 1)
+            {
+                past = aux_grid_pos.clone();
+
+                aux_grid_pos.x = clamp(aux_grid_pos.x + Math.sign(spd_to_add.x), 0, activeLevel[0].length - 1);
+                aux_grid_pos.y  = clamp(aux_grid_pos.y + Math.sign(spd_to_add.y), 0, activeLevel.length - 1);
+
+                if(aux_grid_pos.x == past.x && aux_grid_pos.y == past.y) 
+                {
+                    aux = target.getComponent(ComponentType.Transform).position.clone();
+                    break;
+                }
+            }
+
+            aux = gridToPosition(aux_grid_pos, Victor(40, 40));
+            target_position = Victor(clamp(aux.x, 50, e.scene.width-50), clamp(aux.y, 50, e.scene.height-50));
+            break;
+    }
+     
+    let grid_target_pos = positionToGrid(target_position, Victor(40, 40));
+    let grid_this_pos = positionToGrid(t.position, Victor(40, 40));
+    
+    easystar.findPath(grid_this_pos.x, grid_this_pos.y, grid_target_pos.x, grid_target_pos.y, (path)=>
+    {
+        if(path !== null && path[0] !== undefined)
+        {
+            m.set("next_pos", gridToPosition(path[1] !== undefined ? Victor(path[1].x, path[1].y) : Victor(path[0].x, path[0].y), Victor(40, 40)));
+        }
+        return;
+    });
+};
+
+var bullet = (e, m)=>
+{
+    let c = e.getComponent(ComponentType.Collider);
+    let t = e.getComponent(ComponentType.Transform);
+    if(c.placeMeeting(t.position, Tag.Solid, -1) != null)
+        e.destroy();
+};
 
 //#region Nin
 var ninCreate = (e, m) =>
@@ -496,12 +753,13 @@ var ninCreate = (e, m) =>
 };
 
 var ninUpdate = (e, m) =>
-{
+{    
     // Params
     let dir = m.get("direction");
     let spd = m.get("base_speed");
     let energy = m.get("energy");
     let hp = m.get("hp");
+    
     
     // Input
     let input = e.scene.getInput();
@@ -528,19 +786,23 @@ var ninUpdate = (e, m) =>
             let coll = rayCollision(actualSpeed.normalize(), nextPosition, minCorner, maxCorner); 
             //la funcion devuelve un array donde la pos 0 indica si se ha producido collision 
             //(en este caso sera siempre true ya que la collision se ha chequeado antes) y la pos 1 es un vector con la normal
-            if(coll[1] != null){
-                k.speed = reflect(k.speed.clone(), coll[1]);
-                t.rotation = k.speed.horizontalAngleDeg();
+            if(coll[1] != null){                
+                if(dashing() >= 1 && obj[0].id.search("cd") != -1){         //comprobamos si es un bloque destruible y si estamos en un dash lo bastante potente
+                    //destruimos el bloque
+                    obj[0].removeComponent(ComponentType.Collider);
+                    obj[0].getComponent(ComponentType.Sprite).image_speed = 0.2;
+                }else{
+                    k.speed = reflect(k.speed.clone(), coll[1]);
+                    t.rotation = k.speed.horizontalAngleDeg();
+                }                
             }
             if(e.scene.debug){
                 console.log("collision with " + obj[0].id);
                 console.log("normal "+coll[1]);
             }
             if(obj[0].id.search("dmg") != -1){
-                console.log("vida perdida");
                 //el objeto es una caja dañina                
-                m.set("hp", hp--);
-                scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
+                doDamage(hp-1);
             }
         }
     k.speed = Victor(lerp(k.speed.x, base_spd_w_dir.x, 0.1), lerp(k.speed.y, base_spd_w_dir.y, 0.1));
@@ -548,50 +810,14 @@ var ninUpdate = (e, m) =>
     if(input.getMouseDown(MouseButton.Left))
     {
         m.set("i_mp", input.mouseCanvasPosition);
-        m.set("ready", false);        
+        m.set("ready", false);      
+        //e.scene.getEntity("arrow").addComponent(sprArrow.clone());
+        e.scene.getEntity("charge").addComponent(sprCharge.clone());
     }
 
     if(input.getMousePressed(MouseButton.Left))
     {
-        let pc = m.get("press_count");
-
-        if(pc == 8)
-        {
-            e.scene.getEntity("arrow").addComponent(sprArrow.clone());
-            e.scene.getEntity("charge").addComponent(sprCharge.clone());
-            m.set("ready", true);
-            if(e.scene.debug)
-                console.log("Stage 1");
-        }
-        if(pc == 30)
-        {   
-            if(energy >= 2){
-                if(e.scene.debug)
-                console.log("Stage 2");
-            }else{
-                pc--;
-            }            
-        }
-        if(pc == 60)
-        {   
-            if(energy >= 3){
-                if(e.scene.debug)
-                console.log("Stage 3");
-            }else{
-                pc--;
-            }            
-        }
-        if(pc >= 8){
-            //movemos la flecha y la carga
-            let i_mp = m.get("i_mp");
-            var mouseDir = input.mouseCanvasPosition.clone().subtract(i_mp).normalize();
-            let arrowT = e.scene.getEntity("arrow").getComponent(ComponentType.Transform);
-            let chargeT = e.scene.getEntity("charge").getComponent(ComponentType.Transform);
-            arrowT.rotation = mouseDir.horizontalAngleDeg();
-            arrowT.position = t.position;
-            chargeT.position = t.position;
-        }
-        m.set("press_count", pc+1);
+        
     }
 
     if(input.getMouseUp(MouseButton.Left))
@@ -616,7 +842,6 @@ var ninUpdate = (e, m) =>
                 wastedEnergy++;
             }*/
             let power = e.scene.getEntity("charge").getComponent(ComponentType.Sprite).image_index;
-            console.log(power);
             if(power >= 36){
                 new_spd *= 2;
                 wastedEnergy++;
@@ -635,7 +860,9 @@ var ninUpdate = (e, m) =>
             e.scene.getEntity("charge").addComponent(sprChargeNull.clone());
         }
         else
-        {   if(e.scene.debug)
+        {   
+            e.scene.getEntity("charge").addComponent(sprChargeNull.clone());
+            if(e.scene.debug)
                 console.log("Slash");
             wasteEnergy(1);
             let draw = e.scene.sound_manager.getSound(snd_draw);
@@ -655,6 +882,26 @@ var ninUpdate = (e, m) =>
         memo.set("changed", true);
         memo.set("energy", energy_);
         setEnergyRec();        
+    }
+    
+    function dashing(){        
+        if(k.speed.magnitude() >= spd * 10)
+            return 3;
+        if(k.speed.magnitude() >= spd * 4)
+            return 2;
+        if(k.speed.magnitude() >= spd * 3)
+            return 1;
+        return 0;
+    }
+    
+    function doDamage(value){
+        let newHp = hp - value;
+        m.set("hp", newHp);
+        scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
+        if(newHp <= 0){
+            //TODO implementar metodo gameOver
+            gameOver();
+        }
     }
     // Lerp Speed
 };
@@ -710,7 +957,8 @@ var uiEnergyUpdate = (e, m) =>{
                     m.set("energy_counter", 15);
                 }                
                 break; 
-            }        
+            }
+        m.set("recovery_counter", 0);
         m.set("changed", false);
     }else{
         if(m.get("recover") === true){
@@ -763,8 +1011,25 @@ var chargeUpdate = (e, m) =>{
     if(s.image_speed == 0){
         return;
     }
+    // Input
+    let input = e.scene.getInput();
+    let t = e.getComponent(ComponentType.Transform);
     let image_index = s.image_index;
-    let energy = e.scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory.get("energy");    
+    let ninMem = e.scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory;
+    let energy = ninMem.get("energy");  
+    
+    let i_mp = ninMem.get("i_mp");
+    var mouseDir = input.mouseCanvasPosition.clone().subtract(i_mp).normalize();
+    let arrowT = e.scene.getEntity("arrow").getComponent(ComponentType.Transform);
+    let ninT = e.scene.getEntity("nin").getComponent(ComponentType.Transform);
+    arrowT.rotation = mouseDir.horizontalAngleDeg();
+    arrowT.position = t.position;
+    t.position = ninT.position;
+    
+    if(image_index == 8 && ninMem.get("ready") !== true){
+            e.scene.getEntity("arrow").addComponent(sprArrow.clone());
+            ninMem.set("ready", true);
+        }    
     
     if(image_index == 8 && energy == 1){
         //no puede cargarse el dash más del nivel 1
@@ -780,6 +1045,19 @@ var chargeUpdate = (e, m) =>{
     }  
 }
 
+var breakBoxUpdate = (e, m) =>{
+    let s = e.getComponent(ComponentType.Sprite);
+    if(s.image_speed == 0){
+        return;
+    }
+    let image_index = s.image_index;
+    if(image_index == 3){
+        s.image_speed = 0;
+        e.addComponent(sprCD2);
+        e.scene.addToRun(e);
+    }
+}
+
 function loadLevel(level){
     let mar = scene.margin;
     let w = scene.width;
@@ -789,14 +1067,14 @@ function loadLevel(level){
     let spritesPath = "assets/game/sprites/";    
     //Ninja
     var nin = new Entity("nin", scene, Tag.Player, new Transform(Victor(580, 360), 0, Victor(1, 1)));
-    nin.addComponent(new SpriteD([spritesPath + "nin.png"], -0.5, Victor(-30, -20)));
+    nin.addComponent(new SpriteD([spritesPath + "nin.png"], -1.4, Victor(-30, -20)));
     nin.addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
     nin.addComponent(new RectCollider(30, 30, Victor(-15, -15, 0)));
     nin.addComponent(new Behaviour([ninCreate], [ninUpdate], []));
     scene.addEntity(nin);
     
     var shadow = new Entity("nin-shadow", scene, Tag.Default, new Transform(Victor(560, 340), 0, Victor(1, 1)));
-    shadow.addComponent(new Sprite([spritesPath + "nin-shadow.png"], 0, Victor(-25, -15)));
+    shadow.addComponent(new Sprite([spritesPath + "nin-shadow.png"], 0, Victor(-30, -20)));
     shadow.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 1)));
     scene.addEntity(shadow);
     
@@ -835,23 +1113,33 @@ function loadLevel(level){
     uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
     scene.addEntity(uiEnergy);
     
+    createRobolaRanged(randomId(), Victor(50, 50, 0), 0, Victor(1,1), scene);
+    
     let lvl = lvl1;
+    activeLevel = lvl1Grid;
+    easystar.setGrid(lvl1Grid);
     if(level == 2){
         lvl = lvl2;
+        activeLevel = lvl2Grid;
+        easystar.setGrid(lvl2Grid);
     }else if(level == 3){
         lvl = lvl3;
+        activeLevel = lvl3Grid;
+        easystar.setGrid(lvl3Grid);
     }
     $.each(lvl, function(index, ent){
              if(ent.type == "nd"){                               
                 createND(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));
             }else if(ent.type == "dmg"){
                 createDMG(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
-            }   
+            }else if(ent.type == "d"){
+                createD(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
+            }    
     });  
 }
 
 function createND(scene_, pos, rot, scale){
-    let e = new Entity("b#"+randomId(), scene, Tag.Solid);
+    let e = new Entity("nd#"+randomId(), scene, Tag.Solid);
     e.addComponent(sprND.clone());
     e.addComponent(new Transform(pos, rot, scale));
     e.addComponent(col);
@@ -865,6 +1153,64 @@ function createDMG(scene_, pos, rot, scale){
     e.addComponent(col);
     scene_.addEntity(e); 
 }
+
+function createD(scene_, pos, rot, scale){
+    let e = new Entity("cd#"+randomId(), scene, Tag.Solid);
+    e.addComponent(sprCD.clone());
+    e.addComponent(new Transform(pos, rot, scale));
+    e.addComponent(colCD.clone());
+    e.addComponent(new Behaviour([],[breakBoxUpdate],[]));
+    scene_.addEntity(e); 
+}
+
+let createRobolaRanged = (id, pos, rot, scale, scene_) =>
+{
+    let offset = Victor(-20, -20);
+
+    let robolaSombra = new Entity("robola_shadow#"+id, scene_, Tag.Enemy, new Transform(pos, rot, scale));
+    robolaSombra.addComponent(sprBolaA_S.clone());
+    robolaSombra.addComponent(new Behaviour([], [robolaRangedAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Surround).set("cabeza", "robola_cabeza#"+id)));
+    robolaSombra.addComponent(new Kinematic(new Victor(32, 18), new Victor(0, 0), new Victor(0, 0)));
+    robolaSombra.addComponent(new RectCollider(40, 40, offset));
+
+    let robolaBase = new Entity("robola_base#"+id, scene_);
+    robolaBase.addComponent(sprBolaA_Base.clone());
+    robolaBase.addComponent(new Behaviour([], [follow], [], new Map().set("target", "robola_shadow#"+id)));
+    
+    let robolaRuedas = new Entity("robola_ruedas#"+id, scene_);
+    robolaRuedas.addComponent(sprBolaA_ruedas.clone());
+    robolaRuedas.addComponent(new Behaviour([], [follow], [], new Map().set("target", "robola_base#"+id)));
+    
+    let robolaArmadura = new Entity("robola_armadura#"+id, scene_);
+    robolaArmadura.addComponent(sprBolaA_armadura.clone());
+    robolaArmadura.addComponent(new Behaviour([], [follow], [], new Map().set("target", "robola_cuello#"+id).set("rot_smoothing", 0.5)));
+
+    let robolaCuello = new Entity("robola_cuello#"+id, scene_);
+    robolaCuello.addComponent(sprBolaA_cuello.clone());
+    robolaCuello.addComponent(new Behaviour([], [follow], [], new Map().set("target", "robola_cabeza#"+id).set("rot_smoothing", 0.3)));
+
+    let robolaCabeza = new Entity("robola_cabeza#"+id, scene_);
+    robolaCabeza.addComponent(sprBolaA_cabeza.clone());
+    robolaCabeza.addComponent(new Behaviour([], [follow], [], new Map().set("target", "robola_ruedas#"+id).set("rot_smoothing", 0)));
+
+    scene_.addEntity(robolaSombra);
+    scene_.addEntity(robolaBase);
+    scene_.addEntity(robolaRuedas);
+    scene_.addEntity(robolaCabeza);
+    scene_.addEntity(robolaCuello);
+    scene_.addEntity(robolaArmadura);
+};
+
+let createBala = (id, pos, scene, rot, speed) =>
+{
+    let c = new Entity("bullet#"+ id, scene, Tag.EnemyDamage);
+    c.addComponent(sprBullet.clone());
+    c.addComponent(new Transform(pos, rot, Victor(1, 1)));
+    c.addComponent(new Kinematic(Victor(speed, 0).rotateByDeg(rot), Victor(0, 0), Victor(0, 0)));
+    c.addComponent(new RectCollider(-8, -8));
+    c.addComponent(new Behaviour([], [bullet], []));
+    scene.addToRun(c);
+};
 
 function loadBg(){
     let mar = scene.margin;

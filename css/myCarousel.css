@@ -203,3 +203,23 @@ a.btn.btn-default{
 .pull-left2{
     margin-left: 10px;
 }
+
+@media (min-width: 250px){
+    
+    div.item.active{
+        height: 25%;
+    }
+    
+    #myCarousel.carousel.slide{
+        height: 25%;
+    }
+    
+    .carousel-caption h4{
+        font-size: 95%;
+    }
+    
+    ol.carousel-indicators{
+        transform: scale(0.5);
+    }    
+    
+}
