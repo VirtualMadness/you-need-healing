@@ -1,6 +1,6 @@
 # You Need Healing: by Virtual Madness
 
-### This videogame has been created as a first proyect for the subject "_Juegos para Web y Redes Sociales_" imparted in "_Universidad Rey Juan Carlos, Móstoles (Madrid)_".
+#### This videogame has been created as a first proyect for the subject "_Juegos para Web y Redes Sociales_" imparted in "_Universidad Rey Juan Carlos, Móstoles (Madrid)_".
 
 In You Need Healing you will take the control off K-Tana, a ciberspace´s ninja that will have to fight against an entire army of bad programmed robots for survive.
 There are 3 different levels availables to play (easy, medium and high difficulty).
@@ -13,10 +13,10 @@ You will have 3 lifes and a bar of 5 points of energy. Each time that you make a
 You will get xperience points witch each defeated enemy.
 
 **Enemies:**
-- RoBola A (RoBall A): shoot proyectiles.
-- RoBola B (RoBall B): shoot proyectiles with larger range than _RoBall A_ and move faster.
-- RoboAraña (RoboSpider): shoot a powerful laser.
-- RoboLagarto (RoboLizard): will tackle you if you are near him.
+- RoBall A: shoot proyectiles.
+- RoBall B: shoot proyectiles with larger range than _RoBall A_ and move faster.
+- RoboSpider: shoot a powerful laser.
+- RoboLizard: will tackle you if you are near him.
 
 **Objects:**
 - Destructible Box: you will break it if you hit it.
