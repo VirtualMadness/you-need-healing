@@ -3,23 +3,23 @@
   "name": "You Need Healing",
   "icons": [
     {
-      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/appIconx2.png?raw=true",
+      "src": "https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/appIconx2.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/appIconx3.png?raw=true",
+      "src": "https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/appIconx3.png",
       "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "https://github.com/VirtualMadness/you-need-healing/blob/master/assets/appIconx4.png?raw=true",
+      "src": "https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/appIconx4.png",
       "sizes": "192x192",
       "type": "image/png"
     }
   ],    
     //"start_url": "https://github.com/VirtualMadness/you-need-healing/blob/master/YouNeedHealing.html",
-    start_url: "https://virtualmadness.github.io/you-need-healing/YouNeedHealing.html",
+    "start_url": "https://virtualmadness.github.io/you-need-healing/YouNeedHealing.html",
     "display":      "standalone", /* Could be "fullscreen", "standalone", "minimal-ui", or "browser" */
     "orientation":  "landscape" /* Could be "landscape" or "portrait" */  
 }

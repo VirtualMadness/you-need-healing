@@ -771,7 +771,7 @@ var ninUpdate = (e, m) =>
     let spd = m.get("base_speed");
     let energy = m.get("energy");
     let hp = m.get("hp");
-    
+    let iframes = m.get("iframes");
     
     // Input
     let input = e.scene.getInput();
@@ -785,7 +785,7 @@ var ninUpdate = (e, m) =>
     let actualSpeed = k.speed.clone().multiply(Victor(gameLoop.dt, gameLoop.dt));
     let nextPosition = t.position.clone().add(actualSpeed);
     
-    //check for collisions
+    //check for collisions with solids
     let obj = c.placeMeeting(nextPosition, Tag.Solid, -1);
         if(obj != null)
         {       
@@ -817,13 +817,16 @@ var ninUpdate = (e, m) =>
                 doDamage(hp-1);
             }
         }
-    k.speed = Victor(lerp(k.speed.x, base_spd_w_dir.x, 0.1), lerp(k.speed.y, base_spd_w_dir.y, 0.1));
+    
+    k.speed = Victor(lerp(k.speed.x, base_spd_w_dir.x, 0.1), lerp(k.speed.y, base_spd_w_dir.y, 0.1));    
+    
+    //check for collisions with enemys
+    let obj = c.placeMeeting(nextPosition, Tag.Solid, -1);
     
     if(input.getMouseDown(MouseButton.Left))
     {
         m.set("i_mp", input.mouseCanvasPosition);
         m.set("ready", false);      
-        //e.scene.getEntity("arrow").addComponent(sprArrow.clone());
         e.scene.getEntity("charge").addComponent(sprCharge.clone());
     }
 
