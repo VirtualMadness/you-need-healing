@@ -11,7 +11,7 @@ There are 3 different levels availables to play (easy, medium and high difficult
 - **SHORT TAP** to defend.
 
 You will have **3 lifes** and a bar of **5 points of energy**. Each time that you make an attack movement you will spend X points of energy depending on how long you mantain pressed. This affects to the power of the attack too. Depending on the enemy, you will need more or less energy to defeat it. If you make a defensive movement you will spend 1 point of energy. At least you will always have 1 point of energy.
-You will get experience points witch each defeated enemy.
+You will get experience points with each defeated enemy.
 
 ### Enemies:
 - **RoBall A:** shoot proyectiles.
