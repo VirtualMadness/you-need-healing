@@ -308,13 +308,21 @@ function checkOrientation(){
     }
 }
 
+function loadRanking(){
+    /*$("#ranking").html('<caption style="font-size:34px"><b>LeaderBoard</b></caption> <tr> <th style="width:20%">Place</th> <th style="width:50%">Player</th> <th>Points</th> </tr>');*/
+	for(var i = 0; i < ranking.length; i++){					
+		$("#ranking").append("<tr><td>"+ranking[i].pos+"</td> <td>"+ranking[i].name+"</td> <td>"+ranking[i].points+"</td></tr>");
+	}
+}
+
 $(function(){
     //inicializacion
     init_i18n();    
     detectDevice();
     detectFullscreen();
     detectOrientation();
-    checkOrientation();    
+    checkOrientation(); 
+    loadRanking();
     if(isMobile){
         toggleDisplay($("#change-mode-button"), true);   
         if(isChromium){
@@ -371,8 +379,11 @@ $(function(){
         if(started && scene.sound_manager != null){
             scene.setVolume(musicVol, soundsVol, 100);
         }
-    })    
+    })
     
+    $("#highscore-button").click(function(){toggleWindow($("#highscore-window"))});    
+    $("#highscore-close-button").click(function(){toggleWindow($("#highscore-window"))});
+
     $("#credits-button").click(function(){toggleWindow($("#credits-window"))});    
     $("#credits-close-button").click(function(){toggleWindow($("#credits-window"))});
     
