@@ -469,11 +469,14 @@ class Entity
 
     destroy()
     {
-        this.scene.removeFromRun(this);
         let behaviour = this.getComponent(ComponentType.Behaviour);
-
-        if(behaviour != null) 
+        if(behaviour != null && behaviour["destroy"].length > 0)
             behaviour.destroy();
+        this.scene.removeFromRun(this);
+        this.removeComponent(ComponentType.Sprite);
+        this.removeComponent(ComponentType.Collision);
+        this.removeComponent(ComponentType.Behaviour);
+        this.removeComponent(ComponentType.Kinematic);
     }
 
     update(dt)
@@ -1824,7 +1827,8 @@ class Scene
     play()
     {
         this.running = SceneState.Play;
-        if(this.sound_manager != null && this.sound_manager.loaded){
+        
+        /*if(this.sound_manager != null && this.sound_manager.loaded){
             //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
             //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
             $.each(this.sound_manager.sounds, function(index, sound){   
@@ -1832,14 +1836,14 @@ class Scene
                     sound.play();
                 }
             });   
-        }
+        }*/
     }
     
     pause()
     {
         this.running = SceneState.Pause;
         
-        if(this.sound_manager != null){
+        /*if(this.sound_manager != null){
             //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
             //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
             $.each(this.sound_manager.sounds, function(index, sound){   
@@ -1847,7 +1851,7 @@ class Scene
                     sound.pause();
                 }
             });   
-        }
+        }*/
     }
     
     step()

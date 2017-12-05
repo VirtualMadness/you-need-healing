@@ -143,12 +143,12 @@ h1.about{
     margin-left: auto;
 }
 
-a.rigth.carousel-control{
-    background-color:  #402D3C;
+a.right.carousel-control{
+    background-color:  none;
 }
 
 a.left.carousel-control{
-    background-color:  #402D3C;
+    background-color:  none;
 }
 
 
@@ -185,7 +185,7 @@ a.btn.btn-default{
 
 .infoVirtual{
     font-size: 100%;
-    padding-top: 25%;
+    padding-top: 15%;
 }
 
 .infoVirtual a:hover{

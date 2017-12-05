@@ -175,7 +175,6 @@ tr{
 
 tr:nth-child(even) {
     background-color: var(--dark-blue);
-    height: 7.6%;
 }
 
 .floating-background{

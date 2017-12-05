@@ -95,23 +95,31 @@ let colCD = new RectCollider(80, 80, Victor(-40, -40, 0));  //collider del bloqu
 
 //#region Sonidos
 var snd_draw = "assets/game/snd/sfx/nin/draw-1.ogg";
+var snd_dmg = "assets/game/snd/sfx/nin/ktana_damage.wav";
+var snd_death = "assets/game/snd/sfx/nin/ktana_death.wav";
+var snd_robolaAttack = "assets/game/snd/sfx/enemies/RoboBolaA_attack.wav";
+var snd_robolaDeath = "assets/game/snd/sfx/enemies/RoBolaA_death.wav";
 var game_music = "assets/game/snd/music/boss.ogg";
 var sounds_to_load = 
 [
     game_music,
     snd_draw, 
+    snd_dmg,
+    snd_death,
+    snd_robolaAttack,
+    snd_robolaDeath
 ];
 //#endregion
 
 //#region AI
-function positionToGrid(pos, grid_size)
+function positionToGrid(pos, grid_size, margin)
 {
-    return Victor(Math.floor((pos.x-20)/grid_size.x), Math.floor((pos.y-20)/grid_size.y));
+    return Victor(Math.floor((pos.x-margin)/grid_size.x), Math.floor((pos.y-margin)/grid_size.y));
 }
 
-function gridToPosition(grid_pos, grid_size)
+function gridToPosition(grid_pos, grid_size, margin)
 {
-    return Victor(Math.floor(grid_pos.x * grid_size.x + grid_size.x/2 + 20), Math.floor(grid_pos.y * grid_size.y + grid_size.y/2 + 20));
+    return Victor(Math.floor(grid_pos.x * grid_size.x + grid_size.x/2 + margin), Math.floor(grid_pos.y * grid_size.y + grid_size.y/2 + margin));
 }
 var easystar = new EasyStar.js();
 var activeLevel = lvl1Grid;
@@ -122,6 +130,10 @@ easystar.disableCornerCutting();
 
 easystar.setIterationsPerCalculation(200);
 //#endregion
+
+function gameOver(){
+    scene.restart();
+}
 
 function randomId(){
     id++;
@@ -505,22 +517,6 @@ var cameraCreate = (e, m)=>
     m.set("smoothing", 0.1);
 };
 
-/*var follow = (e, m)=>
-{
-    let target = e.scene.getEntity(m.get("target"));
-    if(target == null) 
-        return;
-
-    let smoothing = m.get("smoothing");
-    let t = e.getComponent(ComponentType.Transform);
-
-    let target_pos = target.getComponent(ComponentType.Transform).position;
-    let target_rot = target.getComponent(ComponentType.Transform).rotation;
-
-    t.position = Victor(lerp(t.position.x, target_pos.x, smoothing), lerp(t.position.y, target_pos.y, smoothing));
-    t.rotation = target_rot;
-};*/
-
 var follow = (e, m)=>
 {
     let target = e.scene.getEntity(m.get("target"));
@@ -589,13 +585,14 @@ var robolaRangedAct = (e, m)=>
             break;
 
         case State.Shoot:            
-            shoot_dir = t_t.position.clone().subtract(t.position).horizontalAngleDeg();
-            
+            shoot_dir = t_t.position.clone().subtract(t.position).horizontalAngleDeg();            
             k.speed = Victor(-10, 0).rotateByDeg(shoot_dir);
+            let bolaShoot = e.scene.sound_manager.getSound(snd_robolaAttack);
+            bolaShoot.play();
             createBala(Math.random()*10000, t.position.clone(), e.scene, shoot_dir, 200);
 
             m.set("state", State.Wait);
-            m.set("wait_time", 20);
+            m.set("wait_time", 50);
             break;
 
         case State.Wait:
@@ -704,13 +701,13 @@ var chase = (e, m)=>
     switch(m.get("state"))
     {
         case State.Chase:
-            target_position = Victor(clamp(target_position.x, 50, e.scene.width-50), clamp(target_position.y, 50, e.scene.height-50));
+            target_position = Victor(clamp(target_position.x, e.scene.margin * 1.5, e.scene.width - e.scene.margin * 1.5), clamp(target_position.y, e.scene.margin * 1.5, e.scene.height - e.scene.margin * 1.5));
             break;
         
         case State.Surround:
             spd_to_add = target.getComponent(ComponentType.Kinematic).speed.clone().normalize().multiply(Victor(120, 120));
             aux = target_position.clone().add(spd_to_add);
-            aux_grid_pos = positionToGrid(aux, Victor(40, 40));
+            aux_grid_pos = positionToGrid(aux, Victor(40, 40), scene.margin);
 
             aux_grid_pos.x = clamp(aux_grid_pos.x, 0, activeLevel[0].length-1);
             aux_grid_pos.y  = clamp(aux_grid_pos.y, 0, activeLevel.length-1);
@@ -729,19 +726,19 @@ var chase = (e, m)=>
                 }
             }
 
-            aux = gridToPosition(aux_grid_pos, Victor(40, 40));
-            target_position = Victor(clamp(aux.x, 50, e.scene.width-50), clamp(aux.y, 50, e.scene.height-50));
+            aux = gridToPosition(aux_grid_pos, Victor(40, 40), scene.margin);
+            target_position = Victor(clamp(aux.x, scene.margin * 1.5, e.scene.width-scene.margin * 1.5), clamp(aux.y, scene.margin * 1.5, e.scene.height-scene.margin * 1.5));
             break;
     }
      
-    let grid_target_pos = positionToGrid(target_position, Victor(40, 40));
-    let grid_this_pos = positionToGrid(t.position, Victor(40, 40));
+    let grid_target_pos = positionToGrid(target_position, Victor(40, 40), e.scene.margin);
+    let grid_this_pos = positionToGrid(t.position, Victor(40, 40), e.scene.margin);
     
     easystar.findPath(grid_this_pos.x, grid_this_pos.y, grid_target_pos.x, grid_target_pos.y, (path)=>
     {
         if(path !== null && path[0] !== undefined)
         {
-            m.set("next_pos", gridToPosition(path[1] !== undefined ? Victor(path[1].x, path[1].y) : Victor(path[0].x, path[0].y), Victor(40, 40)));
+            m.set("next_pos", gridToPosition(path[1] !== undefined ? Victor(path[1].x, path[1].y) : Victor(path[0].x, path[0].y), Victor(40, 40), e.scene.margin));
         }
         return;
     });
@@ -762,6 +759,7 @@ var ninCreate = (e, m) =>
     m.set("hp", 3);
     m.set("base_speed", 100);
     m.set("press_count", 0);
+    m.set("iframes", 0);
 };
 
 var ninUpdate = (e, m) =>
@@ -821,7 +819,35 @@ var ninUpdate = (e, m) =>
     k.speed = Victor(lerp(k.speed.x, base_spd_w_dir.x, 0.1), lerp(k.speed.y, base_spd_w_dir.y, 0.1));    
     
     //check for collisions with enemys
-    let obj = c.placeMeeting(nextPosition, Tag.Solid, -1);
+    obj = c.placeMeeting(nextPosition, Tag.Enemy, -1);
+    if(obj != null){
+        //colision con enemigos
+        if(obj[0].id.search("bullet") != -1){
+            //destruimos la bala
+            obj[0].destroy();
+        }
+        let dashPower = dashing();
+        if(dashPower == 0){
+            //daño personaje
+            if(iframes == 0){
+                console.log("colision con "+obj[0].id)
+                doDamage(hp-1);
+                m.set("iframes", 90);                
+            }            
+        }else{
+            //daño a enemigo
+            if(obj[0].id.search("robola") != -1){
+                //enemigo robola
+                let arrayEnt = obj[0].getComponent(ComponentType.Behaviour).memory.get("ent_array");
+                for(let i = 0; i < arrayEnt.length; i++){
+                    e.scene.getEntity(arrayEnt[i]).destroy();
+                }
+                obj[0].destroy();
+                let bolaDeath = e.scene.sound_manager.getSound(snd_robolaAttack);
+                bolaDeath.play();
+            }
+        }        
+    }
     
     if(input.getMouseDown(MouseButton.Left))
     {
@@ -886,6 +912,10 @@ var ninUpdate = (e, m) =>
         m.set("press_count", 0);        
     }
     
+    if(iframes > 0){
+        m.set("iframes", iframes-1);
+    }
+    
     function wasteEnergy(value){
         let energy_ = m.get("energy");
         energy_ = clamp(energy-value, 1, 5);
@@ -910,7 +940,10 @@ var ninUpdate = (e, m) =>
     }
     
     function doDamage(value){
-        let newHp = hp - value;
+        console.log("dañado");
+        let dmg = e.scene.sound_manager.getSound(snd_dmg);
+        dmg.play();
+        let newHp = hp - value;        
         m.set("hp", newHp);
         scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
         if(newHp <= 0){
@@ -1128,7 +1161,11 @@ function loadLevel(level){
     uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
     scene.addEntity(uiEnergy);
     
-    createRobolaRanged(randomId(), Victor(50, 50, 0), 0, Victor(1,1), scene);
+    createRobolaRanged(randomId(), Victor(400, 400, 0), 0, Victor(1,1), scene);
+    createRobolaRanged(randomId(), Victor(100, 100, 0), 0, Victor(1,1), scene);
+    createRobolaRanged(randomId(), Victor(600, 600, 0), 0, Victor(1,1), scene);
+    createRobolaRanged(randomId(), Victor(600, 200, 0), 0, Victor(1,1), scene);
+    createRobolaRanged(randomId(), Victor(600, 600, 0), 0, Victor(1,1), scene);
     
     let lvl = lvl1;
     activeLevel = lvl1Grid;
@@ -1184,7 +1221,7 @@ let createRobolaRanged = (id, pos, rot, scale, scene_) =>
 
     let robolaSombra = new Entity("robola_shadow#"+id, scene_, Tag.Enemy, new Transform(pos, rot, scale));
     robolaSombra.addComponent(sprBolaA_S.clone());
-    robolaSombra.addComponent(new Behaviour([], [robolaRangedAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Surround).set("cabeza", "robola_cabeza#"+id)));
+    robolaSombra.addComponent(new Behaviour([], [robolaRangedAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Surround).set("cabeza", "robola_cabeza#"+id).set("ent_array", ["robola_base#"+id, "robola_ruedas#"+id, "robola_armadura#"+id, "robola_cuello#"+id, "robola_cabeza#"+id])));
     robolaSombra.addComponent(new Kinematic(new Victor(32, 18), new Victor(0, 0), new Victor(0, 0)));
     robolaSombra.addComponent(new RectCollider(40, 40, offset));
 
@@ -1218,7 +1255,7 @@ let createRobolaRanged = (id, pos, rot, scale, scene_) =>
 
 let createBala = (id, pos, scene, rot, speed) =>
 {
-    let c = new Entity("bullet#"+ id, scene, Tag.EnemyDamage);
+    let c = new Entity("bullet#"+ id, scene, Tag.Enemy);
     c.addComponent(sprBullet.clone());
     c.addComponent(new Transform(pos, rot, Victor(1, 1)));
     c.addComponent(new Kinematic(Victor(speed, 0).rotateByDeg(rot), Victor(0, 0), Victor(0, 0)));
