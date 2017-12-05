@@ -351,7 +351,6 @@ function checkOrientation(){
 }
 
 function loadRanking(){
-    console.log("hola " + ranking.length)
     /*$("#ranking").html('<caption style="font-size:34px"><b>LeaderBoard</b></caption> <tr> <th style="width:20%">Place</th> <th style="width:50%">Player</th> <th>Points</th> </tr>');*/
 	for(var i = 0; i < ranking.length; i++){					
 		$("#ranking").append("<tr><td>"+ranking[i].pos+"</td> <td>"+ranking[i].name+"</td> <td>"+ranking[i].points+"</td></tr>");
