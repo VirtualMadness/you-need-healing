@@ -1681,7 +1681,6 @@ class SoundManager
         this.src = src;
         this.loaded = false;
         this.whenLoaded = whenLoaded;
-
         this.setup();
     }
 
@@ -1731,8 +1730,7 @@ class Scene
 
         this.frame = 0;
 
-        this.ordered_draw = new Array();
-        
+        this.ordered_draw = new Array();        
         this.debug = false;
     }
 
@@ -1813,11 +1811,30 @@ class Scene
     play()
     {
         this.running = SceneState.Play;
+        if(this.sound_manager != null && this.sound_manager.loaded){
+            //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
+            //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
+            $.each(this.sound_manager.sounds, function(index, sound){   
+                if(sound != null && typeof sound.play == 'function'){
+                    sound.play();
+                }
+            });   
+        }
     }
     
     pause()
     {
         this.running = SceneState.Pause;
+        
+        if(this.sound_manager != null){
+            //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
+            //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
+            $.each(this.sound_manager.sounds, function(index, sound){   
+                if(sound != null && typeof sound.pause == 'function'){
+                    sound.pause();
+                }
+            });   
+        }
     }
     
     step()
@@ -1835,6 +1852,37 @@ class Scene
     {
         this.reset();
         this.step();
+        if(this.sound_manager != null){
+            //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
+            //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
+            $.each(this.sound_manager.sounds, function(index, sound){   
+                if(sound != null && typeof sound.pause == 'function'){
+                    sound.pause();
+                }
+            });   
+        }
+    }
+    
+    //volumeMusic y volumeSound deben ser valores de una funcion log ya que el sonido no se percibe de forma lineal
+    setVolume(volumeMusic, volumeSound, max){
+        //comprobamos que sea musica comparando su nombre con los assets correspondientes
+        let aux = max - volumeMusic > 0 ? Math.log(max - volumeMusic) : 0;        
+        volumeMusic = (1- (aux/ Math.log(max)));
+        aux = max - volumeSound > 0 ? Math.log(max - volumeSound) : 0;    
+        volumeSound = (1- (aux/ Math.log(max)));
+        
+        let music = new Map().set("boss.ogg", true);
+        if(this.sound_manager != null){
+            $.each(this.sound_manager.sounds, function(index, sound){  
+                if(sound != null && sound.name != null){
+                    if(music.get(sound.name.split("/").pop()) === true){
+                        sound.volume = volumeMusic;
+                    }else{
+                        sound.volume = volumeSound;
+                    }                    
+                }
+            });   
+        }
     }
 
     askforPause()

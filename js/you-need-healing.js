@@ -59,7 +59,8 @@ let sprCharge = new Animation([
     "assets/game/sprites/charge_frames/charge36.png",
     "assets/game/sprites/charge_frames/charge37.png",
     "assets/game/sprites/charge_frames/charge38.png",
-    "assets/game/sprites/charge_frames/charge39.png"], 0.35, 0.5, Victor(-50, -50));
+    "assets/game/sprites/charge_frames/charge39.png",
+    "assets/game/sprites/charge_frames/charge40.png"], 0.35, 0.5, Victor(-50, -50));
 
 let col = new RectCollider(120, 120, Victor(-60, -60, 0));  //collider estandar de los bloques normales y daño
 
@@ -93,8 +94,8 @@ function recoveryEnergy(){
 function setEnergyRec(){
     if(energyRec != null){       
         clearInterval(energyRec); 
-    }           
-    energyRec = setInterval(recoveryEnergy, 3000);
+    }
+    energyRec = setInterval(recoveryEnergy, 2000);
 }
 
 function toggleSettings(){
@@ -198,7 +199,7 @@ function play(level){
     scene.margin = 60;
     started = true;
     gameLoop = new GameLoop(scene);    
-    loadLevel(level);    
+    loadLevel(level);   
     scene.start();
     gameLoop.loop();    
     setEnergyRec();
@@ -361,9 +362,15 @@ $(function(){
     //listeners para actualizar las variables de audio cuando se cambien los sliders
     $("#music-volume-level").on("change", function(){
         musicVol = $(this).prop("value");
+        if(started && scene.sound_manager != null){
+            scene.setVolume(musicVol, soundsVol, 100);
+        }
     })    
     $("#sounds-volume-level").on("change", function(){
         soundsVol = $(this).prop("value");
+        if(started && scene.sound_manager != null){
+            scene.setVolume(musicVol, soundsVol, 100);
+        }
     })    
     
     $("#credits-button").click(function(){toggleWindow($("#credits-window"))});    
@@ -382,18 +389,19 @@ $(function(){
     });
     
     //manejador boton salir del juego
-    $("#exit-button").click(function(){        
+    $("#exit-button").click(function(){  
+        clearInterval(energyRec); 
+        inMainMenu = true;
+        gameLoop = null;
+        scene.stop();
+        scene = null;     
         toggleBlur($("#playground"), false);
         toggleDisplay($("#level-window"), false);
         toggleDisplay($("#menu-window"), true);
         toggleDisplay($("#game-window"), false);
         toggleDisplay($("#settings-window"), false);
         toggleDisplay($("#credits-window"), false);
-        changeButtonsState($(".menu-btn"), false);
-        inMainMenu = true;
-        gameLoop = null;
-        scene.stop();
-        scene = null;                
+        changeButtonsState($(".menu-btn"), false);                   
         started = false;
     });
     
@@ -549,8 +557,8 @@ var ninUpdate = (e, m) =>
 
         if(pc == 8)
         {
-            scene.getEntity("arrow").addComponent(sprArrow.clone());
-            scene.getEntity("charge").addComponent(sprCharge.clone());
+            e.scene.getEntity("arrow").addComponent(sprArrow.clone());
+            e.scene.getEntity("charge").addComponent(sprCharge.clone());
             m.set("ready", true);
             if(e.scene.debug)
                 console.log("Stage 1");
@@ -577,8 +585,8 @@ var ninUpdate = (e, m) =>
             //movemos la flecha y la carga
             let i_mp = m.get("i_mp");
             var mouseDir = input.mouseCanvasPosition.clone().subtract(i_mp).normalize();
-            let arrowT = scene.getEntity("arrow").getComponent(ComponentType.Transform);
-            let chargeT = scene.getEntity("charge").getComponent(ComponentType.Transform);
+            let arrowT = e.scene.getEntity("arrow").getComponent(ComponentType.Transform);
+            let chargeT = e.scene.getEntity("charge").getComponent(ComponentType.Transform);
             arrowT.rotation = mouseDir.horizontalAngleDeg();
             arrowT.position = t.position;
             chargeT.position = t.position;
@@ -591,13 +599,12 @@ var ninUpdate = (e, m) =>
         if(m.get("ready") === true)
         {
             if(e.scene.debug)
-                console.log("Dash"); 
-            let arrow = scene.getEntity("arrow").addComponent(sprArrowNull.clone());
-            let charge = scene.getEntity("charge").addComponent(sprChargeNull.clone());
+                console.log("Dash");             
             let i_mp = m.get("i_mp");
             let pc = m.get("press_count");
             let new_spd = spd;            
             let wastedEnergy = 1;
+            /*
             if(pc > 60)
             {
                 new_spd *= 2;
@@ -607,11 +614,25 @@ var ninUpdate = (e, m) =>
             {
                 new_spd *= 1.5;
                 wastedEnergy++;
-            } 
-            wasteEnergy(wastedEnergy);
+            }*/
+            let power = e.scene.getEntity("charge").getComponent(ComponentType.Sprite).image_index;
+            console.log(power);
+            if(power >= 36){
+                new_spd *= 2;
+                wastedEnergy++;
+            }
+            if(power >= 18){
+                new_spd *= 1.5;
+                wastedEnergy++;
+            }
+            if(wastedEnergy > 1){
+                wasteEnergy(wastedEnergy);
+            }            
             new_spd *= 5;
             k.speed = input.mouseCanvasPosition.clone().subtract(i_mp).normalize().multiply(Victor(new_spd, new_spd));
             t.rotation = k.speed.horizontalAngleDeg();
+            e.scene.getEntity("arrow").addComponent(sprArrowNull.clone());
+            e.scene.getEntity("charge").addComponent(sprChargeNull.clone());
         }
         else
         {   if(e.scene.debug)
@@ -630,7 +651,7 @@ var ninUpdate = (e, m) =>
             console.log("wasting energy "+value);
         }        
         m.set("energy", energy_);
-        let memo = scene.getEntity("HUD-energy").getComponent(ComponentType.Behaviour).memory;
+        let memo = e.scene.getEntity("HUD-energy").getComponent(ComponentType.Behaviour).memory;
         memo.set("changed", true);
         memo.set("energy", energy_);
         setEnergyRec();        
@@ -737,6 +758,28 @@ var uiEnergyUpdate = (e, m) =>{
 }
 //#endregion
 
+var chargeUpdate = (e, m) =>{
+    let s = e.getComponent(ComponentType.Sprite);
+    if(s.image_speed == 0){
+        return;
+    }
+    let image_index = s.image_index;
+    let energy = e.scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory.get("energy");    
+    
+    if(image_index == 8 && energy == 1){
+        //no puede cargarse el dash más del nivel 1
+        s.setImageIndex(5);
+    }
+    if(image_index == 21 && energy <= 2){
+        //no puede cargarse el dash más del nivel 2
+        s.setImageIndex(18);
+    }
+    if(image_index >= 39){
+        //carga al nivel 3
+        s.setImageIndex(36);
+    }  
+}
+
 function loadLevel(level){
     let mar = scene.margin;
     let w = scene.width;
@@ -753,18 +796,17 @@ function loadLevel(level){
     scene.addEntity(nin);
     
     var shadow = new Entity("nin-shadow", scene, Tag.Default, new Transform(Victor(560, 340), 0, Victor(1, 1)));
-    shadow.addComponent(new Sprite([spritesPath + "nin-shadow.png"], 0, Victor(-20, -20)));
+    shadow.addComponent(new Sprite([spritesPath + "nin-shadow.png"], 0, Victor(-25, -15)));
     shadow.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 1)));
     scene.addEntity(shadow);
     
     var arrow = new Entity("arrow", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
     arrow.addComponent(sprArrowNull.clone());
-    arrow.addComponent(new Behaviour([], [], [],));
     scene.addEntity(arrow);
     
     var charge = new Entity("charge", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
     charge.addComponent(sprChargeNull.clone());
-    charge.addComponent(new Behaviour([], [], [],));
+    charge.addComponent(new Behaviour([], [chargeUpdate], [],));
     scene.addEntity(charge);
     
     //Camara
@@ -776,11 +818,11 @@ function loadLevel(level){
     
     scene.setInput(new Input(), ctx.canvas);
     // Sound    
-    scene.setSoundManager(new SoundManager(sounds, sounds_to_load, ()=>{        
+    scene.setSoundManager(new SoundManager(sounds, sounds_to_load, ()=>{     
+        scene.setVolume(musicVol, soundsVol, 100);
         let bso = scene.sound_manager.getSound(game_music);
-        bso.play();  
-        bso.fadeIn(1);
         bso.loop = true;
+        bso.play();  
     }));
     
     let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
@@ -793,15 +835,19 @@ function loadLevel(level){
     uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
     scene.addEntity(uiEnergy);
     
-    if(level == 1){
-        $.each(lvl1, function(index, ent){
+    let lvl = lvl1;
+    if(level == 2){
+        lvl = lvl2;
+    }else if(level == 3){
+        lvl = lvl3;
+    }
+    $.each(lvl, function(index, ent){
              if(ent.type == "nd"){                               
                 createND(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));
             }else if(ent.type == "dmg"){
                 createDMG(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
             }   
-        });      
-    }
+    });  
 }
 
 function createND(scene_, pos, rot, scale){
@@ -835,45 +881,55 @@ function loadBg(){
     bg2.addComponent(new RectCollider(1120, 20, Victor(-560, -10, 0)));
     scene.addEntity(bg2);
     let bg2b = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    //let sprB = new SpriteD(["assets/game/textures/bordeAncho1.png"], -2.5, Victor(-560, -30), true);
-    //sprB.constraint_x = true;
     bg2b.addComponent(new SpriteD(["assets/game/textures/bordeAncho1.png"], -2.5, Victor(-560, -30), true));
     bg2b.addComponent(new Transform(Victor(w/2, mar-20), 0, Victor(1, 1)));
     scene.addEntity(bg2b);
     
     let bg3 = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg3.addComponent(new SpriteD(["assets/game/textures/bordeAncho.png"], 0, Victor(-560, -10)));
+    bg3.addComponent(new SpriteD(["assets/game/textures/bordeAncho0.png"], 0, Victor(-560, -10)));
     bg3.addComponent(new Transform(Victor(w/2, h-mar+10), 180));
     bg3.addComponent(new RectCollider(1120, 20, Victor(-560, -10, 0)));
     scene.addEntity(bg3);    
+    let bg3b = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg3b.addComponent(new SpriteD(["assets/game/textures/bordeAncho1.png"], -2.5, Victor(-560, -30), true));
+    bg3b.addComponent(new Transform(Victor(w/2, h-mar+20), 180, Victor(1, 1)));
+    scene.addEntity(bg3b);
     
     let bg4 = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg4.addComponent(new SpriteD(["assets/game/textures/bordeAlto.png"], 0, Victor(-10, -340) ));
+    bg4.addComponent(new SpriteD(["assets/game/textures/bordeAlto0.png"], 0, Victor(-10, -340) ));
     bg4.addComponent(new Transform(Victor(mar-10, h/2)));
     bg4.addComponent(new RectCollider(20, 680, Victor(-10, -340)));
     scene.addEntity(bg4);
+    let bg4b = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg4b.addComponent(new SpriteD(["assets/game/textures/bordeAlto1.png"], -2.5, Victor(-30, -340), false, true));
+    bg4b.addComponent(new Transform(Victor(mar-4, h/2), 0, Victor(1, 1)));
+    scene.addEntity(bg4b);
     
     let bg5 = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg5.addComponent(new SpriteD(["assets/game/textures/bordeAlto.png"], 0, Victor(-10, -340)));
+    bg5.addComponent(new SpriteD(["assets/game/textures/bordeAlto0.png"], 0, Victor(-10, -340)));
     bg5.addComponent(new Transform(Victor(w-mar+10, h/2), 180));
     bg5.addComponent(new RectCollider(20, 680, Victor(-10, -340)));
     scene.addEntity(bg5);
+    let bg5b = new Entity("bg#"+randomId(), scene, Tag.Solid);
+    bg5b.addComponent(new SpriteD(["assets/game/textures/bordeAlto1.png"], -2.5, Victor(-30, -340), false, true));
+    bg5b.addComponent(new Transform(Victor(w-mar+4, h/2), 180, Victor(1, 1)));
+    scene.addEntity(bg5b);
     
     //corners
     let bg6 = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg6.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg6.addComponent(new SpriteD(["assets/game/textures/corner0.png"], 0, Victor(-10, -10)));
     bg6.addComponent(new Transform(Victor(mar-10, mar-10), 90));
     scene.addEntity(bg6);
     let bg7 = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg7.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg7.addComponent(new SpriteD(["assets/game/textures/corner0.png"], 0, Victor(-10, -10)));
     bg7.addComponent(new Transform(Victor(mar-10, h-mar+10), 0));
     scene.addEntity(bg7);
     let bg8 = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg8.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg8.addComponent(new SpriteD(["assets/game/textures/corner0.png"], 0, Victor(-10, -10)));
     bg8.addComponent(new Transform(Victor(w-mar+10, mar-10), 180));
     scene.addEntity(bg8);
     let bg9 = new Entity("bg#"+randomId(), scene, Tag.Solid);
-    bg9.addComponent(new SpriteD(["assets/game/textures/corner.png"], 0, Victor(-10, -10)));
+    bg9.addComponent(new SpriteD(["assets/game/textures/corner0.png"], 0, Victor(-10, -10)));
     bg9.addComponent(new Transform(Victor(w-mar+10, h-mar+10), 270));
     scene.addEntity(bg9);
 }

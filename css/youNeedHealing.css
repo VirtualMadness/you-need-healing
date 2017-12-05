@@ -367,6 +367,7 @@ input[type=checkbox]{
     image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
     image-rendering: pixelated;                 /* Awesome future-browsers       */
     -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+    /*cursor:none;*/
 }
 
 .prompt-window{
