@@ -26,6 +26,9 @@ var literals = {
             "aviso_portrait": "Este juego esta diseñado para mostrarse en modo apaisado.", 
             "cambiar": "Cambiar",
             "aviso_webapp": "Puedes añadir este juego a tu pantalla de inicio gracias a la tecnología 'Progressive Web App'.",
+            "puesto": "#",
+            "jugador": "Jugador",
+            "puntos": "Puntos",
           }
         },
         en: {
@@ -53,6 +56,9 @@ var literals = {
             "aviso_portrait": "This game has been designed for being played in landscape mode.", 
             "cambiar": "Change",
             "aviso_webapp": "You can add this game to your home screen thanks to 'Progressive Web App' tecnology.",
+            "puesto": "#",
+            "jugador": "Player",
+            "puntos": "Points",
           }
         },
         fr: {
@@ -80,6 +86,9 @@ var literals = {
             "aviso_portrait": "Ce jeu a été conçu pour être joué en mode paysage.", 
             "cambiar": "Changer",
             "aviso_webapp": "Vous pouvez ajouter ce jeu à votre écran d'accueil grâce à la technologie 'Progressive Web App'.",
+            "puesto": "#",
+            "jugador": "Joueur",
+            "puntos": "Points",  
           }
         },
         de: {
@@ -107,6 +116,9 @@ var literals = {
             "aviso_portrait": "Dieses spiel wurde für die Wiedergabe im Querformat entwickelt.", 
             "cambiar": "Ändern",
             "aviso_webapp": "sie können dieses spiel dank der Technologie zu Ihrem startbildschirm hinzufügen 'Progressive Web App'.",
+            "puesto": "#",
+            "jugador": "spieler",
+            "puntos": "Punkte",
           }
         },
         it: {
@@ -134,10 +146,13 @@ var literals = {
             "aviso_portrait": "Questo gioco è stato progettato per essere giocato in modalità orizzontale.", 
             "cambiar": "Modificare",
             "aviso_webapp": "È possibile aggiungere questo gioco alla schermata iniziale grazie alla tecnologia 'Progressive Web App'.",
+            "puesto": "#",
+            "jugador": "Giocatore",
+            "puntos": "Punti",
           }
-        }
+    }
           
-      }
+}
 
 /*var jqJson = $.getJSON("https://raw.githubusercontent.com/VirtualMadness/you-need-healing/master/assets/localization.json")
 .done(function(result){

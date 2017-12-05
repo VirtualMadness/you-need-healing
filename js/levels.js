@@ -800,3 +800,57 @@ let lvl3Grid =
     [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
     [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
 ];
+
+let ranking = [
+    {
+        "pos": "1º",
+        "name": "Dany25cl",
+        "points": 100,
+    },
+    {
+        "pos": "2º",
+        "name": "Pikas",
+        "points": 90,
+    },
+    {
+        "pos": "3º",
+        "name": "Presi",
+        "points": 80,
+    },
+    {
+        "pos": "4º",
+        "name": "GabriFucker",
+        "points": 75,
+    },
+    {
+        "pos": "5º",
+        "name": "AgentePanda",
+        "points": 70,
+    },
+    {
+        "pos": "6º",
+        "name": "Angelito",
+        "points": 65,
+    },
+    {
+        "pos": "7º",
+        "name": "Magueliño",
+        "points": 60,
+    },
+    {
+        "pos": "8º",
+        "name": "AlvaroCapilla",
+        "points": 50,
+    },
+    {
+        "pos": "9º",
+        "name": "RaulElCachimbas",
+        "points": 45,
+    },
+    {
+        "pos": "10º",
+        "name": "Jorcrack",
+        "points": 40,
+    }
+];
+
