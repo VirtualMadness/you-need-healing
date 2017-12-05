@@ -14,9 +14,9 @@ You will have **3 lifes** and a bar of **5 points of energy**. Each time that yo
 You will get experience points with each defeated enemy.
 
 ### Enemies:
-- **RoBall A:** shoot proyectiles.
-- **RoBall B:** shoot proyectiles with larger range than _RoBall A_ and move faster.
-- **RoboSpider:** shoot a powerful laser.
+- **RoBall A:** shoots proyectiles.
+- **RoBall B:** shoots proyectiles with larger range than _RoBall A_ and moves faster.
+- **RoboSpider:** shoots a powerful laser.
 - **RoboLizard:** will tackle you if you are near him.
 
 ### Objects:
