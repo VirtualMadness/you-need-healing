@@ -90,6 +90,100 @@ let sprBolaA_cuello = new SpriteD(["assets/game/sprites/enemys/robola-A/robola2.
 let sprBolaA_cabeza = new SpriteD(["assets/game/sprites/enemys/robola-A/robola1.png"], -1, offset);
 let sprBullet = new SpriteD(["assets/game/sprites/enemys/robola-A/bullet.png"], -0.5, Victor(-8, -8));
 
+let path = "assets/game/sprites/";
+var nin_cabeza_src = 
+[
+    path+"nin/nin-cabeza/nin-cabeza1.png",
+    path+"nin/nin-cabeza/nin-cabeza2.png",
+    path+"nin/nin-cabeza/nin-cabeza3.png",
+    path+"nin/nin-cabeza/nin-cabeza4.png",
+    path+"nin/nin-cabeza/nin-cabeza5.png"
+];
+
+var nin_piernas_src = 
+[
+    path+"nin/nin-piernas/nin-piernas1.png",
+    path+"nin/nin-piernas/nin-piernas2.png",
+    path+"nin/nin-piernas/nin-piernas3.png",
+    path+"nin/nin-piernas/nin-piernas4.png",
+    path+"nin/nin-piernas/nin-piernas5.png",
+    path+"nin/nin-piernas/nin-piernas6.png",
+    path+"nin/nin-piernas/nin-piernas7.png",
+    path+"nin/nin-piernas/nin-piernas8.png",
+    path+"nin/nin-piernas/nin-piernas9.png",
+    path+"nin/nin-piernas/nin-piernas10.png"
+];
+
+var nin_katana_src = 
+[
+    path+"nin/nin-katana/nin-katana1.png",
+    path+"nin/nin-katana/nin-katana2.png",
+    path+"nin/nin-katana/nin-katana3.png",
+    path+"nin/nin-katana/nin-katana4.png",
+    path+"nin/nin-katana/nin-katana5.png",
+    path+"nin/nin-katana/nin-katana6.png",
+    path+"nin/nin-katana/nin-katana7.png",
+    path+"nin/nin-katana/nin-katana8.png",
+];
+
+var nin_hombros_src = 
+[
+    path+"nin/nin-hombros/nin-hombros1.png",
+    path+"nin/nin-hombros/nin-hombros2.png",
+    path+"nin/nin-hombros/nin-hombros3.png",
+    path+"nin/nin-hombros/nin-hombros4.png",
+    path+"nin/nin-hombros/nin-hombros5.png",
+];
+
+var nin_capa_src = 
+[
+    path+"nin/nin-capa/nin1.png",
+    path+"nin/nin-capa/nin2.png",
+    path+"nin/nin-capa/nin3.png",
+    path+"nin/nin-capa/nin4.png",
+    path+"nin/nin-capa/nin5.png",
+];
+var nin_shadow_src = path+"nin/ninS.png";
+var sprNin_cabeza = new AnimationD(nin_cabeza_src, 0.2, -1.6, Victor(-13, -4));
+var sprNin_hombros = new AnimationD(nin_hombros_src, 0.2, -1.4, Victor(-16, -11));
+var sprNin_katana = new AnimationD(nin_katana_src, 0, -1.2, Victor(-31, -40));
+var sprNin_piernas = new AnimationD(nin_piernas_src, 0.2, -0.4, Victor(-6, -8));
+var sprNin_shadow = new Sprite(nin_shadow_src, 0, Victor(-46, -20));
+var sprNin_capa1 = new SpriteD(nin_capa_src[0], -1.2, Victor(-36, -8));
+var sprNin_capa2 = new SpriteD(nin_capa_src[1], -1.1, Victor(-36, -8));
+var sprNin_capa3 = new SpriteD(nin_capa_src[2], -1.0, Victor(-36, -8));
+var sprNin_capa4 = new SpriteD(nin_capa_src[3], -0.9, Victor(-36, -6));
+var sprNin_capa5 = new SpriteD(nin_capa_src[4], -0.9, Victor(-36, -11));
+
+let lagarto_path = "assets/game/sprites/enemys/";
+var lagarto_src =
+[
+    lagarto_path+"lagarto/lagarto1.png",
+    lagarto_path+"lagarto/lagarto2.png",
+    lagarto_path+"lagarto/lagarto3.png",
+    lagarto_path+"lagarto/lagarto4.png",
+    lagarto_path+"lagarto/lagarto5.png",
+    lagarto_path+"lagarto/lagarto6.png",
+    lagarto_path+"lagarto/lagarto7.png",
+    lagarto_path+"lagarto/lagarto8.png",
+    lagarto_path+"lagarto/lagarto9.png",
+    lagarto_path+"lagarto/lagarto10.png",
+];
+
+let lagarto_offset = Victor(-40, -40);
+
+var sprLagarto_cabeza = new SpriteD(lagarto_src[0], -1.8, lagarto_offset);
+var sprLagarto_neckT = new SpriteD(lagarto_src[1], -1.6, lagarto_offset);
+var sprLagarto_neckM = new Sprite(lagarto_src[2], -1.4, lagarto_offset);
+var sprLagarto_neckB = new Sprite(lagarto_src[3], -1.3, lagarto_offset);
+var sprLagarto_bodyT = new Sprite(lagarto_src[4], -0.9, lagarto_offset);
+var sprLagarto_bodyB = new Sprite(lagarto_src[5], -0.6, lagarto_offset);
+var sprLagarto_orugaT = new Sprite(lagarto_src[6], -0.4, lagarto_offset);
+var sprLagarto_ruedas = new SpriteD(lagarto_src[7], -0.2, lagarto_offset);
+var sprLagarto_orugaB = new Sprite(lagarto_src[8], -0.1, lagarto_offset);
+var sprLagarto_shadow = new Sprite(lagarto_src[9], 0, lagarto_offset);
+
+//collider
 let col = new RectCollider(120, 120, Victor(-60, -60, 0));  //collider estandar de los bloques normales y daño
 let colCD = new RectCollider(80, 80, Victor(-40, -40, 0));  //collider del bloque destruible
 
@@ -132,7 +226,9 @@ easystar.setIterationsPerCalculation(200);
 //#endregion
 
 function gameOver(){
-    scene.restart();
+    console.log("Game Over");
+    scene.start();
+    scene.getEntity("nin").addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
 }
 
 function randomId(){
@@ -365,8 +461,7 @@ function checkOrientation(){
 function loadRanking(){
     /*$("#ranking").html('<caption style="font-size:34px"><b>LeaderBoard</b></caption> <tr> <th style="width:20%">Place</th> <th style="width:50%">Player</th> <th>Points</th> </tr>');*/
 	for(var i = 0; i < ranking.length; i++){					
-		$("#ranking").append("<tr><td>"+ranking[i].pos+"</td> <td>"+ranking[i].name+"</td> <td>"+ranking[i].points+"</td></tr>");
-        console.log(ranking[i])
+		$("#ranking").append("<tr><td>"+ranking[i].pos+"</td> <td>"+ranking[i].name+"</td> <td>"+ranking[i].points+"</td></tr>");        
 	}
 }
 
@@ -621,7 +716,7 @@ var lagartoAct = (e, m, dt)=>
         case State.Chase:
             //console.log("chasing");
             chase(e, m);
-            if(t_t.position.clone().distance(t.position) < 220)
+            if(t_t.position.clone().distance(t.position) < 150)
             {
                 console.log("CHARGE");
                 m.set("state", State.Charge);
@@ -810,9 +905,9 @@ var ninUpdate = (e, m) =>
                 console.log("collision with " + obj[0].id);
                 console.log("normal "+coll[1]);
             }
-            if(obj[0].id.search("dmg") != -1){
+            if(obj[0].id.search("dmg") != -1 && iframes == 0){
                 //el objeto es una caja dañina                
-                doDamage(hp-1);
+                doDamage(1);
             }
         }
     
@@ -831,7 +926,7 @@ var ninUpdate = (e, m) =>
             //daño personaje
             if(iframes == 0){
                 console.log("colision con "+obj[0].id)
-                doDamage(hp-1);
+                doDamage(1);
                 m.set("iframes", 90);                
             }            
         }else{
@@ -843,7 +938,7 @@ var ninUpdate = (e, m) =>
                     e.scene.getEntity(arrayEnt[i]).destroy();
                 }
                 obj[0].destroy();
-                let bolaDeath = e.scene.sound_manager.getSound(snd_robolaAttack);
+                let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
                 bolaDeath.play();
             }
         }        
@@ -855,13 +950,63 @@ var ninUpdate = (e, m) =>
         m.set("ready", false);      
         e.scene.getEntity("charge").addComponent(sprCharge.clone());
     }
+    
+    if(input.getMouseUp(MouseButton.Left))
+    {
+        if(!m.get("attacking"))
+        {
+            if(m.get("ready") === true)
+            {
+                if(e.scene.debug)
+                    console.log("Dash");   
+
+                let i_mp = m.get("i_mp");
+                let pc = m.get("press_count");
+                let new_spd = spd;
+                let wastedEnergy = 1;
+
+                let power = e.scene.getEntity("charge").getComponent(ComponentType.Sprite).image_index;
+                if(power >= 36){
+                    new_spd *= 2;
+                    wastedEnergy++;
+                }
+                if(power >= 18){
+                    new_spd *= 1.5;
+                    wastedEnergy++;
+                }
+                if(wastedEnergy > 1){
+                    wasteEnergy(wastedEnergy);
+                }            
+                new_spd *= 5;
+                k.speed = input.mouseCanvasPosition.clone().subtract(i_mp).normalize().multiply(Victor(new_spd, new_spd));
+                t.rotation = k.speed.horizontalAngleDeg();                
+            }
+            else
+            {
+                if(e.scene.debug)
+                    console.log("Slash");
+                wasteEnergy(1);
+                
+                let draw = e.scene.sound_manager.getSound(snd_draw);
+                draw.play();
+                let a = e.scene.getEntity("nin_katana").getComponent(ComponentType.Sprite);
+                a.setImageIndex(1);
+                a.image_speed = 0.5;
+                createDamage(randomId(), t.position, t.rotation, e.scene);
+                m.set("attacking", true);
+            }
+        }
+        e.scene.getEntity("arrow").addComponent(sprArrowNull.clone());
+        e.scene.getEntity("charge").addComponent(sprChargeNull.clone());
+        m.set("press_count", 0);
+    }
 
     if(input.getMousePressed(MouseButton.Left))
     {
         
     }
 
-    if(input.getMouseUp(MouseButton.Left))
+    /*if(input.getMouseUp(MouseButton.Left))
     {
         if(m.get("ready") === true)
         {
@@ -871,17 +1016,6 @@ var ninUpdate = (e, m) =>
             let pc = m.get("press_count");
             let new_spd = spd;            
             let wastedEnergy = 1;
-            /*
-            if(pc > 60)
-            {
-                new_spd *= 2;
-                wastedEnergy++;               
-            }            
-            if(pc > 30)
-            {
-                new_spd *= 1.5;
-                wastedEnergy++;
-            }*/
             let power = e.scene.getEntity("charge").getComponent(ComponentType.Sprite).image_index;
             if(power >= 36){
                 new_spd *= 2;
@@ -910,7 +1044,7 @@ var ninUpdate = (e, m) =>
             draw.play();
         }
         m.set("press_count", 0);        
-    }
+    }*/
     
     if(iframes > 0){
         m.set("iframes", iframes-1);
@@ -940,14 +1074,15 @@ var ninUpdate = (e, m) =>
     }
     
     function doDamage(value){
-        console.log("dañado");
         let dmg = e.scene.sound_manager.getSound(snd_dmg);
         dmg.play();
         let newHp = hp - value;        
         m.set("hp", newHp);
         scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
+        console.log("dañado!!!!, vida actual: "+newHp)
         if(newHp <= 0){
             //TODO implementar metodo gameOver
+            console.log("gameOver");
             gameOver();
         }
     }
@@ -1067,7 +1202,7 @@ var chargeUpdate = (e, m) =>{
     let energy = ninMem.get("energy");  
     
     let i_mp = ninMem.get("i_mp");
-    var mouseDir = input.mouseCanvasPosition.clone().subtract(i_mp).normalize();
+    var mouseDir = (input.mouseCanvasPosition.clone().subtract(i_mp)).normalize();
     let arrowT = e.scene.getEntity("arrow").getComponent(ComponentType.Transform);
     let ninT = e.scene.getEntity("nin").getComponent(ComponentType.Transform);
     arrowT.rotation = mouseDir.horizontalAngleDeg();
@@ -1114,7 +1249,8 @@ function loadLevel(level){
     loadBg();    
     let spritesPath = "assets/game/sprites/";    
     //Ninja
-    var nin = new Entity("nin", scene, Tag.Player, new Transform(Victor(580, 360), 0, Victor(1, 1)));
+    
+    /*var nin = new Entity("nin", scene, Tag.Player, new Transform(Victor(580, 360), 0, Victor(1, 1)));
     nin.addComponent(new SpriteD([spritesPath + "nin.png"], -1.4, Victor(-30, -20)));
     nin.addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
     nin.addComponent(new RectCollider(30, 30, Victor(-15, -15, 0)));
@@ -1124,7 +1260,9 @@ function loadLevel(level){
     var shadow = new Entity("nin-shadow", scene, Tag.Default, new Transform(Victor(560, 340), 0, Victor(1, 1)));
     shadow.addComponent(new Sprite([spritesPath + "nin-shadow.png"], 0, Victor(-30, -20)));
     shadow.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 1)));
-    scene.addEntity(shadow);
+    scene.addEntity(shadow);*/
+    
+    createNin(Victor(580, 360), scene);
     
     var arrow = new Entity("arrow", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
     arrow.addComponent(sprArrowNull.clone());
@@ -1167,6 +1305,8 @@ function loadLevel(level){
     createRobolaRanged(randomId(), Victor(600, 200, 0), 0, Victor(1,1), scene);
     createRobolaRanged(randomId(), Victor(600, 600, 0), 0, Victor(1,1), scene);
     
+    createLagarto(randomId(), Victor(300, 300, 0), 0, Victor(1,1), scene);
+    
     let lvl = lvl1;
     activeLevel = lvl1Grid;
     easystar.setGrid(lvl1Grid);
@@ -1189,6 +1329,127 @@ function loadLevel(level){
             }    
     });  
 }
+
+let createNin = (pos, scene) =>
+{
+    let nin = new Entity("nin", scene, Tag.Player, new Transform(pos, 0));
+    nin.addComponent(sprNin_hombros.clone());
+    nin.addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
+    nin.addComponent(new RectCollider(24, 24, Victor(-12, -12, 0)));
+    nin.addComponent(new Behaviour([], [ninUpdate, katanaControl], [], new Map().set("energy", 5).set("hp", 3).set("base_speed", 80).set("iframes", 0).set("attacking", false).set("ready", false)));
+
+    let shadow = new Entity("nin_s", scene, Tag.Player, new Transform(pos, 0));
+    shadow.addComponent(sprNin_shadow.clone());
+    shadow.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "nin")));
+
+    let nin_cabeza = new Entity("nin_cabeza", scene, Tag.Player, new Transform(pos, 0));
+    nin_cabeza.addComponent(sprNin_cabeza.clone());
+    nin_cabeza.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "nin")));
+
+    let nin_piernas = new Entity("nin_piernas", scene, Tag.Player, new Transform(pos, 0));
+    nin_piernas.addComponent(sprNin_piernas.clone());
+    nin_piernas.addComponent(new Behaviour([], [follow], [], new Map()      .set("target", "nin")));
+    let nin_katana = new Entity("nin_katana", scene, Tag.Player, new Transform(pos, 0));
+    nin_katana.addComponent(sprNin_katana.clone());
+    nin_katana.addComponent(new Behaviour([], [follow, (e)=>
+    {
+        let a = e.getComponent(ComponentType.Sprite);
+        if(a.image_index == 0)
+        {
+            a.image_speed = 0;
+        }
+    }], [], new Map()
+        .set("target", "nin")));
+
+    let nin_capa_1 = new Entity("nin_capa_1", scene, Tag.Player, new Transform(pos));
+    nin_capa_1.addComponent(sprNin_capa1.clone());
+    nin_capa_1.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "nin").set("pos_smoothing", 0.9).set("rot_smoothing", 0.8)));
+
+    let nin_capa_2 = new Entity("nin_capa_2", scene, Tag.Player, new Transform(pos));
+    nin_capa_2.addComponent(sprNin_capa2.clone());
+    nin_capa_2.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "nin_capa_1").set("pos_smoothing", 0.5).set("rot_smoothing", 0.4)));
+
+    let nin_capa_3 = new Entity("nin_capa_3", scene, Tag.Player, new Transform(pos, 0));
+    nin_capa_3.addComponent(sprNin_capa3.clone());
+    nin_capa_3.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "nin_capa_2").set("pos_smoothing", 0.5).set("rot_smoothing", 0.3)));
+
+    let nin_capa_4 = new Entity("nin_capa_4", scene, Tag.Player, new Transform(pos, 0));
+    nin_capa_4.addComponent(sprNin_capa4.clone());
+    nin_capa_4.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "nin_capa_3").set("pos_smoothing", 0.5).set("rot_smoothing", 0.2)));
+
+    let nin_capa_5 = new Entity("nin_capa_5", scene, Tag.Player, new Transform(pos, 0));
+    nin_capa_5.addComponent(sprNin_capa5.clone());
+    nin_capa_5.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "nin_capa_3").set("pos_smoothing", 0.5).set("rot_smoothing", 0.3)));
+    
+    scene.addEntity(nin);
+    scene.addEntity(shadow);
+    scene.addEntity(nin_cabeza);
+    scene.addEntity(nin_katana);
+    scene.addEntity(nin_piernas);
+    scene.addEntity(nin_capa_1);
+    scene.addEntity(nin_capa_2);
+    scene.addEntity(nin_capa_3);
+    scene.addEntity(nin_capa_4);
+    scene.addEntity(nin_capa_5);
+};
+
+let katanaControl = (e, m) =>
+{
+    let a = e.scene.getEntity("nin_katana").getComponent(ComponentType.Sprite);
+
+    if(a.image_index == 0)
+    {
+        m.set("attacking", false);
+    }
+};
+
+let createDamage = (id, pos, rot, scene)=>
+{
+    let d = new Entity("damage#"+id, scene, Tag.AllyDMG, new Transform(pos, rot));
+    d.addComponent(new RectCollider(70, 70, Victor(-35, -35)));
+    d.addComponent(new Behaviour([], [(e, m)=>
+    {
+        let c = e.getComponent(ComponentType.Collider);
+        let p = e.getComponent(ComponentType.Transform).position;
+        if(m.get("wait_time") <= 0)
+        {
+            e.destroy();
+        }
+        else
+            m.set("wait_time", m.get("wait_time") - 1);
+        
+        //check collision with enemies
+        obj = c.placeMeeting(p, Tag.Enemy, -1);
+        if(obj != null){
+        //daño a bola
+        if(obj[0].id.search("bullet") != -1){
+            //destruimos la bala
+            obj[0].destroy();
+        }
+        //daño a robola
+        if(obj[0].id.search("robola") != -1){
+            //enemigo robola
+            let arrayEnt = obj[0].getComponent(ComponentType.Behaviour).memory.get("ent_array");
+            for(let i = 0; i < arrayEnt.length; i++){
+                e.scene.getEntity(arrayEnt[i]).destroy();
+            }
+            obj[0].destroy();
+            let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
+            bolaDeath.play();
+        }
+                
+    }
+    }
+    ], [], new Map().set("wait_time", 5)));
+    scene.addToRun(d);
+};
 
 function createND(scene_, pos, rot, scale){
     let e = new Entity("nd#"+randomId(), scene, Tag.Solid);
@@ -1259,9 +1520,103 @@ let createBala = (id, pos, scene, rot, speed) =>
     c.addComponent(sprBullet.clone());
     c.addComponent(new Transform(pos, rot, Victor(1, 1)));
     c.addComponent(new Kinematic(Victor(speed, 0).rotateByDeg(rot), Victor(0, 0), Victor(0, 0)));
-    c.addComponent(new RectCollider(-8, -8));
+    c.addComponent(new RectCollider(16, 16, Victor(-8, -8)));
     c.addComponent(new Behaviour([], [bullet], []));
     scene.addToRun(c);
+};
+
+let createLagarto = (id, pos, rot, scale, scene) =>
+{
+    // Capas
+    let lagartoSombra = new Entity("lagarto_shadow#"+id, scene, Tag.Default, new Transform(pos, rot, scale));
+    lagartoSombra.addComponent(sprLagarto_shadow.clone());
+    lagartoSombra.addComponent(new Behaviour([], [follow], [], new Map().set("target", "lagarto_cabeza#"+id).set("pos_smoothing", 0.3).set("rot_smoothing", 0.2)));
+    lagartoSombra.addComponent(new RectCollider(30, 30));
+
+    let lagartoOrugaB = new Entity("lagarto_oruga_b#"+id, scene, new Transform(pos, rot, scale));
+    lagartoOrugaB.addComponent(sprLagarto_neckT.clone());
+    lagartoOrugaB.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_shadow#"+id)
+    ));
+
+    let lagartoRuedas = new Entity("lagarto_ruedas#"+id, scene, new Transform(pos, rot, scale));
+    lagartoRuedas.addComponent(sprLagarto_ruedas.clone());
+    lagartoRuedas.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_shadow#"+id)
+    ));
+
+    let lagartoOrugaT = new Entity("lagarto_oruga_t#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
+    lagartoOrugaT.addComponent(sprLagarto_orugaT.clone());
+    lagartoOrugaT.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_shadow#"+id)
+    ));
+
+    let lagartoBodyB = new Entity("lagarto_body_b#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
+    lagartoBodyB.addComponent(sprLagarto_bodyB.clone());
+    lagartoBodyB.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_shadow#"+id)
+        .set("rot_smoothing", 0.2)
+    ));
+    let lagartoBodyT = new Entity("lagarto_body_m#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
+    lagartoBodyT.addComponent(sprLagarto_bodyT.clone());
+    lagartoBodyT.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_body_b#"+id)
+    ));
+
+
+    let lagartoNeckB = new Entity("lagarto_neck_b#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
+    lagartoNeckB.addComponent(sprLagarto_neckB.clone());
+    lagartoNeckB.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_cabeza#"+id)
+        .set("pos_smoothing", 0.6)
+        .set("rot_smoothing", 0.2)
+    ));
+
+
+    let lagartoNeckM = new Entity("lagarto_neck_m#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
+    lagartoNeckM.addComponent(sprLagarto_neckM.clone());
+    lagartoNeckM.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_cabeza#"+id)
+        .set("pos_smoothing", 0.4)
+        .set("rot_smoothing", 0.2)
+    ));
+
+
+    let lagartoNeckT = new Entity("lagarto_neck_t#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
+    lagartoNeckT.addComponent(sprLagarto_neckT.clone());
+    lagartoNeckT.addComponent(new Behaviour([], [follow], [], new Map()
+        .set("target", "lagarto_cabeza#"+id)
+        .set("pos_smoothing", 0.7)
+        .set("rot_smoothing", 0.2)
+    ));
+// Control
+    let lagartoCabeza = new Entity("lagarto_cabeza#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
+    lagartoCabeza.addComponent(sprLagarto_cabeza.clone());
+    lagartoCabeza.addComponent(new Kinematic(new Victor(0, 0), new Victor(0, 0), new Victor(0, 0)));
+    lagartoCabeza.addComponent(new Behaviour([], [lagartoAct], [], new Map()
+        .set("pos_smoothing", 0.3)
+        .set("rot_smoothing", 0.2)
+        .set("target", "nin")
+        .set("speed", 50)
+        .set("state", State.Chase)
+        .set("collider_holder", "lagarto_shadow#"+id)
+        .set("wait_time", 0)
+    ));
+
+    scene.addEntity(lagartoSombra);
+
+    scene.addEntity(lagartoOrugaB);
+    scene.addEntity(lagartoRuedas);
+    scene.addEntity(lagartoOrugaT);
+
+    scene.addEntity(lagartoBodyB);
+    scene.addEntity(lagartoBodyT);
+
+    scene.addEntity(lagartoNeckB);
+    scene.addEntity(lagartoNeckM);
+    scene.addEntity(lagartoNeckT);
+
+    scene.addEntity(lagartoCabeza);
 };
 
 function loadBg(){
