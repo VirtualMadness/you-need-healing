@@ -163,20 +163,23 @@ td, th {
     text-align: center;
 }
 
+tr:nth-child(odd) {
+    /*background-color: var(--dark-blue);*/
+    background-color: #10425e70;
+    
+}
+
 th{
     font-size: 2vw;
     height: 10%;
+    background-color: var(--text-light-blue);
+    color: #10425eff;
 }
 
 tr{
     font-size: 1.5vw;
     height: 9%;
 }
-
-tr:nth-child(even) {
-    background-color: var(--dark-blue);
-}
-
 .floating-background{
     position: absolute;
     width: 95%;

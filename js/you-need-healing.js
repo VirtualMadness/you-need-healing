@@ -1,5 +1,4 @@
 var started = false;
-//var fullscreenElement;
 var musicVol = 80;
 var soundsVol = 80;
 var inMainMenu = true;
@@ -8,6 +7,7 @@ var isChromium = false;
 var webApp = false;
 var fullScreen = false;
 var orientationLandscape = true;
+
 var scene;
 var gameLoop;
 var ctx;
@@ -30,13 +30,26 @@ State.Attack = new State("Shoot");
 State.Surround = new State("Surround");
 State.Wait = new State("Wait");
 
-//resource variables
-let sprND = new SpriteD(["assets/game/textures/cajaNoDestruible.png"], -1, Victor(-60, -60));      //sprite de los bloques normales
-let sprCD = new AnimationD(["assets/game/textures/CajaDestruible1.png", "assets/game/textures/CajaDestruible2.png", "assets/game/textures/CajaDestruible3.png", "assets/game/textures/CajaDestruible4.png"],0 , -1, Victor(-50, -50));      //sprite del bloque destruible
-let sprCD2 = new Sprite(["assets/game/textures/CajaDestruible4.png"], 0.5, Victor(-50, -50));      //sprite de los bloques normales
-let sprDMG = new AnimationD(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -1, Victor(-60, -60));       //sprite animado de los bloques con daño
+//RESOURCE VARIABLES
+//sprite normal block
+let sprND = new SpriteD(["assets/game/textures/cajaNoDestruible3.png"], 0, Victor(-60, -60));     
+let sprND2 = new SpriteD(["assets/game/textures/cajaNoDestruible3.png"], -1, Victor(-60, -60));    
+let sprND3 = new SpriteD(["assets/game/textures/cajaNoDestruible2.png"], -2, Victor(-60, -60));   
+let sprND3b = new SpriteD(["assets/game/textures/cajaNoDestruible.png"], -2, Victor(-60, -60));  
+//sprite breakable block
+let sprCD = new AnimationD(["assets/game/textures/CajaDestruible1.png", "assets/game/textures/CajaDestruible2.png", "assets/game/textures/CajaDestruible3.png", "assets/game/textures/CajaDestruible4.png"],0 , -2, Victor(-50, -50)); 
+let sprCD_2 = new SpriteD(["assets/game/textures/CajaDestruible_second.png"], -1, Victor(-50, -50));
+let sprCD_3 = new SpriteD(["assets/game/textures/CajaDestruible_third.png"], 0, Victor(-50, -50));      
+//sprite breakable block destroyed
+let sprCD2 = new SpriteD(["assets/game/textures/CajaDestruible4.png"], 0.2, Victor(-50, -50));  
+//sprite animated damage block
+let sprDMG = new AnimationD(["assets/game/textures/boxDamage_second1.png", "assets/game/textures/boxDamage_second2.png", "assets/game/textures/boxDamage_second3.png", "assets/game/textures/boxDamage_second4.png",], 0.1, 0, Victor(-60, -60));   
+let sprDMG2 = new AnimationD(["assets/game/textures/boxDamage_third1.png", "assets/game/textures/boxDamage_third2.png", "assets/game/textures/boxDamage_third3.png", "assets/game/textures/boxDamage_third4.png",],0.1, -1, Victor(-60, -60));    
+let sprDMG3 = new AnimationD(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -2, Victor(-60, -60));   
+//sprite arrow indicator and null arrow
 let sprArrowNull = new Sprite(["assets/game/sprites/null.png"], -10, Victor(0, -9));
 let sprArrow = new Sprite(["assets/game/sprites/arrow.png"], -10, Victor(0, -9));
+//sprite charge indicator and null charge
 let sprChargeNull = new Animation(["assets/game/sprites/null.png"],0, 0.5, Victor(-50, -50));
 let sprCharge = new Animation([
     "assets/game/sprites/charge_frames/charge1.png",
@@ -90,6 +103,7 @@ let sprBolaA_cuello = new SpriteD(["assets/game/sprites/enemys/robola-A/robola2.
 let sprBolaA_cabeza = new SpriteD(["assets/game/sprites/enemys/robola-A/robola1.png"], -1, offset);
 let sprBullet = new SpriteD(["assets/game/sprites/enemys/robola-A/bullet.png"], -0.5, Victor(-8, -8));
 
+//sprite ninja
 let path = "assets/game/sprites/";
 var nin_cabeza_src = 
 [
@@ -99,7 +113,6 @@ var nin_cabeza_src =
     path+"nin/nin-cabeza/nin-cabeza4.png",
     path+"nin/nin-cabeza/nin-cabeza5.png"
 ];
-
 var nin_piernas_src = 
 [
     path+"nin/nin-piernas/nin-piernas1.png",
@@ -113,7 +126,6 @@ var nin_piernas_src =
     path+"nin/nin-piernas/nin-piernas9.png",
     path+"nin/nin-piernas/nin-piernas10.png"
 ];
-
 var nin_katana_src = 
 [
     path+"nin/nin-katana/nin-katana1.png",
@@ -125,7 +137,6 @@ var nin_katana_src =
     path+"nin/nin-katana/nin-katana7.png",
     path+"nin/nin-katana/nin-katana8.png",
 ];
-
 var nin_hombros_src = 
 [
     path+"nin/nin-hombros/nin-hombros1.png",
@@ -134,7 +145,6 @@ var nin_hombros_src =
     path+"nin/nin-hombros/nin-hombros4.png",
     path+"nin/nin-hombros/nin-hombros5.png",
 ];
-
 var nin_capa_src = 
 [
     path+"nin/nin-capa/nin1.png",
@@ -142,6 +152,14 @@ var nin_capa_src =
     path+"nin/nin-capa/nin3.png",
     path+"nin/nin-capa/nin4.png",
     path+"nin/nin-capa/nin5.png",
+];
+var nin_capa_dmg_src = 
+[
+    path+"nin/nin-capa/nin_dmg1.png",
+    path+"nin/nin-capa/nin_dmg2.png",
+    path+"nin/nin-capa/nin_dmg3.png",
+    path+"nin/nin-capa/nin_dmg4.png",
+    path+"nin/nin-capa/nin_dmg5.png",
 ];
 var nin_shadow_src = path+"nin/ninS.png";
 var sprNin_cabeza = new AnimationD(nin_cabeza_src, 0.2, -1.6, Victor(-13, -4));
@@ -154,6 +172,12 @@ var sprNin_capa2 = new SpriteD(nin_capa_src[1], -1.1, Victor(-36, -8));
 var sprNin_capa3 = new SpriteD(nin_capa_src[2], -1.0, Victor(-36, -8));
 var sprNin_capa4 = new SpriteD(nin_capa_src[3], -0.9, Victor(-36, -6));
 var sprNin_capa5 = new SpriteD(nin_capa_src[4], -0.9, Victor(-36, -11));
+//----------------------------------------------
+var sprNin_capa_dmg1 = new SpriteD(nin_capa_dmg_src[0], -1.2, Victor(-36, -8));
+var sprNin_capa_dmg2 = new SpriteD(nin_capa_dmg_src[1], -1.1, Victor(-36, -8));
+var sprNin_capa_dmg3 = new SpriteD(nin_capa_dmg_src[2], -1.0, Victor(-36, -8));
+var sprNin_capa_dmg4 = new SpriteD(nin_capa_dmg_src[3], -0.9, Victor(-36, -6));
+var sprNin_capa_dmg5 = new SpriteD(nin_capa_dmg_src[4], -0.9, Victor(-36, -11));
 
 let lagarto_path = "assets/game/sprites/enemys/";
 var lagarto_src =
@@ -169,7 +193,6 @@ var lagarto_src =
     lagarto_path+"lagarto/lagarto9.png",
     lagarto_path+"lagarto/lagarto10.png",
 ];
-
 let lagarto_offset = Victor(-40, -40);
 
 var sprLagarto_cabeza = new SpriteD(lagarto_src[0], -1.8, lagarto_offset);
@@ -182,10 +205,6 @@ var sprLagarto_orugaT = new Sprite(lagarto_src[6], -0.4, lagarto_offset);
 var sprLagarto_ruedas = new SpriteD(lagarto_src[7], -0.2, lagarto_offset);
 var sprLagarto_orugaB = new Sprite(lagarto_src[8], -0.1, lagarto_offset);
 var sprLagarto_shadow = new Sprite(lagarto_src[9], 0, lagarto_offset);
-
-//collider
-let col = new RectCollider(120, 120, Victor(-60, -60, 0));  //collider estandar de los bloques normales y daño
-let colCD = new RectCollider(80, 80, Victor(-40, -40, 0));  //collider del bloque destruible
 
 //#region Sonidos
 var snd_draw = "assets/game/snd/sfx/nin/draw-1.ogg";
@@ -226,7 +245,6 @@ easystar.setIterationsPerCalculation(200);
 //#endregion
 
 function gameOver(){
-    console.log("Game Over");
     scene.start();
     scene.getEntity("nin").addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
 }
@@ -234,11 +252,15 @@ function gameOver(){
 function randomId(){
     id++;
     return id;
-    //return new Date().getTime();
 }
 
+//Time out, cada 2 segundos sin gastar energia se recupera 1
 function recoveryEnergy(){
-   let ninM = scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory;
+    let ninM = scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory;    
+    if(ninM == null){
+        clearInterval(energyRec);
+        return;
+    }
     let energy = ninM.get("energy");
     if (energy < 5){
         ninM.set("energy", energy+1)
@@ -248,6 +270,7 @@ function recoveryEnergy(){
     }   
 }
 
+//resetea el contador de recuperacion de energia
 function setEnergyRec(){
     if(energyRec != null){       
         clearInterval(energyRec); 
@@ -255,6 +278,7 @@ function setEnergyRec(){
     energyRec = setInterval(recoveryEnergy, 2000);
 }
 
+//muestra/oculta el menu de ajustes
 function toggleSettings(){
     var actualState = $("#settings-window").css("display");    
     actualState = actualState == "none"? false: true;
@@ -311,8 +335,7 @@ function toggleLang(view, state){
 function changeButtonsState(container, newState){    
     container.each(function(){
         $(this).prop("disabled", newState);
-    })
-    
+    })    
     /*let items = container.children("button");
     for(var i = 0; i < items.length; i++){
         var item = items[i];
@@ -342,6 +365,7 @@ function play(level){
     ctx.imageSmoothingEnabled = false;
     const C_WIDTH = parseInt(ctx.canvas.getAttribute("width"));
     const C_HEIGHT = parseInt(ctx.canvas.getAttribute("height"));
+    
     //creamos la escena
     scene = new Scene("main", 1240, 800, C_WIDTH, C_HEIGHT);    
     //scene.debug = true;
@@ -606,11 +630,11 @@ class GameLoop{
 
 //#region Behaviours
 //#region Camera
-var cameraCreate = (e, m)=>
+/*var cameraCreate = (e, m)=>
 {
     m.set("target", "nin");
     m.set("smoothing", 0.1);
-};
+};*/
 
 var follow = (e, m)=>
 {
@@ -718,7 +742,7 @@ var lagartoAct = (e, m, dt)=>
             chase(e, m);
             if(t_t.position.clone().distance(t.position) < 150)
             {
-                console.log("CHARGE");
+                //console.log("CHARGE");
                 m.set("state", State.Charge);
                 charge_dir = t_t.position.clone().subtract(t.position).horizontalAngleDeg();
                 k.speed = Victor(330, 0).rotateByDeg(charge_dir);
@@ -739,7 +763,7 @@ var lagartoAct = (e, m, dt)=>
                 
                 k.speed = Victor(0, 0);
                 m.set("state", State.Wait);
-                console.log("WAIT");
+                //console.log("WAIT");
                 m.set("wait_time", 80);
             }
             break;
@@ -749,7 +773,7 @@ var lagartoAct = (e, m, dt)=>
             if(m.get("wait_time") <= 0)
             {
                 m.set("state", State.Chase);
-                console.log("CHASE");
+                //console.log("CHASE");
             }
             else
             {
@@ -848,14 +872,14 @@ var bullet = (e, m)=>
 };
 
 //#region Nin
-var ninCreate = (e, m) =>
+/*var ninCreate = (e, m) =>
 {
     m.set("energy", 5);
     m.set("hp", 3);
     m.set("base_speed", 100);
     m.set("press_count", 0);
     m.set("iframes", 0);
-};
+};*/
 
 var ninUpdate = (e, m) =>
 {    
@@ -895,7 +919,7 @@ var ninUpdate = (e, m) =>
                 if(dashing() >= 1 && obj[0].id.search("cd") != -1){         //comprobamos si es un bloque destruible y si estamos en un dash lo bastante potente
                     //destruimos el bloque
                     obj[0].removeComponent(ComponentType.Collider);
-                    obj[0].getComponent(ComponentType.Sprite).image_speed = 0.2;
+                    obj[0].getComponent(ComponentType.Sprite).image_speed = 0.3;
                 }else{
                     k.speed = reflect(k.speed.clone(), coll[1]);
                     t.rotation = k.speed.horizontalAngleDeg();
@@ -925,18 +949,16 @@ var ninUpdate = (e, m) =>
         if(dashPower == 0){
             //daño personaje
             if(iframes == 0){
-                console.log("colision con "+obj[0].id)
-                doDamage(1);
-                m.set("iframes", 90);                
+                doDamage(1);                            
             }            
         }else{
             //daño a enemigo
             if(obj[0].id.search("robola") != -1){
                 //enemigo robola
                 let arrayEnt = obj[0].getComponent(ComponentType.Behaviour).memory.get("ent_array");
-                for(let i = 0; i < arrayEnt.length; i++){
-                    e.scene.getEntity(arrayEnt[i]).destroy();
-                }
+                $.each(arrayEnt, function(index, ent){
+                    e.scene.getEntity(ent).destroy();
+                });
                 obj[0].destroy();
                 let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
                 bolaDeath.play();
@@ -946,7 +968,7 @@ var ninUpdate = (e, m) =>
     
     if(input.getMouseDown(MouseButton.Left))
     {
-        m.set("i_mp", input.mouseCanvasPosition);
+        m.set("i_mp", input.mouseCanvasPosition.clone());
         m.set("ready", false);      
         e.scene.getEntity("charge").addComponent(sprCharge.clone());
     }
@@ -1047,6 +1069,20 @@ var ninUpdate = (e, m) =>
     }*/
     
     if(iframes > 0){
+        if(iframes != 1){
+            if(iframes%5 == 0){
+                if(m.get("damaged") === true){
+                    m.set("damaged", false);
+                    changeDmgSprite();                    
+                }else{
+                    m.set("damaged", true);
+                    changeDmgSprite();  
+                }
+            }
+        }else{            
+            m.set("damaged", false);
+            changeDmgSprite();
+        }        
         m.set("iframes", iframes-1);
     }
     
@@ -1078,26 +1114,62 @@ var ninUpdate = (e, m) =>
         dmg.play();
         let newHp = hp - value;        
         m.set("hp", newHp);
-        scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
-        console.log("dañado!!!!, vida actual: "+newHp)
+        e.scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
+        e.scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("hp_value", newHp);
+        m.set("iframes", 90);    
+        m.set("damaged", true);
+        changeDmgSprite();
         if(newHp <= 0){
             //TODO implementar metodo gameOver
-            console.log("gameOver");
             gameOver();
+        }
+    }
+    
+    function changeDmgSprite(){
+        if(m.get("damaged") === true){
+            e.scene.getEntity("nin_capa_1").addComponent(sprNin_capa_dmg1);
+            e.scene.getEntity("nin_capa_2").addComponent(sprNin_capa_dmg2);
+            e.scene.getEntity("nin_capa_3").addComponent(sprNin_capa_dmg3);
+            e.scene.getEntity("nin_capa_4").addComponent(sprNin_capa_dmg4);
+            e.scene.getEntity("nin_capa_5").addComponent(sprNin_capa_dmg5);
+        }else{
+            e.scene.getEntity("nin_capa_1").addComponent(sprNin_capa1); 
+            e.scene.getEntity("nin_capa_2").addComponent(sprNin_capa2);
+            e.scene.getEntity("nin_capa_3").addComponent(sprNin_capa3);
+            e.scene.getEntity("nin_capa_4").addComponent(sprNin_capa4);
+            e.scene.getEntity("nin_capa_5").addComponent(sprNin_capa5);
         }
     }
     // Lerp Speed
 };
+
+var robolaDeath = (e, m) =>{
+    console.log("destroying robola");
+    let arrayEnt = m.get("ent_array");
+    for(let i = 0; i < arrayEnt.length; i++){
+        e.scene.getEntity(arrayEnt[i]).destroy();
+    }            
+    let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
+    bolaDeath.play();
+}
 
 var uiLifeUpdate = (e, m) =>{
     let t = e.getComponent(ComponentType.Transform);
     let image_index = e.getComponent(ComponentType.Sprite).image_index;
     let scene_ = e.scene;
     t.position = (Victor(scene_.view_x + scene_.canvas_width - 32, scene_.view_y + scene_.canvas_height - 10));
-    
+    let hp = m.get("hp_value");
     if(m.get("damaged") === true){
-        e.getComponent(ComponentType.Sprite).setImageIndex(image_index+1);
-        m.set("dmg_counter", 20);
+        if(hp == 2){
+            e.getComponent(ComponentType.Sprite).setImageIndex(1);
+        }        
+        if(hp == 1){
+            e.getComponent(ComponentType.Sprite).setImageIndex(3);
+        } 
+        if(hp <= 0){
+            e.getComponent(ComponentType.Sprite).setImageIndex(5);
+        } 
+        m.set("dmg_counter", 15);
         m.set("damaged", false);
     }   
     let count = m.get("dmg_counter");
@@ -1163,6 +1235,7 @@ var uiEnergyUpdate = (e, m) =>{
                 m.set("recovery_counter", 15);
                 break; 
             }        
+        m.set("energy_counter", 0);
         m.set("recover", false);
         } 
     }    
@@ -1200,9 +1273,12 @@ var chargeUpdate = (e, m) =>{
     let image_index = s.image_index;
     let ninMem = e.scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory;
     let energy = ninMem.get("energy");  
-    
+            
     let i_mp = ninMem.get("i_mp");
-    var mouseDir = (input.mouseCanvasPosition.clone().subtract(i_mp)).normalize();
+    if(i_mp == null)
+        return;
+    
+    var mouseDir = input.mouseCanvasPosition.clone().subtract(i_mp).normalize();
     let arrowT = e.scene.getEntity("arrow").getComponent(ComponentType.Transform);
     let ninT = e.scene.getEntity("nin").getComponent(ComponentType.Transform);
     arrowT.rotation = mouseDir.horizontalAngleDeg();
@@ -1236,6 +1312,10 @@ var breakBoxUpdate = (e, m) =>{
     let image_index = s.image_index;
     if(image_index == 3){
         s.image_speed = 0;
+        let arrayEnt = m.get("layers_array");
+        $.each(arrayEnt, function(index, ent){
+            e.scene.getEntity(ent).destroy();
+        });
         e.addComponent(sprCD2);
         e.scene.addToRun(e);
     }
@@ -1276,7 +1356,7 @@ function loadLevel(level){
     //Camara
     var cam = new Entity("camera", scene, Tag.Camera, new Transform(Victor(580, 360), 0, Victor(0.1, 0.1)));
     //cam.addComponent(new Sprite([spritesPath + "robola.png"], -2, Victor(0, 0)));
-    cam.addComponent(new Behaviour([cameraCreate], [follow], []));
+    cam.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 0.1)));
     scene.addEntity(cam);
     scene.setCamera(cam);
     
@@ -1336,7 +1416,7 @@ let createNin = (pos, scene) =>
     nin.addComponent(sprNin_hombros.clone());
     nin.addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
     nin.addComponent(new RectCollider(24, 24, Victor(-12, -12, 0)));
-    nin.addComponent(new Behaviour([], [ninUpdate, katanaControl], [], new Map().set("energy", 5).set("hp", 3).set("base_speed", 80).set("iframes", 0).set("attacking", false).set("ready", false)));
+    nin.addComponent(new Behaviour([], [ninUpdate, katanaControl], [], new Map().set("energy", 5).set("hp", 3).set("base_speed", 80).set("iframes", 0).set("attacking", false).set("ready", false).set("damaged", true).set("i_mp", Victor(0,0))));
 
     let shadow = new Entity("nin_s", scene, Tag.Player, new Transform(pos, 0));
     shadow.addComponent(sprNin_shadow.clone());
@@ -1436,13 +1516,7 @@ let createDamage = (id, pos, rot, scene)=>
         //daño a robola
         if(obj[0].id.search("robola") != -1){
             //enemigo robola
-            let arrayEnt = obj[0].getComponent(ComponentType.Behaviour).memory.get("ent_array");
-            for(let i = 0; i < arrayEnt.length; i++){
-                e.scene.getEntity(arrayEnt[i]).destroy();
-            }
-            obj[0].destroy();
-            let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
-            bolaDeath.play();
+            obj[0].destroy();            
         }
                 
     }
@@ -1452,28 +1526,64 @@ let createDamage = (id, pos, rot, scene)=>
 };
 
 function createND(scene_, pos, rot, scale){
-    let e = new Entity("nd#"+randomId(), scene, Tag.Solid);
+    let id = randomId();
+    let e = new Entity("nd#"+id, scene, Tag.Solid);
     e.addComponent(sprND.clone());
     e.addComponent(new Transform(pos, rot, scale));
-    e.addComponent(col);
+    e.addComponent(new RectCollider(120, 120, Victor(-60, -60, 0)));
+    
+    let e2 = new Entity("nd2#"+id, scene, Tag.Solid);
+    e2.addComponent(sprND2.clone());
+    e2.addComponent(new Transform(pos, rot, scale));
+    
+    let e3 = new Entity("nd3#"+id, scene, Tag.Solid);
+    e3.addComponent((Math.random() <= 0.5 ? sprND3.clone() : sprND3b.clone()));
+    e3.addComponent(new Transform(pos, rot, scale));
+    
     scene_.addEntity(e); 
+    scene_.addEntity(e2); 
+    scene_.addEntity(e3); 
 }
 
 function createDMG(scene_, pos, rot, scale){
-    let e = new Entity("dmg#"+randomId(), scene, Tag.Solid);
+    let id = randomId();
+    let e = new Entity("dmg#"+id, scene, Tag.Solid);
     e.addComponent(sprDMG.clone());
     e.addComponent(new Transform(pos, rot, scale));
-    e.addComponent(col);
+    e.addComponent(new RectCollider(120, 120, Victor(-60, -60, 0)));
+    
+    let e2 = new Entity("dmg2#"+id, scene, Tag.Solid);
+    e2.addComponent(sprDMG2.clone());
+    e2.addComponent(new Transform(pos, rot, scale));  
+    
+    let e3 = new Entity("dmg3#"+id, scene, Tag.Solid);
+    e3.addComponent(sprDMG3.clone());
+    e3.addComponent(new Transform(pos, rot, scale));
+    
     scene_.addEntity(e); 
+    scene_.addEntity(e2); 
+    scene_.addEntity(e3); 
 }
 
 function createD(scene_, pos, rot, scale){
-    let e = new Entity("cd#"+randomId(), scene, Tag.Solid);
+    let id = randomId();
+    let e = new Entity("cd#"+id, scene, Tag.Solid);
     e.addComponent(sprCD.clone());
     e.addComponent(new Transform(pos, rot, scale));
-    e.addComponent(colCD.clone());
-    e.addComponent(new Behaviour([],[breakBoxUpdate],[]));
+    e.addComponent(new RectCollider(80, 80, Victor(-40, -40, 0)));
+    e.addComponent(new Behaviour([],[breakBoxUpdate],[],new Map().set("layers_array",["cd2#"+id, "cd3#"+id])));  
+    
+    let e2 = new Entity("cd2#"+id, scene, Tag.Solid);
+    e2.addComponent(sprCD_2.clone());
+    e2.addComponent(new Transform(pos, rot, scale));
+    
+    let e3 = new Entity("cd3#"+id, scene, Tag.Solid);
+    e3.addComponent(sprCD_3.clone());
+    e3.addComponent(new Transform(pos, rot, scale));
+    
     scene_.addEntity(e); 
+    scene_.addEntity(e2); 
+    scene_.addEntity(e3); 
 }
 
 let createRobolaRanged = (id, pos, rot, scale, scene_) =>
@@ -1482,7 +1592,7 @@ let createRobolaRanged = (id, pos, rot, scale, scene_) =>
 
     let robolaSombra = new Entity("robola_shadow#"+id, scene_, Tag.Enemy, new Transform(pos, rot, scale));
     robolaSombra.addComponent(sprBolaA_S.clone());
-    robolaSombra.addComponent(new Behaviour([], [robolaRangedAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Surround).set("cabeza", "robola_cabeza#"+id).set("ent_array", ["robola_base#"+id, "robola_ruedas#"+id, "robola_armadura#"+id, "robola_cuello#"+id, "robola_cabeza#"+id])));
+    robolaSombra.addComponent(new Behaviour([], [robolaRangedAct], [robolaDeath], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Surround).set("cabeza", "robola_cabeza#"+id).set("ent_array", ["robola_base#"+id, "robola_ruedas#"+id, "robola_armadura#"+id, "robola_cuello#"+id, "robola_cabeza#"+id])));
     robolaSombra.addComponent(new Kinematic(new Victor(32, 18), new Victor(0, 0), new Victor(0, 0)));
     robolaSombra.addComponent(new RectCollider(40, 40, offset));
 
