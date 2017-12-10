@@ -1,3 +1,5 @@
+//vscode-fold=1
+
 //#region helpers
 
 /**
@@ -24,14 +26,13 @@ function clamp(val, min, max)
 function lerp(val, target, factor)
 {
     return val + (target - val) * factor;
-}
-
+};
 /**
  * Interpola linealmente entre dos `Victor`, inicial y objetivo, según un factor dado.
- * 
- * @param {Victor} val 
- * @param {Victor} target 
- * @param {number} factor 
+ *
+ * @param {Victor} val
+ * @param {Victor} target
+ * @param {number} factor
  * @returns {Victor} Resultado de la interpolación
  */
 Victor.lerp = (val, target, factor) =>
@@ -48,7 +49,7 @@ function shortAngleDist(a0,a1) {
     return 2*da % max - da;
 }
 
-function lerpAngle(val, target, factor) 
+function lerpAngle(val, target, factor)
 {
     return val + shortAngleDist(val, target) * factor;
 }
@@ -56,7 +57,7 @@ function lerpAngle(val, target, factor)
 Victor.reflect = (dir, normal) =>{
     normal = normal.normalize();
     dir = dir.normalize();
-    
+
     //normal component
     var velN = normal.multiply(dir.dot(normal));
     //tangential component
@@ -68,7 +69,7 @@ Victor.reflect = (dir, normal) =>{
 
 function reflect(dir, normal){
     normal = normal.normalize();
-    
+
     //normal component
     var velN = Victor(normal.x * dir.dot(normal), normal.y * dir.dot(normal));
     //tangential component
@@ -80,15 +81,15 @@ function reflect(dir, normal){
 
 function rayCollision(dir, ori, minCorner, maxCorner){
     let dirfrac = Victor(1, 1).divide(dir);
-    
+
     let t1 = (minCorner.x - ori.x)* dirfrac.x;
     let t2 = (maxCorner.x - ori.x)* dirfrac.x;
     let t3 = (minCorner.y - ori.y)* dirfrac.y;
     let t4 = (maxCorner.y - ori.y)* dirfrac.y;
-    
+
     let tmin = Math.max(Math.min(t1, t2), Math.min(t3, t4));
     let tmax = Math.min(Math.max(t1, t2), Math.max(t3, t4));
-    
+
     // if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
     if (tmax < 0)
     {
@@ -101,7 +102,7 @@ function rayCollision(dir, ori, minCorner, maxCorner){
     {
         t = tmax;
         return [false, null];
-    }    
+    }
     t = tmin;
     let normal = Victor(0, 0);
     if (t == t1)
@@ -143,7 +144,7 @@ class Enum
 
 /**
  * Enum que contiene tipos de `Component`.
- * 
+ *
  * @class ComponentType
  * @extends {Enum}
  */
@@ -151,7 +152,7 @@ class ComponentType extends Enum
 {
     /**
      * Clase/Enum que alberga los tipos de `Component`.
-     * 
+     *
      * @param {string} name Nombre del `ComponentType` a crear.
      * @memberof ComponentType
      */
@@ -173,7 +174,7 @@ class ComponentType extends Enum
 
 /**
  * Enum que contiene los tipos de `Collider`.
- * 
+ *
  * @class ColliderType
  * @extends {Enum}
  */
@@ -181,7 +182,7 @@ class ColliderType extends Enum
 {
     /**
      * Clase/Enum que alberga los tipos de `Collider`.
-     * 
+     *
      * @param {string} name Nombre del `ColliderType` deseado.
      * @memberof ColliderType
      */
@@ -201,7 +202,7 @@ class BehaviourType extends Enum
 {
     /**
      * Clase/Enum que alberga los tipos de `Behaviour`.
-     * 
+     *
      * @param {string} name Nombre del `BehaviourType` deseado.
      * @memberof BehaviourType
      */
@@ -220,7 +221,7 @@ class BehaviourType extends Enum
 
 /**
  * Enum que contiene los diferentes posibles estados de `Scene`
- * 
+ *
  * @class SceneState
  * @extends {Enum}
  */
@@ -228,7 +229,7 @@ class SceneState extends Enum
 {
     /**
      * Clase/Enum que alberga los diferentes estados de reproducción de `Scene`.
-     * 
+     *
      * @param {string} name Nombre del `SceneState` deseado.
      * @memberof sceneState
      */
@@ -250,7 +251,7 @@ class Layer extends Enum
 {
     /**
      * Clase/Enum que alberga las diferentes capas.
-     * 
+     *
      * @param {string} name Nombre de `Layer`.
      * @memberof Layer
      */
@@ -272,7 +273,7 @@ class KeyCode extends Enum
 {
     /**
      * Clase/Enum que alberga lcos códigos de teclas.
-     * 
+     *
      * @param {string} name Nombre del `KeyCode`.
      * @memberof KeyCode
      */
@@ -286,7 +287,7 @@ class KeyCode extends Enum
 
 // KeyCodes
 const KeyCodes = new Array(
-    
+
     // Letras
     KeyCode.A = new KeyCode("A", 65),
     KeyCode.B = new KeyCode("B", 66),
@@ -344,7 +345,7 @@ class MouseButton extends Enum
 {
     /**
      * Clase/Enum que alberga los códigos de botones del ratón.
-     * 
+     *
      * @param {string} name Nombre del `MouseButton`.
      * @memberof MouseButton
      */
@@ -367,7 +368,7 @@ class Tag extends Enum
 {
     /**
      * Clase/Enum que alberga las diferentes tags.
-     * 
+     *
      * @param {string} name Nombre de `Tag`.
      * @memberof Tag
      */
@@ -391,14 +392,14 @@ class Tag extends Enum
 //#region entity
 /**
  * Agente base del motor, contiene componentes (```Component```).
- * 
+ *
  * @class Entity
  */
 class Entity
 {
     /**
      * Crea una instancia de `Entity`.
-     * 
+     *
      * @param {string} id Cadena de identificación de la entidad dentro de la escena.
      * @param {Entity} scene Escena a la que pertenece la entidad.
      * @param {Transform} transform Transformación inicial de la entidad.
@@ -412,10 +413,10 @@ class Entity
         this.tag = tag;
         this.addComponent(transform);
     }
-    
+
     /**
      * Devuelve una copia por valor de la entidad, con los mismos componentes y valores.
-     * 
+     *
      * @returns {Entity} Copia de esta entidad.
      * @memberof Entity
      */
@@ -431,7 +432,7 @@ class Entity
 
     /**
      * Añade un componente a la entidad.
-     * 
+     *
      * @param {Component} component Componente a añadir.
      * @returns {ComponentType} Devuelve el tipo de componente (`ComponentType`) añadido.
      * @memberof Entity
@@ -445,7 +446,7 @@ class Entity
 
     /**
      * Elimina un componente de la entidad.
-     * 
+     *
      * @param {ComponentType} type Tipo del componente.
      * @returns {boolean} Devuelve `true` si el componente se ha podido eliminar y `false` de lo contrario o si no existe.
      * @memberof Entity
@@ -454,11 +455,11 @@ class Entity
     {
         return this.components.delete(type);
     }
-    
+
     /**
      * Devuelve el componente del tipo especificado de la entidad, o `null` si no lo tiene.
-     * 
-     * @param {ComponentType} type 
+     *
+     * @param {ComponentType} type
      * @returns {Component} Componente deseado o `null`.
      * @memberof Entity
      */
@@ -522,7 +523,7 @@ class Entity
     toJSON()
     {
         let c = new Array();
-        
+
         this.components.forEach(function(comp) {
             c.push(comp.toJSON());
         }, this);
@@ -536,7 +537,7 @@ class Entity
 
 /**
  * Clase base para el resto de componentes, almacena la entidad a la que está asociado
- * 
+ *
  * @class Component
  */
 class Component
@@ -566,7 +567,7 @@ class Behaviour extends Component
         super();
         this.entity = undefined;
 
-        this.behaviours = 
+        this.behaviours =
         {
             create: on_create_behaviours,
             update: on_update_behaviours,
@@ -585,7 +586,7 @@ class Behaviour extends Component
 
     create()
     {
-        this.behaviours["create"].forEach(behaviour => 
+        this.behaviours["create"].forEach(behaviour =>
         {
             behaviour(this.entity, this.memory);
         });
@@ -593,7 +594,7 @@ class Behaviour extends Component
 
     update(dt)
     {
-        this.behaviours["update"].forEach(behaviour => 
+        this.behaviours["update"].forEach(behaviour =>
         {
             behaviour(this.entity, this.memory, dt);
         });
@@ -601,7 +602,7 @@ class Behaviour extends Component
 
     destroy()
     {
-        this.behaviours["destroy"].forEach(behaviour => 
+        this.behaviours["destroy"].forEach(behaviour =>
         {
             behaviour(this.entity, this.memory);
         });
@@ -612,7 +613,7 @@ class Behaviour extends Component
 //#region physics
 /**
  * Almacena la posición, rotación y escala local del objeto respecto a su padre inmediato.
- * 
+ *
  * @class Transform
  * @extends {Component}
  */
@@ -620,7 +621,7 @@ class Transform extends Component
 {
     /**
      * Crea una instancia de `Transform`.
-     * 
+     *
      * @param {Victor} position Posición inicial.
      * @param {number} rotation Rotación inicial.
      * @param {Victor} scale Escala inicial.
@@ -644,9 +645,9 @@ class Transform extends Component
 
     /**
      * Devuelve una copia de este componente (`Transform`) con los mismos valores.
-     * 
+     *
      * @returns {Transform} Copia del componente `Transform`.
-     * @memberof Transform 
+     * @memberof Transform
      */
     clone()
     {
@@ -655,7 +656,7 @@ class Transform extends Component
 
     /**
      * Mueve la posición actual.
-     * 
+     *
      * @param {Victor} vec Vector que se suma a la posición actual.
      * @memberof Transform
      */
@@ -667,7 +668,7 @@ class Transform extends Component
 
     /**
      * Suma grados a la rotación actual.
-     * 
+     *
      * @param {number} deg Número de grados a rotar.
      * @memberof Transform
      */
@@ -692,7 +693,7 @@ class Transform extends Component
 
     /**
      * Devuelve un string con la información básica del `Transform`.
-     * 
+     *
      * @returns {string} Cadena con información.
      * @memberof Transform
      */
@@ -704,20 +705,20 @@ class Transform extends Component
 
     /**
      * Devuelve un objeto con la información básica del `Transform`.
-     * 
+     *
      * @returns {Object} Objeto con información.
      * @memberof Transform
      */
     toJSON()
     {
-        let o = 
+        let o =
         {
             type: "Transform",
             data:
             {
-                position: 
+                position:
                 {
-                    x: this.position.x, 
+                    x: this.position.x,
                     y: this.position.y,
                 },
                 rotation: this.rotation,
@@ -734,7 +735,7 @@ class Transform extends Component
 
     /**
      * Multiplica las `Transform` locales de las entidades padre consecutivamente hasta llegar al root, devuelve la `Transform` global.
-     * 
+     *
      * @param {Entity[]} parents Entidades padre de esta misma. Se pueden obtener del atributo `parents` de los nodos de jsTree.
      * @returns {Transform} La transformación global del objeto que realiza la llamada.
      * @memberof Transform
@@ -765,11 +766,11 @@ class Transform extends Component
         else
         {
             let that = this.entity.parent.getComponent(ComponentType.Transform).updateGlobal();
-            let total = new Transform(this.entity, 
-                that.g_position.clone().add(this.position.clone().rotateByDeg(that.g_rotation).multiply(that.g_scale)), 
-                that.g_rotation + this.rotation, 
+            let total = new Transform(this.entity,
+                that.g_position.clone().add(this.position.clone().rotateByDeg(that.g_rotation).multiply(that.g_scale)),
+                that.g_rotation + this.rotation,
                 that.g_scale.clone().multiply(this.scale));
-    
+
             this.g_position = total.position;
             this.g_rotation = total.rotation;
             this.g_scale = total.scale;
@@ -790,7 +791,7 @@ class Transform extends Component
             return this.g_flag;
         else
             return this.g_flag && this.entity.parent.getComponent(ComponentType.Transform).getFlag();
-        
+
     }*/
 
     /*applyParents(child, parent)
@@ -803,16 +804,16 @@ class Transform extends Component
             next = parent.pop();
 
         }
-            
+
 
         return total;
     }*/
 
     /**
      * Computa los contenidos de las transformaciones.
-     * 
-     * @param {Transform} child 
-     * @param {Transform} parent 
+     *
+     * @param {Transform} child
+     * @param {Transform} parent
      * @returns {Transform}
      * @memberof Transform
      */
@@ -831,7 +832,7 @@ class Transform extends Component
         this.position = pos;
     }
 
-    
+
     getPosition()
     {
         return this.position;
@@ -873,9 +874,9 @@ class Kinematic extends Component
     /**
      * Creates an instance of Kinematic.
      * @param {Entity} entity Entidad (`Entity`) asociada este componente (orientativa, se determina definitivamente al añadirlo).
-     * @param {any} [spd=new Victor()] 
-     * @param {any} [acc=new Victor()] 
-     * @param {any} [frc=new Victor(1, 1)] 
+     * @param {any} [spd=new Victor()]
+     * @param {any} [acc=new Victor()]
+     * @param {any} [frc=new Victor(1, 1)]
      * @memberof Kinematic
      */
     constructor(spd = new Victor(), acc = new Victor(), frc = new Victor(1, 1))
@@ -891,10 +892,10 @@ class Kinematic extends Component
 
     /**
      * Devuelve una copia de este componente `Kinematic`, con los mismos valores.
-     * 
+     *
      * @param {Entity} entity Entidad a la que el nuevo `Kinematic` estará asociado.
-     * @returns {Kinematic} Copia del componente `Kinematic` 
-     * @memberof Kinematic 
+     * @returns {Kinematic} Copia del componente `Kinematic`
+     * @memberof Kinematic
      */
     clone()
     {
@@ -933,19 +934,19 @@ class Kinematic extends Component
 
     toJSON()
     {
-        let o = 
+        let o =
         {
             type: "Kinematic",
             data:
             {
-                speed: 
+                speed:
                 {
-                    x: this.speed.x, 
+                    x: this.speed.x,
                     y: this.speed.y
                 },
-                acceleration: 
+                acceleration:
                 {
-                    x: this.acceleration.x, 
+                    x: this.acceleration.x,
                     y: this.acceleration.y
                 },
                 friction:
@@ -962,7 +963,7 @@ class Kinematic extends Component
 
 /**
  * Almacena la forma de colisión de la `Entity` y comprueba colisiones con otros colliders.
- * 
+ *
  * @class Collider
  * @extends {Component}
  */
@@ -977,10 +978,10 @@ class Collider extends Component
 
     /**
      * Devuelve una copia de este componente `Collider`, con los mismos valores.
-     * 
+     *
      * @param {Entity} entity Entidad a la que el nuevo `Collider` estará asociado.
      * @returns {Collider} Copia del componente `Collider`.
-     * @memberof Collider 
+     * @memberof Collider
      */
     clone()
     {
@@ -994,7 +995,7 @@ class Collider extends Component
 
     /**
      * Comprueba si, en una posición hipotética, este collider colisiona con alguna entidad;
-     * 
+     *
      * @param {Victor} pos supuesta posición en la que se comprueba la colisión
      * @param {Tag} tag Tag de los objetos con los que se quiere comprobar colisión.
      * @param {number} margin Máxima distancia a la que se comprueban colisiones (<0 = infinito).
@@ -1007,7 +1008,7 @@ class Collider extends Component
 
         let result = new Array();
 
-        collisionables.forEach(e => 
+        collisionables.forEach(e =>
         {
             let other_pos = e.getComponent(ComponentType.Transform).position;
 
@@ -1020,22 +1021,22 @@ class Collider extends Component
         });
 
         return result.length == 0 ? null : result;
-         
+
     }
 
     /**
      * Comprueba la colisión con otro `Collider`
-     * 
-     * @param {Collider} other 
+     *
+     * @param {Collider} other
      * @memberof RectCollider
      */
     checkCollision(pos, other, other_pos)
     {
         if(this != undefined && other != undefined && this.constructor.name == "RectCollider" && other.constructor.name == "RectCollider")
         {
-            if(pos.x + this.offset.x < other_pos.x + other.width + other.offset.x && 
-                pos.x + this.width + this.offset.x > other_pos.x + other.offset.x && 
-                pos.y + this.offset.y < other_pos.y + other.height + other.offset.y && 
+            if(pos.x + this.offset.x < other_pos.x + other.width + other.offset.x &&
+                pos.x + this.width + this.offset.x > other_pos.x + other.offset.x &&
+                pos.y + this.offset.y < other_pos.y + other.height + other.offset.y &&
                 pos.y + this.height + this.offset.y > other_pos.y + other.offset.y)
             {
                 return true;
@@ -1049,14 +1050,14 @@ class RectCollider extends Collider
 {
     /**
      * Crea una entidad de `RectCollider`.
-     * 
+     *
      * @param {Entity} entity Entidad (`Entity`) a la que pertenece el componente.
      * @param {number} width Anchura en píxeles del rectángulo de colisión (`RectCollider`).
      * @param {number} height Altura en píxeles del rectángulo de colisión (`RectCollider`).
      * @param {Victor} origin Distancia que se resta del centro de la entidad (`Entity`) para hacer cálculos con el rectángulo de colisón (`RectCollider`).
      * @memberof RectCollider
      */
-    constructor(width, height, offset  = new Victor(0, 0))
+    constructor(width, height, offset = Victor(0, 0))
     {
         super();
         this.entity = undefined;
@@ -1076,7 +1077,7 @@ class RectCollider extends Collider
 //#region graphics
 /**
  * Renderiza un Sprite.
- * 
+ *
  * @class Sprite
  * @extends {Component}
  */
@@ -1085,7 +1086,7 @@ class Sprite extends Component
     /**
      * Creates an instance of Sprite.
      *
-     * @param {string[]} src 
+     * @param {string[]} src
      * @param {Victor} origin
      * @param {number} depth
      * @memberof Sprite
@@ -1105,7 +1106,7 @@ class Sprite extends Component
 
     /**
      * Devuelve una copia de este componente (`Sprite`) con los mismos valores.
-     * 
+     *
      * @param {Entity} entity Entidad (`Entity`) asociada a la copia del componente (orientativa, se determina definitivamente al añadirlo).
      * @returns {Sprite} Copia de este componente `Sprite`.
      * @memberof Sprite
@@ -1122,35 +1123,35 @@ class Sprite extends Component
 
         ctx.save();
 
-        let tran = Victor(pos.x, pos.y);     
+        let tran = Victor(pos.x, pos.y);
 
         ctx.translate(tran.x, tran.y);
         ctx.rotate(transform.rotation*Math.PI/180);
         ctx.translate(-tran.x, -tran.y);
-        if (this.entity.scene.debug){     
+        if (this.entity.scene.debug){
             let c = this.entity.getComponent(ComponentType.Collider);
             if(c){
                 ctx.strokeStyle = "#fffa40";
                 ctx.strokeRect(pos.x + c.offset.x, pos.y + c.offset.y, c.width * transform.scale.x, c.height * transform.scale.y);
             }
         }
-        
-        ctx.drawImage(this.image, 0, 0, 
+
+        ctx.drawImage(this.image, 0, 0,
             this.image.width, this.image.height,
             pos.x + this.offset.x, pos.y + this.offset.y,
             this.image.width*transform.scale.x, this.image.height*transform.scale.y
         );
-        
+
         ctx.restore();
     }
 
     /**
      * Cambia la imagen fuente del componente.
-     * 
+     *
      * _Si quieres cambiar la imagen de una entidad,
      * es mejor crear un nuevo Sprite con la ruta correspondiente y asignárselo (`entidad.addComponent(nuevoSprite)`),
      * en vez de cambiar la ruta del que ya tiene asignado_
-     * 
+     *
      * @param {string} src Ruta a la nueva imagen fuente.
      * @memberof Sprite
      */
@@ -1163,15 +1164,15 @@ class Sprite extends Component
 
     toJSON()
     {
-        let o = 
+        let o =
         {
             type: "Sprite",
             data:
             {
                 src: this.src,
-                center: 
+                center:
                 {
-                    x: this.center.x, 
+                    x: this.center.x,
                     y: this.center.y
                 },
                 layer: this.layer
@@ -1187,7 +1188,7 @@ class SpriteD extends Sprite
     /**
      * Creates an instance of Sprite.
      *
-     * @param {string[]} src 
+     * @param {string[]} src
      * @param {Victor} origin
      * @param {number} depth
      * @memberof Sprite
@@ -1201,7 +1202,7 @@ class SpriteD extends Sprite
 
     /**
      * Devuelve una copia de este componente (`Sprite`) con los mismos valores.
-     * 
+     *
      * @param {Entity} entity Entidad (`Entity`) asociada a la copia del componente (orientativa, se determina definitivamente al añadirlo).
      * @returns {Sprite} Copia de este componente `Sprite`.
      * @memberof Sprite
@@ -1222,33 +1223,33 @@ class SpriteD extends Sprite
         ctx.save();
 
         let tran = Victor(pos.x + (depth_offset.x * (this.constraint_x ? 0: 1)), pos.y + (depth_offset.y * (this.constraint_y ? 0: 1)));
-        
-        if (this.entity.scene.debug){     
+
+        if (this.entity.scene.debug){
             let c = this.entity.getComponent(ComponentType.Collider);
             if(c){
                 ctx.strokeStyle = "#fffa40";
                 ctx.strokeRect(pos.x + c.offset.x, pos.y + c.offset.y, c.width * transform.scale.x, c.height * transform.scale.y);
             }
         }
-        
+
         ctx.translate(tran.x, tran.y);
         ctx.rotate(transform.rotation*Math.PI/180);
         ctx.translate(-tran.x, -tran.y);
-        
+
         ctx.drawImage(this.image,
-            0,                                              0, 
-            this.image.width,                               this.image.height, 
-            this.offset.x + tran.x,         this.offset.y + tran.y, 
+            0,                                              0,
+            this.image.width,                               this.image.height,
+            this.offset.x + tran.x,         this.offset.y + tran.y,
             this.image.width*transform.scale.x * clamp((-this.depth)*2/15, 1, 1.8),  this.image.height*transform.scale.y * clamp((-this.depth)*2/15, 1, 1.8)
         );
-        
+
         ctx.restore();
     }
 }
 
 /**
  * Renderiza una animación a partir de varios recursos.
- * 
+ *
  * @class Animation
  * @extends {Sprite}
  */
@@ -1257,15 +1258,15 @@ class Animation extends Sprite
     /**
      * Creates an instance of Animation.
      * @param {string[]} src Rutas de las imágenes fuente.
-     * @param {number} image_speed Velocidad de la animación: 
-     * 
+     * @param {number} image_speed Velocidad de la animación:
+     *
      * | image_speed | Efecto                             |
      * |:-----------:|:-----------------------------------|
      * |      1      |    Cambia de imagen cada frame.    |
      * |     0.33    | Cambia de imagen cada ~= 3 frames. |
      * |     0.2     |   Cambia de imagen cada 5 frames.  |
      * |      0      |        No cambia de imagen.        |
-     * 
+     *
      * @param {Victor} origin Centro de la imagen en coordenadas relativas.
      * @param {number} depth Capa en la que se renderiza la animación.
      * @memberof Animation
@@ -1285,7 +1286,7 @@ class Animation extends Sprite
 
     /**
      * Devuelve una copia de este componente (`Animation`) con los mismos valores.
-     * 
+     *
      * @param {Entity} entity Entidad (`Entity`) asociada a la copia del componente (orientativa, se determina definitivamente al añadirlo).
      * @returns {Animation} Copia de este componente `Animation`.
      * @memberof Animation
@@ -1296,9 +1297,9 @@ class Animation extends Sprite
     }
 
     /**
-     * 
-     * 
-     * @param {any} image_index 
+     *
+     *
+     * @param {any} image_index
      * @memberof Animation
      */
     setImageIndex(image_index)
@@ -1307,14 +1308,14 @@ class Animation extends Sprite
             this.image_index = 0;
         }else{
              this.image_index = image_index;
-        }       
+        }
         this.setImageSource(this.src, this.image_index);
     }
 
     /**
-     * 
-     * 
-     * @param {any} ctx 
+     *
+     *
+     * @param {any} ctx
      * @memberof Animation
      */
     render(ctx)
@@ -1325,7 +1326,7 @@ class Animation extends Sprite
         let aux = this.image_index;
 
         this.anim_controller += this.image_speed;
-        
+
         if(this.anim_controller >= 1)
         {
             this.image_index += Math.sign(this.anim_controller);
@@ -1341,7 +1342,7 @@ class Animation extends Sprite
             this.anim_controller = this.anim_controller % 1;
         }
 
-        if(aux != this.image_index)    
+        if(aux != this.image_index)
             this.setImageSource(this.src, this.image_index);
 
     }
@@ -1354,7 +1355,7 @@ class Animation extends Sprite
         let aux = this.image_index;
 
         this.anim_controller += this.image_speed;
-        
+
         if(this.anim_controller >= 1)
         {
             this.image_index += Math.sign(this.anim_controller);
@@ -1370,10 +1371,10 @@ class Animation extends Sprite
             this.anim_controller = this.anim_controller % 1;
         }
 
-        if(aux != this.image_index)    
+        if(aux != this.image_index)
             this.setImageSource(this.src, this.image_index);
 
-    }    
+    }
 }
 
 class AnimationD extends SpriteD
@@ -1381,15 +1382,15 @@ class AnimationD extends SpriteD
     /**
      * Creates an instance of AnimationD.
      * @param {string[]} src Rutas de las imágenes fuente.
-     * @param {number} image_speed Velocidad de la animación: 
-     * 
+     * @param {number} image_speed Velocidad de la animación:
+     *
      * | image_speed | Efecto                             |
      * |:-----------:|:-----------------------------------|
      * |      1      |    Cambia de imagen cada frame.    |
      * |     0.33    | Cambia de imagen cada ~= 3 frames. |
      * |     0.2     |   Cambia de imagen cada 5 frames.  |
      * |      0      |        No cambia de imagen.        |
-     * 
+     *
      * @param {Victor} origin Centro de la imagen en coordenadas relativas.
      * @param {number} depth Capa en la que se renderiza la animación.
      * @memberof AnimationD
@@ -1409,7 +1410,7 @@ class AnimationD extends SpriteD
 
     /**
      * Devuelve una copia de este componente (`Animation`) con los mismos valores.
-     * 
+     *
      * @param {Entity} entity Entidad (`Entity`) asociada a la copia del componente (orientativa, se determina definitivamente al añadirlo).
      * @returns {Animation} Copia de este componente `Animation`.
      * @memberof Animation
@@ -1417,20 +1418,20 @@ class AnimationD extends SpriteD
     clone()
     {
         return new AnimationD(this.src, this.image_speed, this.depth, this.offset.clone());
-    }    
+    }
     setImageIndex(image_index)
     {
         if(image_index >= this.frame_length){
             this.image_index = 0;
         }else{
              this.image_index = image_index;
-        }       
+        }
         this.setImageSource(this.src, this.image_index);
     }
     /**
-     * 
-     * 
-     * @param {any} ctx 
+     *
+     *
+     * @param {any} ctx
      * @memberof Animation
      */
     render(ctx)
@@ -1441,7 +1442,7 @@ class AnimationD extends SpriteD
         let aux = this.image_index;
 
         this.anim_controller += this.image_speed;
-        
+
         if(this.anim_controller >= 1)
         {
             this.image_index += Math.sign(this.anim_controller);
@@ -1457,7 +1458,7 @@ class AnimationD extends SpriteD
             this.anim_controller = this.anim_controller % 1;
         }
 
-        if(aux != this.image_index)    
+        if(aux != this.image_index)
             this.setImageSource(this.src, this.image_index);
 
     }
@@ -1489,7 +1490,7 @@ class Input
     init(target)
     {
         this.target = target;
-        
+
         // Inicialización de arrays
         KeyCodes.forEach(key => {
             this.keysPressed.set(key, false);
@@ -1505,7 +1506,7 @@ class Input
 
         // Teclado
         document.addEventListener("keydown", e =>
-        { 
+        {
             //console.log(e.keyCode);
             KeyCodes.forEach(key => {
                 if(e.keyCode == key.code)
@@ -1513,14 +1514,14 @@ class Input
                     if(!this.keysPressed.get(key))
                     {
                         this.keysDown.set(key, true);
-                        this.keysPressed.set(key, true); 
+                        this.keysPressed.set(key, true);
                     }
                 }
             });
         });
 
         document.addEventListener("keyup", e =>
-        { 
+        {
             //console.log(e.keyCode);
             KeyCodes.forEach(key => {
                 if(e.keyCode == key.code)
@@ -1543,9 +1544,9 @@ class Input
             if(!this.mousePressed.get(MouseButton.Left))
             {
                 this.mouseDown.set(MouseButton.Left, true);
-                this.mousePressed.set(MouseButton.Left, true); 
+                this.mousePressed.set(MouseButton.Left, true);
             }
-            
+
             // Scroll
             if ($(e.target).closest(target).length == 1)
             {
@@ -1562,15 +1563,15 @@ class Input
             {
                 this.mouseUp.set(MouseButton.Left, true);
             }
-            
+
             // Scroll
             window.blockMenuHeaderScroll = false;
         });
 
         target.addEventListener("touchmove", e =>
         {
-            //this.setMousePosition(e.clientX, e.clientY, target);      
-            this.setMousePosition(e.changedTouches[0].clientX, e.changedTouches[0].clientY, target); 
+            //this.setMousePosition(e.clientX, e.clientY, target);
+            this.setMousePosition(e.changedTouches[0].clientX, e.changedTouches[0].clientY, target);
             if (window.blockMenuHeaderScroll)
             {
                 e.preventDefault();
@@ -1579,21 +1580,21 @@ class Input
 
         // Mouse
         target.addEventListener("mousedown", e =>
-        { 
+        {
             MouseButtons.forEach(btn => {
                 if(e.button == btn.code)
                 {
                     if(!this.mousePressed.get(btn))
                     {
                         this.mouseDown.set(btn, true);
-                        this.mousePressed.set(btn, true); 
+                        this.mousePressed.set(btn, true);
                     }
                 }
             });
         });
 
         document.addEventListener("mouseup", e =>
-        { 
+        {
             MouseButtons.forEach(btn => {
                 if(e.button == btn.code)
                 {
@@ -1628,12 +1629,12 @@ class Input
 
     earlyUpdate()
     {
-        KeyCodes.forEach(key => 
+        KeyCodes.forEach(key =>
         {
             if(this.keysUp.get(key))
                 this.keysPressed.set(key, false);
         });
-        
+
         MouseButtons.forEach(btn =>
         {
             if(this.mouseUp.get(btn))
@@ -1643,13 +1644,13 @@ class Input
 
     lateUpdate()
     {
-        KeyCodes.forEach(key => 
+        KeyCodes.forEach(key =>
         {
             this.keysDown.set(key, false);
             this.keysUp.set(key, false);
         });
 
-        MouseButtons.forEach(btn => 
+        MouseButtons.forEach(btn =>
         {
             this.mouseDown.set(btn, false);
             this.mouseUp.set(btn, false);
@@ -1727,14 +1728,26 @@ class Scene
         this.movables = new Map();
         this.collisionables = new Map();
         this.renderizables = new Map();
+        this.renderizablesByDepth = new Map();
+
+        this.sortRend = function(a, b)
+        {
+            let a_z = a[1];
+            let b_z = b[1];
+            
+            if(b_z > a_z) return 1;
+            if(a_z >= b_z) return -1;
+            return 0;
+        };
 
         this.name = name;
         this.running = SceneState.Pause;
 
         this.doPause = false;
-        
+
         this.input = null;
 
+        // Camera
         this.width = width;
         this.height = height;
 
@@ -1744,9 +1757,14 @@ class Scene
         this.canvas_width = canvas_width;
         this.canvas_height = canvas_height;
 
+        // SS
+        this.shake = 0;
+        this.kickY = 0;
+        this.kickX = 0;
+
         this.frame = 0;
 
-        this.ordered_draw = new Array();        
+        this.ordered_draw = new Array();
         this.debug = false;
     }
 
@@ -1762,7 +1780,7 @@ class Scene
     addToRun(entity)
     {
         let new_e = entity.clone();
-        
+
         if(new_e.getComponent(ComponentType.Collider) != null)
         {
             this.collisionables.set(new_e.id, new_e);
@@ -1772,24 +1790,17 @@ class Scene
         {
             this.renderizables.set(new_e.id, new_e);
 
-            this.ordered_draw = new Array();
-            this.renderizables.forEach(e => {
-                this.ordered_draw.push(e);
-            });
-            this.ordered_draw.sort((a, b) => 
+            this.renderizablesByDepth.set(new_e.id, new_e.getComponent(ComponentType.Sprite).depth);
+
+            this.renderizablesByDepth = new Map([...this.renderizablesByDepth.entries()].sort(this.sortRend));
+
+
+            if(this.debug)
             {
-                let a_z = a.getComponent(ComponentType.Sprite).depth;
-                let b_z = b.getComponent(ComponentType.Sprite).depth;
-                
-                if(b_z > a_z) return 1;
-                if(a_z > b_z) return -1;
-                return 0;
-            });
-            if(this.debug){
-                console.log(this.ordered_draw);
+                console.log(this.renderizablesByDepth);
             }
         }
-
+        
         if(new_e.getComponent(ComponentType.Kinematic) != null || new_e.getComponent(ComponentType.Behaviour) != null)
         {
             this.movables.set(new_e.id, new_e);
@@ -1798,9 +1809,10 @@ class Scene
 
     removeFromRun(entity)
     {
+        this.renderizables.delete(entity.id);
+        this.renderizablesByDepth.delete(entity.id);
         this.collisionables.delete(entity.id);
         this.movables.delete(entity.id);
-        this.renderizables.delete(entity.id);
     }
 
     getEntity(id)
@@ -1815,6 +1827,7 @@ class Scene
         this.collisionables = new Map();
         this.movables = new Map();
         this.renderizables = new Map();
+        this.renderizablesByDepth = new Map();
 
         this.frame = 0;
         // Añade de nuevo las entidades
@@ -1827,38 +1840,38 @@ class Scene
     play()
     {
         this.running = SceneState.Play;
-        
+
         /*if(this.sound_manager != null && this.sound_manager.loaded){
             //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
             //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
-            $.each(this.sound_manager.sounds, function(index, sound){   
+            $.each(this.sound_manager.sounds, function(index, sound){
                 if(sound != null && typeof sound.play == 'function'){
                     sound.play();
                 }
-            });   
+            });
         }*/
     }
-    
+
     pause()
     {
         this.running = SceneState.Pause;
-        
+
         /*if(this.sound_manager != null){
             //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
             //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
-            $.each(this.sound_manager.sounds, function(index, sound){   
+            $.each(this.sound_manager.sounds, function(index, sound){
                 if(sound != null && typeof sound.pause == 'function'){
                     sound.pause();
                 }
-            });   
+            });
         }*/
     }
-    
+
     step()
     {
         this.running = SceneState.Step;
     }
-    
+
     start()
     {
         this.reset();
@@ -1872,33 +1885,33 @@ class Scene
         if(this.sound_manager != null){
             //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
             //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
-            $.each(this.sound_manager.sounds, function(index, sound){   
+            $.each(this.sound_manager.sounds, function(index, sound){
                 if(sound != null && typeof sound.pause == 'function'){
                     sound.pause();
                 }
-            });   
+            });
         }
     }
-    
+
     //volumeMusic y volumeSound deben ser valores de una funcion log ya que el sonido no se percibe de forma lineal
     setVolume(volumeMusic, volumeSound, max){
         //comprobamos que sea musica comparando su nombre con los assets correspondientes
-        let aux = max - volumeMusic > 0 ? Math.log(max - volumeMusic) : 0;        
+        let aux = max - volumeMusic > 0 ? Math.log(max - volumeMusic) : 0;
         volumeMusic = (1- (aux/ Math.log(max)));
-        aux = max - volumeSound > 0 ? Math.log(max - volumeSound) : 0;    
+        aux = max - volumeSound > 0 ? Math.log(max - volumeSound) : 0;
         volumeSound = (1- (aux/ Math.log(max)));
-        
+
         let music = new Map().set("boss.ogg", true);
         if(this.sound_manager != null){
-            $.each(this.sound_manager.sounds, function(index, sound){  
+            $.each(this.sound_manager.sounds, function(index, sound){
                 if(sound != null && sound.name != null){
                     if(music.get(sound.name.split("/").pop()) === true){
                         sound.volume = volumeMusic;
                     }else{
                         sound.volume = volumeSound;
-                    }                    
+                    }
                 }
-            });   
+            });
         }
     }
 
@@ -1949,7 +1962,7 @@ class Scene
         {
             this.draw(ctx);
             this.askforPause();
-        }        
+        }
     }
 
     draw(ctx)
@@ -1962,21 +1975,24 @@ class Scene
         this.view_x = clamp(cam_pos.x - this.canvas_width * 0.5, 0, this.width - this.canvas_width);
         this.view_y = clamp(cam_pos.y - this.canvas_height * 0.5, 0, this.height - this.canvas_height);
 
+        /*this.view_x = cam_pos.x - this.canvas_width * 0.5;
+        this.view_y = cam_pos.y - this.canvas_height * 0.5;*/
+
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, -this.view_x, -this.view_y);
 
         ctx.fillStyle = "#000000";
 
         ctx.clearRect(this.view_x, this.view_y, this.canvas_width, this.canvas_height);
-        
+
         ctx.fillRect(this.view_x, this.view_y, this.canvas_width, this.canvas_height);
 
-        // Draw        
-        this.ordered_draw.forEach(function(e)
+        // Draw
+        
+        this.renderizablesByDepth.forEach((depth, id)=>
         {
-            //e.render(ctx);
-            e.render(ctx);
-        }, this);
+            this.renderizables.get(id).render(ctx);
+        });
 
         ctx.restore();
     }
@@ -1999,8 +2015,8 @@ class Scene
     setCamera(cam)
     {
         this.camera = cam;
-    }   
-    
+    }
+
     // Sound
     setSoundManager(sm)
     {

@@ -1,3 +1,5 @@
+//vscode-fold=1
+
 var started = false;
 var musicVol = 80;
 var soundsVol = 80;
@@ -95,13 +97,15 @@ let sprCharge = new Animation([
 
 //enemy Sprites
 let offset = Victor(-20, -20);
-let sprBolaA_S = new Sprite(["assets/game/sprites/enemys/robola-A/robolaS.png"], 0, offset);
-let sprBolaA_Base = new SpriteD(["assets/game/sprites/enemys/robola-A/robola5.png"], -0.2, offset);
-let sprBolaA_ruedas = new SpriteD(["assets/game/sprites/enemys/robola-A/robola4.png"], -0.4, offset);
-let sprBolaA_armadura = new SpriteD(["assets/game/sprites/enemys/robola-A/robola3.png"], -0.6, offset);
-let sprBolaA_cuello = new SpriteD(["assets/game/sprites/enemys/robola-A/robola2.png"], -0.9, offset);
-let sprBolaA_cabeza = new SpriteD(["assets/game/sprites/enemys/robola-A/robola1.png"], -1, offset);
-let sprBullet = new SpriteD(["assets/game/sprites/enemys/robola-A/bullet.png"], -0.5, Victor(-8, -8));
+let sprBolaA_S = new Sprite(["assets/game/sprites/enemies/robola-A/robolaS.png"], 0, offset);
+let sprBolaA_Base = new SpriteD(["assets/game/sprites/enemies/robola-A/robola5.png"], -0.2, offset);
+let sprBolaA_ruedas = new SpriteD(["assets/game/sprites/enemies/robola-A/robola4.png"], -0.4, offset);
+let sprBolaA_armadura = new SpriteD(["assets/game/sprites/enemies/robola-A/robola3.png"], -0.6, offset);
+let sprBolaA_cuello = new SpriteD(["assets/game/sprites/enemies/robola-A/robola2.png"], -0.9, offset);
+let sprBolaA_cabeza = new SpriteD(["assets/game/sprites/enemies/robola-A/robola1.png"], -1, offset);
+let sprBullet = new SpriteD(["assets/game/sprites/enemies/robola-A/bullet.png"], -0.5, Victor(-8, -8));
+
+let sprLaser = new SpriteD(["assets/game/sprites/enemies/aranya/laser.png"], -0.8, Victor(-12, -12));
 
 //sprite ninja
 let path = "assets/game/sprites/";
@@ -179,7 +183,7 @@ var sprNin_capa_dmg3 = new SpriteD(nin_capa_dmg_src[2], -1.0, Victor(-36, -8));
 var sprNin_capa_dmg4 = new SpriteD(nin_capa_dmg_src[3], -0.9, Victor(-36, -6));
 var sprNin_capa_dmg5 = new SpriteD(nin_capa_dmg_src[4], -0.9, Victor(-36, -11));
 
-let lagarto_path = "assets/game/sprites/enemys/";
+let lagarto_path = "assets/game/sprites/enemies/";
 var lagarto_src =
 [
     lagarto_path+"lagarto/lagarto1.png",
@@ -263,7 +267,7 @@ function recoveryEnergy(){
     }
     let energy = ninM.get("energy");
     if (energy < 5){
-        ninM.set("energy", energy+1)
+        ninM.set("energy", energy+1);
         let memo = scene.getEntity("HUD-energy").getComponent(ComponentType.Behaviour).memory;
         memo.set("energy", energy+1);
         memo.set("recover", true);            
@@ -285,8 +289,8 @@ function toggleSettings(){
     if(!inMainMenu && !actualState && !started)
         return;
     if(started){
-        $(".menu-subtitle").css({"height": "18%"})
-        $(".subtitle-sm").css({"height": "14%"})
+        $(".menu-subtitle").css({"height": "18%"});
+        $(".subtitle-sm").css({"height": "14%"});
         if(!actualState){
             scene.pause();
         }else{
@@ -295,8 +299,8 @@ function toggleSettings(){
         toggleDisplay($("#exit-button"), true);
         toggleBlur($("#playground"), !actualState);        
     }else{
-        $(".menu-subtitle").css({"height": "20%"})
-        $(".subtitle-sm").css({"height": "14%"})
+        $(".menu-subtitle").css({"height": "20%"});
+        $(".subtitle-sm").css({"height": "14%"});
         toggleDisplay($("#exit-button"), false);
         changeButtonsState($(".menu-btn"), !actualState);
         toggleBlur($("#menu-window"), !actualState);        
@@ -335,7 +339,7 @@ function toggleLang(view, state){
 function changeButtonsState(container, newState){    
     container.each(function(){
         $(this).prop("disabled", newState);
-    })    
+    });    
     /*let items = container.children("button");
     for(var i = 0; i < items.length; i++){
         var item = items[i];
@@ -390,7 +394,7 @@ function resetLanguageButtons(){
 function changeLang(but, lang){
     //console.log("cambiando lenguaje " + lang)
     if(i18next.language == "lang")
-            return;
+        return;
     resetLanguageButtons();
     i18next.changeLanguage(lang);    
     but.children().addClass("language-selected");
@@ -399,30 +403,30 @@ function changeLang(but, lang){
 //funciones para el modo fullscreen
 // mozfullscreenerror event handler
 function errorHandler() {
-   alert('mozfullscreenerror');
+    alert("mozfullscreenerror");
 }
-document.documentElement.addEventListener('mozfullscreenerror', errorHandler, false);
+document.documentElement.addEventListener("mozfullscreenerror", errorHandler, false);
 
 // toggle full screen
 function toggleFullScreen() {
-  if (!document.fullscreenElement &&    // alternative standard method
+    if (!document.fullscreenElement &&    // alternative standard method
       !document.mozFullScreenElement && !document.webkitFullscreenElement) {  // current working methods
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-    } else if (document.documentElement.mozRequestFullScreen) {
-      document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullscreen) {
-      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+    } else {
+        if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        }
     }
-  } else {
-    if (document.cancelFullScreen) {
-      document.cancelFullScreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitCancelFullScreen) {
-      document.webkitCancelFullScreen();
-    }
-  }
 }
 
 function detectDevice(){
@@ -440,15 +444,15 @@ function detectFullscreen(){
     //detectamos si estamos en full screen
     if (document.fullscreenElement ||    // alternative standard method
       document.mozFullScreenElement || document.webkitFullscreenElement){
-         $("#full-screen").get(0).checked = true;
+        $("#full-screen").get(0).checked = true;
         fullScreen = true;
     }else{
-         $("#full-screen").get(0).checked = false;
+        $("#full-screen").get(0).checked = false;
         fullScreen = false;
     }
     if(fullScreen && isMobile){
         //intentamos forcar el modo landscape
-        screen.orientation.lock('landscape');
+        screen.orientation.lock("landscape");
     }
 }
 
@@ -456,8 +460,8 @@ function detectOrientation(){
     //detectamos si se ha cambiado la orientación del movil
     if (matchMedia("(orientation: portrait)").matches) {
         orientationLandscape = false;
-      $("#landscape-button").children().removeClass("glyphicon-folder-close");
-      $("#landscape-button").children().addClass("glyphicon-file");
+        $("#landscape-button").children().removeClass("glyphicon-folder-close");
+        $("#landscape-button").children().addClass("glyphicon-file");
     }
     if (matchMedia("(orientation: landscape)").matches) {
         orientationLandscape = true;
@@ -484,12 +488,12 @@ function checkOrientation(){
 
 function loadRanking(){
     /*$("#ranking").html('<caption style="font-size:34px"><b>LeaderBoard</b></caption> <tr> <th style="width:20%">Place</th> <th style="width:50%">Player</th> <th>Points</th> </tr>');*/
-	for(var i = 0; i < ranking.length; i++){					
-		$("#ranking").append("<tr><td>"+ranking[i].pos+"</td> <td>"+ranking[i].name+"</td> <td>"+ranking[i].points+"</td></tr>");        
-	}
+    for(var i = 0; i < ranking.length; i++){					
+        $("#ranking").append("<tr><td>"+ranking[i].pos+"</td> <td>"+ranking[i].name+"</td> <td>"+ranking[i].points+"</td></tr>");        
+    }
 }
 
-$(function(){
+$(document).ready(()=>{
     //inicializacion
     init_i18n();    
     detectDevice();
@@ -509,7 +513,7 @@ $(function(){
     $("#sounds-volume-level").prop("value", soundsVol);
         
     //detectamos si la web se esta cargando como una web app desde el escritorio android
-    if (matchMedia('(display-mode: standalone)').matches) {
+    if (matchMedia("(display-mode: standalone)").matches) {
         webApp = true;
         fullScreen = true;
     }  
@@ -522,21 +526,21 @@ $(function(){
     
     $("#full-screen").click(function(){
         toggleFullScreen();       
-    })  
+    });  
     
     $("#change-mode-button").click(function(){
         //intentamos activar el modo fullscreen
         if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
+            document.documentElement.requestFullscreen();
         } else if (document.documentElement.mozRequestFullScreen) {
-          document.documentElement.mozRequestFullScreen();
+            document.documentElement.mozRequestFullScreen();
         } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
         }       
-    })
+    });
     
-    $("#1player-button").click(function(){toggleWindow($("#level-window"))});
-    $("#level-close-button").click(function(){toggleWindow($("#level-window"))}); 
+    $("#1player-button").click(function(){toggleWindow($("#level-window"));});
+    $("#level-close-button").click(function(){toggleWindow($("#level-window"));}); 
     
     $("#settings-button").click(toggleSettings);
     $("#settings-close-button").click(toggleSettings);   
@@ -547,22 +551,22 @@ $(function(){
         if(started && scene.sound_manager != null){
             scene.setVolume(musicVol, soundsVol, 100);
         }
-    })    
+    });    
     $("#sounds-volume-level").on("change", function(){
         soundsVol = $(this).prop("value");
         if(started && scene.sound_manager != null){
             scene.setVolume(musicVol, soundsVol, 100);
         }
-    })    
+    });    
     
-    $("#highscore-button").click(function(){toggleWindow($("#highscore-window"))});    
-    $("#highscore-close-button").click(function(){toggleWindow($("#highscore-window"))});
+    $("#highscore-button").click(function(){toggleWindow($("#highscore-window"));});    
+    $("#highscore-close-button").click(function(){toggleWindow($("#highscore-window"));});
     
-    $("#credits-button").click(function(){toggleWindow($("#credits-window"))});    
-    $("#credits-close-button").click(function(){toggleWindow($("#credits-window"))});
+    $("#credits-button").click(function(){toggleWindow($("#credits-window"));});    
+    $("#credits-close-button").click(function(){toggleWindow($("#credits-window"));});
     
-    $("#2players-button").click(function(){toggleWindow($("#2players-window"))});    
-    $("#2players-close-button").click(function(){toggleWindow($("#2players-window"))});
+    $("#2players-button").click(function(){toggleWindow($("#2players-window"));});    
+    $("#2players-close-button").click(function(){toggleWindow($("#2players-window"));});
     
     $("#pause-button").click(toggleSettings);
     // Manejador esc para pause
@@ -591,21 +595,21 @@ $(function(){
     });
     
     //manejador botones de idiomas
-    $("#bt-es").click(function (){changeLang($(this), "es")});
-    $("#bt-en").click(function (){changeLang($(this), "en")});
-    $("#bt-fr").click(function (){changeLang($(this), "fr")});
-    $("#bt-de").click(function (){changeLang($(this), "de")});
-    $("#bt-it").click(function (){changeLang($(this), "it")});    
+    $("#bt-es").click(function (){changeLang($(this), "es");});
+    $("#bt-en").click(function (){changeLang($(this), "en");});
+    $("#bt-fr").click(function (){changeLang($(this), "fr");});
+    $("#bt-de").click(function (){changeLang($(this), "de");});
+    $("#bt-it").click(function (){changeLang($(this), "it");});    
 });
 
 class GameLoop{    
     constructor(currentScene){
-        var self = this;
+        //var self = this;
         this.nt = new Date().getTime();
         this.t = new Date().getTime();
         this.dt = 0;
         this.scene = currentScene;
-    };
+    }
     
     loop(){
         easystar.calculate();
@@ -619,7 +623,7 @@ class GameLoop{
         this.scene.checkPause();
 
         // Render
-        requestAnimationFrame(function(){if(gameLoop != null) gameLoop.loop()});
+        requestAnimationFrame(function(){if(gameLoop != null) gameLoop.loop();});
 
         this.t = this.nt;
 
@@ -672,8 +676,23 @@ var follow = (e, m)=>
 
 //#endregion
 
-var rayCast = (from, to, tag)=>
+var rayCast = (collider, from, dir, tag, maxDist)=>
 {
+    let pos = from.clone();
+    let dist = 0;
+    while(dist <= maxDist)
+    {
+        if(collider.placeMeeting(pos, tag, -1) === null)
+        {
+            pos.add(Victor(1, 0).rotateByDeg(dir));
+            dist++;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    return false;
 
 };
 
@@ -690,14 +709,14 @@ var robolaRangedAct = (e, m)=>
     let t_t = target.getComponent(ComponentType.Transform);
 
     let shoot_dir;
-
+    let bolaShoot;
     let head = e.scene.getEntity(m.get("cabeza"));
     head.getComponent(ComponentType.Transform).rotation = lerpAngle(head.getComponent(ComponentType.Transform).rotation, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), 0.3);
     switch(m.get("state"))
     {
         case State.Surround:
             chase(e, m);
-            if(t_t.position.clone().distance(t.position) < 160)
+            if(t_t.position.clone().distance(t.position) < 160 && !rayCast(e.getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
             {
                 m.set("state", State.Shoot);
             }
@@ -706,7 +725,7 @@ var robolaRangedAct = (e, m)=>
         case State.Shoot:            
             shoot_dir = t_t.position.clone().subtract(t.position).horizontalAngleDeg();            
             k.speed = Victor(-10, 0).rotateByDeg(shoot_dir);
-            let bolaShoot = e.scene.sound_manager.getSound(snd_robolaAttack);
+            bolaShoot = e.scene.sound_manager.getSound(snd_robolaAttack);
             bolaShoot.play();
             createBala(Math.random()*10000, t.position.clone(), e.scene, shoot_dir, 200);
 
@@ -740,7 +759,7 @@ var lagartoAct = (e, m, dt)=>
         case State.Chase:
             //console.log("chasing");
             chase(e, m);
-            if(t_t.position.clone().distance(t.position) < 150)
+            if(t_t.position.clone().distance(t.position) < 150 && !rayCast(e.scene.getEntity(m.get("collider_holder")).getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
             {
                 //console.log("CHARGE");
                 m.set("state", State.Charge);
@@ -779,6 +798,63 @@ var lagartoAct = (e, m, dt)=>
             {
                 m.set("wait_time", m.get("wait_time")-1);
                 t.rotation = lerpAngle(t.rotation, t.rotation + Math.sin(m.get("wait_time")*0.01) * 120, 0.4);
+            }
+            break;
+    }
+};
+
+var aranyaAct = (e, m, dt)=>
+{
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null)
+        return;
+
+    let t = e.getComponent(ComponentType.Transform);
+    let k = e.getComponent(ComponentType.Kinematic);
+    let t_t = target.getComponent(ComponentType.Transform);
+
+    let laser_dir;
+
+    switch(m.get("state"))
+    {
+        case State.Chase:
+            //console.log("chasing");
+            chase(e, m);
+            if(t_t.position.clone().distance(t.position) < 320 && !rayCast(e.getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
+            {
+                m.set("state", State.Wait);
+                laser_dir = t_t.position.clone().add(target.getComponent(ComponentType.Kinematic).speed.clone().multiply(Victor(dt, dt))).subtract(t.position).horizontalAngleDeg();
+                t.rotation = laser_dir;
+                m.set("wait_time", 60);
+                k.speed.multiply(Victor(-0.05, -0.05).rotateDeg(laser_dir));
+            }
+            break;
+
+        case State.Shoot:
+            //console.log("charging");
+
+            if(m.get("laser_time") <= 0)
+            {
+                m.set("state", State.Chase);
+            }
+            else
+            {
+                createLaser(randomId(), t.position, e.scene, t.rotation, 900);
+                t.rotation = lerpAngle(t.rotation, t_t.position.clone().add(target.getComponent(ComponentType.Kinematic).speed.clone().multiply(Victor(dt, dt))).subtract(t.position).horizontalAngleDeg(), 0.01);
+                m.set("laser_time", m.get("laser_time") - 1);
+            }
+            break;
+
+        case State.Wait:
+            if(m.get("wait_time") <= 0)
+            {
+                m.set("state", State.Shoot);
+                m.set("laser_time", 120);
+            }
+            else
+            {
+                m.set("wait_time", m.get("wait_time")-1);
+                t.rotation = lerpAngle(t.rotation, t.rotation + Math.sin(m.get("wait_time")*0.2) * 130, 0.01);
             }
             break;
     }
@@ -904,40 +980,40 @@ var ninUpdate = (e, m) =>
     
     //check for collisions with solids
     let obj = c.placeMeeting(nextPosition, Tag.Solid, -1);
-        if(obj != null)
-        {       
-            //variables usadas para calcular la normal del impacto, se usa la funcion rayCollision que necesita 2 
-            //esquinas opuestas del collider total (sumando el ancho y alto de cada collider), la direccion y el punto de origen.
-            let otherC = obj[0].getComponent(ComponentType.Collider);
-            let otherT = obj[0].getComponent(ComponentType.Transform);            
-            let minCorner = Victor(otherT.position.x - ((c.width + otherC.width)/2),otherT.position.y - ((c.height + otherC.height)/2));
-            let maxCorner = Victor(otherT.position.x + ((c.width + otherC.width)/2),otherT.position.y + ((c.height + otherC.height)/2));
-            let coll = rayCollision(actualSpeed.normalize(), nextPosition, minCorner, maxCorner); 
-            //la funcion devuelve un array donde la pos 0 indica si se ha producido collision 
-            //(en este caso sera siempre true ya que la collision se ha chequeado antes) y la pos 1 es un vector con la normal
-            if(coll[1] != null){                
-                if(dashing() >= 1 && obj[0].id.search("cd") != -1){         //comprobamos si es un bloque destruible y si estamos en un dash lo bastante potente
-                    //destruimos el bloque
-                    obj[0].removeComponent(ComponentType.Collider);
-                    obj[0].getComponent(ComponentType.Sprite).image_speed = 0.3;
-                }else{
-                    k.speed = reflect(k.speed.clone(), coll[1]);
-                    t.rotation = k.speed.horizontalAngleDeg();
-                }                
-            }
-            if(e.scene.debug){
-                console.log("collision with " + obj[0].id);
-                console.log("normal "+coll[1]);
-            }
-            if(obj[0].id.search("dmg") != -1 && iframes == 0){
-                //el objeto es una caja dañina                
-                doDamage(1);
-            }
+    if(obj != null)
+    {       
+        //variables usadas para calcular la normal del impacto, se usa la funcion rayCollision que necesita 2 
+        //esquinas opuestas del collider total (sumando el ancho y alto de cada collider), la direccion y el punto de origen.
+        let otherC = obj[0].getComponent(ComponentType.Collider);
+        let otherT = obj[0].getComponent(ComponentType.Transform);            
+        let minCorner = Victor(otherT.position.x - ((c.width + otherC.width)/2),otherT.position.y - ((c.height + otherC.height)/2));
+        let maxCorner = Victor(otherT.position.x + ((c.width + otherC.width)/2),otherT.position.y + ((c.height + otherC.height)/2));
+        let coll = rayCollision(actualSpeed.normalize(), nextPosition, minCorner, maxCorner); 
+        //la funcion devuelve un array donde la pos 0 indica si se ha producido collision 
+        //(en este caso sera siempre true ya que la collision se ha chequeado antes) y la pos 1 es un vector con la normal
+        if(coll[1] != null){                
+            if(dashing() >= 1 && obj[0].id.search("cd") != -1){         //comprobamos si es un bloque destruible y si estamos en un dash lo bastante potente
+                //destruimos el bloque
+                obj[0].removeComponent(ComponentType.Collider);
+                obj[0].getComponent(ComponentType.Sprite).image_speed = 0.3;
+            }else{
+                k.speed = reflect(k.speed.clone(), coll[1]);
+                t.rotation = k.speed.horizontalAngleDeg();
+            }                
         }
+        if(e.scene.debug){
+            console.log("collision with " + obj[0].id);
+            console.log("normal "+coll[1]);
+        }
+        if(obj[0].id.search("dmg") != -1 && iframes == 0){
+            //el objeto es una caja dañina                
+            doDamage(1);
+        }
+    }
     
     k.speed = Victor(lerp(k.speed.x, base_spd_w_dir.x, 0.1), lerp(k.speed.y, base_spd_w_dir.y, 0.1));    
     
-    //check for collisions with enemys
+    //check for collisions with enemies
     obj = c.placeMeeting(nextPosition, Tag.Enemy, -1);
     if(obj != null){
         //colision con enemigos
@@ -1151,7 +1227,7 @@ var robolaDeath = (e, m) =>{
     }            
     let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
     bolaDeath.play();
-}
+};
 
 var uiLifeUpdate = (e, m) =>{
     let t = e.getComponent(ComponentType.Transform);
@@ -1179,7 +1255,7 @@ var uiLifeUpdate = (e, m) =>{
         }
         m.set("dmg_counter", count-1);
     }    
-}
+};
 
 var uiEnergyUpdate = (e, m) =>{
     let energy = m.get("energy");
@@ -1212,31 +1288,31 @@ var uiEnergyUpdate = (e, m) =>{
                     m.set("energy_counter", 15);
                 }                
                 break; 
-            }
+        }
         m.set("recovery_counter", 0);
         m.set("changed", false);
     }else{
         if(m.get("recover") === true){
-        switch (energy){
-            case 5: 
-                e.getComponent(ComponentType.Sprite).setImageIndex(1);
-                m.set("recovery_counter", 15);
-                break;   
-            case 4: 
-                e.getComponent(ComponentType.Sprite).setImageIndex(3);
-                m.set("recovery_counter", 15);
-                break;     
-            case 3: 
-                e.getComponent(ComponentType.Sprite).setImageIndex(5);
-                m.set("recovery_counter", 15);
-                break;  
-            case 2: 
-                e.getComponent(ComponentType.Sprite).setImageIndex(7);
-                m.set("recovery_counter", 15);
-                break; 
+            switch (energy){
+                case 5: 
+                    e.getComponent(ComponentType.Sprite).setImageIndex(1);
+                    m.set("recovery_counter", 15);
+                    break;   
+                case 4: 
+                    e.getComponent(ComponentType.Sprite).setImageIndex(3);
+                    m.set("recovery_counter", 15);
+                    break;     
+                case 3: 
+                    e.getComponent(ComponentType.Sprite).setImageIndex(5);
+                    m.set("recovery_counter", 15);
+                    break;  
+                case 2: 
+                    e.getComponent(ComponentType.Sprite).setImageIndex(7);
+                    m.set("recovery_counter", 15);
+                    break; 
             }        
-        m.set("energy_counter", 0);
-        m.set("recover", false);
+            m.set("energy_counter", 0);
+            m.set("recover", false);
         } 
     }    
 
@@ -1259,7 +1335,7 @@ var uiEnergyUpdate = (e, m) =>{
             m.set("recovery_counter", countRec-1);
         }
     }  
-}
+};
 //#endregion
 
 var chargeUpdate = (e, m) =>{
@@ -1286,9 +1362,9 @@ var chargeUpdate = (e, m) =>{
     t.position = ninT.position;
     
     if(image_index == 8 && ninMem.get("ready") !== true){
-            e.scene.getEntity("arrow").addComponent(sprArrow.clone());
-            ninMem.set("ready", true);
-        }    
+        e.scene.getEntity("arrow").addComponent(sprArrow.clone());
+        ninMem.set("ready", true);
+    }    
     
     if(image_index == 8 && energy == 1){
         //no puede cargarse el dash más del nivel 1
@@ -1302,7 +1378,7 @@ var chargeUpdate = (e, m) =>{
         //carga al nivel 3
         s.setImageIndex(36);
     }  
-}
+};
 
 var breakBoxUpdate = (e, m) =>{
     let s = e.getComponent(ComponentType.Sprite);
@@ -1319,7 +1395,7 @@ var breakBoxUpdate = (e, m) =>{
         e.addComponent(sprCD2);
         e.scene.addToRun(e);
     }
-}
+};
 
 function loadLevel(level){
     let mar = scene.margin;
@@ -1343,6 +1419,8 @@ function loadLevel(level){
     scene.addEntity(shadow);*/
     
     createNin(Victor(580, 360), scene);
+
+    createAranya(randomId(), Victor(720, 440), 0, Victor(0, 0), scene);
     
     var arrow = new Entity("arrow", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
     arrow.addComponent(sprArrowNull.clone());
@@ -1350,7 +1428,7 @@ function loadLevel(level){
     
     var charge = new Entity("charge", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
     charge.addComponent(sprChargeNull.clone());
-    charge.addComponent(new Behaviour([], [chargeUpdate], [],));
+    charge.addComponent(new Behaviour([], [chargeUpdate], []));
     scene.addEntity(charge);
     
     //Camara
@@ -1400,13 +1478,13 @@ function loadLevel(level){
         easystar.setGrid(lvl3Grid);
     }
     $.each(lvl, function(index, ent){
-             if(ent.type == "nd"){                               
-                createND(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));
-            }else if(ent.type == "dmg"){
-                createDMG(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
-            }else if(ent.type == "d"){
-                createD(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
-            }    
+        if(ent.type == "nd"){                               
+            createND(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));
+        }else if(ent.type == "dmg"){
+            createDMG(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
+        }else if(ent.type == "d"){
+            createD(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
+        }    
     });  
 }
 
@@ -1509,17 +1587,17 @@ let createDamage = (id, pos, rot, scene)=>
         obj = c.placeMeeting(p, Tag.Enemy, -1);
         if(obj != null){
         //daño a bola
-        if(obj[0].id.search("bullet") != -1){
+            if(obj[0].id.search("bullet") != -1){
             //destruimos la bala
-            obj[0].destroy();
-        }
-        //daño a robola
-        if(obj[0].id.search("robola") != -1){
+                obj[0].destroy();
+            }
+            //daño a robola
+            if(obj[0].id.search("robola") != -1){
             //enemigo robola
-            obj[0].destroy();            
-        }
+                obj[0].destroy();            
+            }
                 
-    }
+        }
     }
     ], [], new Map().set("wait_time", 5)));
     scene.addToRun(d);
@@ -1624,10 +1702,59 @@ let createRobolaRanged = (id, pos, rot, scale, scene_) =>
     scene_.addEntity(robolaArmadura);
 };
 
+let createAranya = (id, pos, rot, scale, scene_) =>
+{
+    let offset = Victor(-20, -20);
+
+    let aranyaSombra = new Entity("aranya_shadow#"+id, scene_, Tag.Enemy, new Transform(pos, rot, scale));
+    aranyaSombra.addComponent(sprBolaA_S.clone());
+    aranyaSombra.addComponent(new Behaviour([], [aranyaAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Chase).set("cabeza", "aranya_cabeza#"+id).set("ent_array", ["aranya_base#"+id, "aranya_ruedas#"+id, "aranya_armadura#"+id, "aranya_cuello#"+id, "aranya_cabeza#"+id])));
+    aranyaSombra.addComponent(new Kinematic(new Victor(32, 18), new Victor(0, 0), new Victor(0, 0)));
+    aranyaSombra.addComponent(new RectCollider(40, 40, offset));
+
+    let aranyaBase = new Entity("aranya_base#"+id, scene_);
+    aranyaBase.addComponent(sprBolaA_Base.clone());
+    aranyaBase.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_shadow#"+id)));
+    
+    let aranyaRuedas = new Entity("aranya_ruedas#"+id, scene_);
+    aranyaRuedas.addComponent(sprBolaA_ruedas.clone());
+    aranyaRuedas.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_base#"+id)));
+    
+    let aranyaArmadura = new Entity("aranya_armadura#"+id, scene_);
+    aranyaArmadura.addComponent(sprBolaA_armadura.clone());
+    aranyaArmadura.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_cuello#"+id).set("rot_smoothing", 0.5)));
+
+    let aranyaCuello = new Entity("aranya_cuello#"+id, scene_);
+    aranyaCuello.addComponent(sprBolaA_cuello.clone());
+    aranyaCuello.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_cabeza#"+id).set("rot_smoothing", 0.3)));
+
+    let aranyaCabeza = new Entity("aranya_cabeza#"+id, scene_);
+    aranyaCabeza.addComponent(sprBolaA_cabeza.clone());
+    aranyaCabeza.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_ruedas#"+id).set("rot_smoothing", 0)));
+
+    scene_.addEntity(aranyaSombra);
+    scene_.addEntity(aranyaBase);
+    scene_.addEntity(aranyaRuedas);
+    scene_.addEntity(aranyaCabeza);
+    scene_.addEntity(aranyaCuello);
+    scene_.addEntity(aranyaArmadura);
+};
+
 let createBala = (id, pos, scene, rot, speed) =>
 {
     let c = new Entity("bullet#"+ id, scene, Tag.Enemy);
     c.addComponent(sprBullet.clone());
+    c.addComponent(new Transform(pos, rot, Victor(1, 1)));
+    c.addComponent(new Kinematic(Victor(speed, 0).rotateByDeg(rot), Victor(0, 0), Victor(0, 0)));
+    c.addComponent(new RectCollider(16, 16, Victor(-8, -8)));
+    c.addComponent(new Behaviour([], [bullet], []));
+    scene.addToRun(c);
+};
+
+let createLaser = (id, pos, scene, rot, speed) =>
+{
+    let c = new Entity("bullet#"+ id, scene, Tag.Enemy);
+    c.addComponent(sprLaser.clone());
     c.addComponent(new Transform(pos, rot, Victor(1, 1)));
     c.addComponent(new Kinematic(Victor(speed, 0).rotateByDeg(rot), Victor(0, 0), Victor(0, 0)));
     c.addComponent(new RectCollider(16, 16, Victor(-8, -8)));
@@ -1699,7 +1826,7 @@ let createLagarto = (id, pos, rot, scale, scene) =>
         .set("pos_smoothing", 0.7)
         .set("rot_smoothing", 0.2)
     ));
-// Control
+    // Control
     let lagartoCabeza = new Entity("lagarto_cabeza#"+id, scene, Tag.Solid, new Transform(pos, rot, scale));
     lagartoCabeza.addComponent(sprLagarto_cabeza.clone());
     lagartoCabeza.addComponent(new Kinematic(new Victor(0, 0), new Victor(0, 0), new Victor(0, 0)));
@@ -1796,3 +1923,16 @@ function loadBg(){
     bg9.addComponent(new Transform(Victor(w-mar+10, h-mar+10), 270));
     scene.addEntity(bg9);
 }
+
+// Usa el siguiente comentario para desactivar los errores de librería que saca el linter
+/*global 
+
+Victor $
+console log
+
+Scene ComponentType Entity Transform Sprite Kinematic Collider Input KeyCode RectCollider Tag Behaviour MouseButton BehaviourType SoundManager SpriteD EasyStar Enum AnimationD
+
+lerpAngle sounds lerp clamp
+
+lvl1 lvl1Grid ranking init_i18n i18next
+*/
