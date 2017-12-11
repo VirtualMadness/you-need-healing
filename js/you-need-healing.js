@@ -10,6 +10,7 @@ var webApp = false;
 var fullScreen = false;
 var orientationLandscape = true;
 
+var actualLevel;
 var scene;
 var gameLoop;
 var ctx;
@@ -251,8 +252,22 @@ easystar.setIterationsPerCalculation(200);
 //#endregion
 
 function gameOver(){
+    scene.pause();
+    toggleBlur($("#playground"), true);
+    $("#points").html(""+points);
+    toggleDisplay($("#gameover-window"), true);        
+}
+
+function startGame(){ 
+    toggleDisplay($("#load-window"), false);     
+    started = true;
+    gameLoop = new GameLoop(scene);      
     scene.start();
-    scene.getEntity("nin").addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
+    gameLoop.loop();    
+    let bso = scene.sound_manager.getSound(game_music);
+    bso.loop = true;
+    bso.play();  
+    setEnergyRec();
 }
 
 function randomId(){
@@ -286,6 +301,10 @@ function setEnergyRec(){
 
 //muestra/oculta el menu de ajustes
 function toggleSettings(){
+
+    if(started && ($("#gameover-window").css("display") == "block" || $("#load-window").css("display") == "block")){
+        return;
+    }
     var actualState = $("#settings-window").css("display");    
     actualState = actualState == "none"? false: true;
     if(!inMainMenu && !actualState && !started)
@@ -361,9 +380,9 @@ function toggleDisplay(item, newState){
 function play(level){
     toggleBlur($("#menu-window"), false);
     toggleDisplay($("#level-window"), false);
-    toggleDisplay($("#menu-window"), false);
+    toggleDisplay($("#menu-window"), false);    
     toggleDisplay($("#game-window"), true); 
-    
+    toggleDisplay($("#load-window"), true);   
     //inicializamos el canvas
     ctx = $("#playground").get(0).getContext("2d");
     ctx.webkitImageSmoothingEnabled = false;
@@ -371,18 +390,20 @@ function play(level){
     ctx.imageSmoothingEnabled = false;
     const C_WIDTH = parseInt(ctx.canvas.getAttribute("width"));
     const C_HEIGHT = parseInt(ctx.canvas.getAttribute("height"));
+
+    //pintamos la escena en negro
+    ctx.fillStyle = "#000000";
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     
     //creamos la escena
     scene = new Scene("main", 1240, 800, C_WIDTH, C_HEIGHT);    
     //scene.debug = true;
     scene.margin = 60;
-    started = true;
-    gameLoop = new GameLoop(scene);    
-    loadLevel(level);   
-    scene.start();
-    gameLoop.loop();
-    points = 0;
-    setEnergyRec();
+    points = 0;    
+    actualLevel = level;    
+    loadLevel(actualLevel); 
+    setTimeout(startGame, 4000);
 }
 
 function resetLanguageButtons(){
@@ -488,6 +509,24 @@ function checkOrientation(){
     }
 }
 
+function exitGame(){
+    clearInterval(energyRec); 
+    inMainMenu = true;
+    gameLoop = null;
+    scene.stop();
+    scene = null;     
+    toggleDisplay($("#gameover-window"), false);    
+    toggleBlur($("#playground"), false);
+    toggleDisplay($("#level-window"), false);
+    toggleDisplay($("#menu-window"), true);
+    toggleDisplay($("#game-window"), false);
+    toggleDisplay($("#settings-window"), false);
+    toggleDisplay($("#credits-window"), false);
+    changeButtonsState($(".menu-btn"), false);                   
+    started = false;
+    points = 0;
+}
+
 function loadRanking(){
     /*$("#ranking").html('<caption style="font-size:34px"><b>LeaderBoard</b></caption> <tr> <th style="width:20%">Place</th> <th style="width:50%">Player</th> <th>Points</th> </tr>');*/
     for(var i = 0; i < ranking.length; i++){					
@@ -508,6 +547,8 @@ $(document).ready(()=>{
         if(isChromium){
             toggleDisplay($("#webApp-hint"), true);      
         }
+        $("#intro1").attr("src","assets/game/textures/intro_mobile1.gif");
+        $("#intro2").attr("src","assets/game/textures/intro_tap_mobile.gif");
     }
     
     //definimos los valores por defecto de los sliders de audio
@@ -518,7 +559,7 @@ $(document).ready(()=>{
     if (matchMedia("(display-mode: standalone)").matches) {
         webApp = true;
         fullScreen = true;
-    }  
+    }      
     
     window.addEventListener("resize", function(){
         detectFullscreen();
@@ -580,20 +621,16 @@ $(document).ready(()=>{
     });
     
     //manejador boton salir del juego
-    $("#exit-button").click(function(){  
-        clearInterval(energyRec); 
-        inMainMenu = true;
-        gameLoop = null;
-        scene.stop();
-        scene = null;     
-        toggleBlur($("#playground"), false);
-        toggleDisplay($("#level-window"), false);
-        toggleDisplay($("#menu-window"), true);
-        toggleDisplay($("#game-window"), false);
-        toggleDisplay($("#settings-window"), false);
-        toggleDisplay($("#credits-window"), false);
-        changeButtonsState($(".menu-btn"), false);                   
-        started = false;
+    $("#exit-button").click(exitGame);
+
+    $("#exit-button-gameover").click(exitGame);
+
+    $("#retry-button").click(function(){        
+        toggleBlur($("#playground"), false);    
+        toggleDisplay($("#gameover-window"), false);    
+        scene.start();
+        scene.getEntity("nin").addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
+        points = 0;
     });
     
     //manejador botones de idiomas
@@ -631,7 +668,7 @@ class GameLoop{
         ctx.font = "bold 10px Telemarines1Import";
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
-        ctx.fillText("Points: " + points, 590, 15);
+        ctx.fillText(i18next.t("puntos") +": " + points, 590, 15);
         
         // Render
         requestAnimationFrame(function(){if(gameLoop != null) gameLoop.loop();});             
@@ -1068,7 +1105,7 @@ var ninUpdate = (e, m) =>
                     console.log("Dash");   
 
                 let i_mp = m.get("i_mp");
-                let pc = m.get("press_count");
+                //let pc = m.get("press_count");
                 let new_spd = spd;
                 let wastedEnergy = 1;
 
@@ -1108,10 +1145,10 @@ var ninUpdate = (e, m) =>
         m.set("press_count", 0);
     }
 
-    if(input.getMousePressed(MouseButton.Left))
+    /*if(input.getMousePressed(MouseButton.Left))
     {
         
-    }    
+    }    */
     
     if(iframes > 0){
         if(iframes != 1){
@@ -1159,7 +1196,7 @@ var ninUpdate = (e, m) =>
         dmg.play();
         let newHp = hp - value; 
         //TOO borrar inmortal code
-        newHp = 3;
+        //newHp = 3;
         //inmortal code
         m.set("hp", newHp);
         e.scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
@@ -1430,10 +1467,7 @@ function loadLevel(level){
     scene.setInput(new Input(), ctx.canvas);
     // Sound    
     scene.setSoundManager(new SoundManager(sounds, sounds_to_load, ()=>{     
-        scene.setVolume(musicVol, soundsVol, 100);
-        let bso = scene.sound_manager.getSound(game_music);
-        bso.loop = true;
-        bso.play();  
+        scene.setVolume(musicVol, soundsVol, 100);        
     }));
     
     let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
@@ -1573,7 +1607,7 @@ let createDamage = (id, pos, rot, scene)=>
             m.set("wait_time", m.get("wait_time") - 1);
         
         //check collision with enemies
-        obj = c.placeMeeting(p, Tag.Enemy, -1);
+        let obj = c.placeMeeting(p, Tag.Enemy, -1);
         if(obj != null){
         //daño a bola
             if(obj[0].id.search("bullet") != -1){
@@ -1583,7 +1617,7 @@ let createDamage = (id, pos, rot, scene)=>
             //daño a robola
             if(obj[0].id.search("robola") != -1){
             //enemigo robola
-                enemyDeath(scene, obj[0].id)
+                enemyDeath(scene, obj[0].id);
                 points += 2;
             }
                 
@@ -1758,7 +1792,7 @@ let createLagarto = (id, pos, rot, scale, scene) =>
     let lagartoSombra = new Entity("lagarto_shadow#"+id, scene, Tag.Enemy, new Transform(pos, rot, scale));
     lagartoSombra.addComponent(sprLagarto_shadow.clone());
     lagartoSombra.addComponent(new Behaviour([], [follow], [], new Map().set("target", "lagarto_cabeza#"+id).set("pos_smoothing", 0.3).set("rot_smoothing", 0.2).set("ent_array", ["lagarto_oruga_b#"+id, "lagarto_ruedas#"+id, "lagarto_oruga_t#"+id, "lagarto_body_b#"+id, "lagarto_body_m#"+id, "lagarto_neck_b#"+id,
-    "lagarto_neck_m#"+id, "lagarto_neck_t#"+id, "lagarto_cabeza#"+id])));
+        "lagarto_neck_m#"+id, "lagarto_neck_t#"+id, "lagarto_cabeza#"+id])));
     lagartoSombra.addComponent(new RectCollider(30, 30, Victor(-15, -15)));
 
     let lagartoOrugaB = new Entity("lagarto_oruga_b#"+id, scene, new Transform(pos, rot, scale));

@@ -29,7 +29,7 @@ var literals = {
             "puesto": "#",
             "jugador": "Jugador",
             "puntos": "Puntos",
-            "puntosf": "Puntos:",
+            "cargando": "Cargando...",
             "reintentar": "Reintentar",
           }
         },
@@ -61,7 +61,7 @@ var literals = {
             "puesto": "#",
             "jugador": "Player",
             "puntos": "Points",
-            "puntosf": "Points:",
+            "cargando": "Loading...",
             "reintentar": "Retry",
           }
         },
@@ -93,7 +93,7 @@ var literals = {
             "puesto": "#",
             "jugador": "Joueur",
             "puntos": "Points",  
-            "puntosf": "Points:",
+            "cargando": "Loading...",
             "reintentar": "Réessayer",
           }
         },
@@ -125,7 +125,7 @@ var literals = {
             "puesto": "#",
             "jugador": "spieler",
             "puntos": "Punkte",
-            "puntosf": "Punkte:",
+            "cargando": "Laden...",
             "reintentar": "Retrying",
           }
         },
@@ -157,7 +157,7 @@ var literals = {
             "puesto": "#",
             "jugador": "Giocatore",
             "puntos": "Punti",
-            "puntosf": "Punti:",
+            "cargando": "Caricando...",
             "reintentar": "Riprovare",  
           }
     }
