@@ -1908,7 +1908,7 @@ class Scene
         aux = max - volumeSound > 0 ? Math.log(max - volumeSound) : 0;
         volumeSound = (1- (aux/ Math.log(max)));
 
-        let music = new Map().set("boss.ogg", true);
+        let music = new Map().set("game-theme.mp3", true);
         if(this.sound_manager != null){
             $.each(this.sound_manager.sounds, function(index, sound){
                 if(sound != null && sound.name != null){

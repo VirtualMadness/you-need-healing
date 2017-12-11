@@ -17,6 +17,9 @@ var ctx;
 var id = 0;
 var energyRec = null;
 var points = 0;
+var intervalRobola;
+var intervalAranya;
+var intervalLagarto;
 
 //#region Enums
 class State extends Enum
@@ -279,7 +282,9 @@ var snd_death = "assets/game/snd/sfx/nin/ktana_death.wav";
 var snd_robolaAttack = "assets/game/snd/sfx/enemies/RoboBolaA_attack.wav";
 var snd_robolaDeath = "assets/game/snd/sfx/enemies/RoBolaA_death.wav";
 var snd_lagartoDeath = "assets/game/snd/sfx/enemies/RoboLagarto_death.wav";
-var game_music = "assets/game/snd/music/boss.ogg";
+var snd_aranyaDeath = "assets/game/snd/sfx/enemies/RoboArana_death.wav";
+//var game_music = "assets/game/snd/music/boss.ogg";
+var game_music = "assets/game/snd/music/game-theme.mp3";
 var sounds_to_load = 
 [
     game_music,
@@ -289,6 +294,7 @@ var sounds_to_load =
     snd_robolaAttack,
     snd_robolaDeath,
     snd_lagartoDeath,
+    snd_aranyaDeath,
 ];
 //#endregion
 
@@ -544,13 +550,13 @@ function detectOrientation(){
     //detectamos si se ha cambiado la orientación del movil
     if (matchMedia("(orientation: portrait)").matches) {
         orientationLandscape = false;
-        $("#landscape-button").children().removeClass("glyphicon-folder-close");
-        $("#landscape-button").children().addClass("glyphicon-file");
+        //$("#landscape-button").children().removeClass("glyphicon-folder-close");
+        //$("#landscape-button").children().addClass("glyphicon-file");
     }
     if (matchMedia("(orientation: landscape)").matches) {
         orientationLandscape = true;
-        $("#landscape-button").children().addClass("glyphicon-folder-close");
-        $("#landscape-button").children().removeClass("glyphicon-file");
+        //$("#landscape-button").children().addClass("glyphicon-folder-close");
+        //$("#landscape-button").children().removeClass("glyphicon-file");
     }
 }
 
@@ -572,6 +578,9 @@ function checkOrientation(){
 
 function exitGame(){
     clearInterval(energyRec); 
+    clearInterval(intervalRobola);
+    clearInterval(intervalAranya);
+    clearInterval(intervalLagarto);
     inMainMenu = true;
     gameLoop = null;
     scene.stop();
@@ -608,7 +617,7 @@ $(document).ready(()=>{
         if(isChromium){
             toggleDisplay($("#webApp-hint"), true);      
         }
-        $("#intro1").attr("src","assets/game/textures/intro_mobile1.gif");
+        $("#intro1").attr("src","assets/game/textures/intro_mobile.gif");
         $("#intro2").attr("src","assets/game/textures/intro_tap_mobile.gif");
     }
     
@@ -686,7 +695,7 @@ $(document).ready(()=>{
 
     $("#exit-button-gameover").click(exitGame);
 
-    $("#retry-button").click(function(){        
+    $("#retry-button").click(function(){         
         toggleBlur($("#playground"), false);    
         toggleDisplay($("#gameover-window"), false);    
         scene.start();
@@ -1163,16 +1172,22 @@ var ninUpdate = (e, m, dt) =>
             //daño a enemigo        // puntos de la araña points += 10; bola points += 4
             if(obj[0].id.search("robola") != -1){
                 //enemigo robola
-                enemyDeath(e.scene, obj[0].id)
+                enemyDeath(e.scene, obj[0].id);
                 points += 2;
                 let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
                 bolaDeath.play();            
             }else if(obj[0].id.search("lagarto") != -1 && dashPower == 3){
-                //enemigo robola
-                enemyDeath(e.scene, obj[0].id)
+                //enemigo lagarto
+                enemyDeath(e.scene, obj[0].id);
                 let lagartoDeath = e.scene.sound_manager.getSound(snd_lagartoDeath);
                 lagartoDeath.play();  
                 points += 15;
+            }else if(obj[0].id.search("aranya") != -1 && dashPower == 2){
+                //enemigo aranya
+                enemyDeath(e.scene, obj[0].id);
+                let aranyaDeath = e.scene.sound_manager.getSound(snd_aranyaDeath);
+                aranyaDeath.play();  
+                points += 10;
             }
         }        
     }
@@ -1270,7 +1285,7 @@ var ninUpdate = (e, m, dt) =>
     }
     
     function dashing(){        
-        if(k.speed.magnitude() >= spd * 7)
+        if(k.speed.magnitude() >= spd * 7.2)
             return 3;
         if(k.speed.magnitude() >= spd * 4)
             return 2;
@@ -1536,9 +1551,7 @@ function loadLevel(level){
     shadow.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 1)));
     scene.addEntity(shadow);*/
     
-    createNin(Victor(580, 360), scene);
-
-    createAranya(randomId(), Victor(720, 440), 0, Victor(1, 1), scene);
+    createNin(Victor(580, 360), scene);   
     
     var arrow = new Entity("arrow", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
     arrow.addComponent(sprArrowNull.clone());
@@ -1572,13 +1585,15 @@ function loadLevel(level){
     uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
     scene.addEntity(uiEnergy);
     
-    createRobolaRanged(randomId(), Victor(400, 400, 0), 0, Victor(1,1), scene);
+    /*createRobolaRanged(randomId(), Victor(400, 400, 0), 0, Victor(1,1), scene);
     createRobolaRanged(randomId(), Victor(100, 100, 0), 0, Victor(1,1), scene);
     createRobolaRanged(randomId(), Victor(600, 600, 0), 0, Victor(1,1), scene);
     createRobolaRanged(randomId(), Victor(600, 200, 0), 0, Victor(1,1), scene);
     createRobolaRanged(randomId(), Victor(600, 600, 0), 0, Victor(1,1), scene);
     
     createLagarto(randomId(), Victor(300, 300, 0), 0, Victor(1,1), scene);
+
+    createAranya(randomId(), Victor(720, 440), 0, Victor(1, 1), scene);*/
     
     let lvl = lvl1;
     activeLevel = lvl1Grid;
@@ -1599,6 +1614,29 @@ function loadLevel(level){
             createDMG(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
         }else if(ent.type == "d"){
             createD(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
+        }else if(ent.type == "rba"){
+            createRobolaRanged(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), 0, Victor(1,1), scene); 
+            intervalRobola = setInterval(function(){
+                if(scene.running != SceneState.Play || scene.frame > 60*13){
+                    return;
+                }
+                createRobolaRanged(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), 0, Victor(1,1), scene); 
+            }, 10000);
+        }else if(ent.type == "ra"){
+            intervalAranya = setInterval(function(){
+                if(scene.running != SceneState.Play || scene.frame > 60*20){
+                    return;
+                }
+                createAranya(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar), 0, Victor(1, 1), scene);
+            }, 20000);            
+        }else if(ent.type == "rl"){
+            intervalLagarto = setInterval(function(){
+                if(scene.running != SceneState.Play || scene.frame > 60*30){
+                    return;
+                }
+                createLagarto(randomId(), Victor(40 * ent.x + mar, 40 * ent.y + mar, 0), 0, Victor(1,1), scene);
+            }, 30000); 
+            //createLagarto(randomId(), Victor(40 * ent.x + mar, 40 * ent.y + mar, 0), 0, Victor(1,1), scene);
         }    
     });  
 }
@@ -1810,12 +1848,12 @@ let createRobolaRanged = (id, pos, rot, scale, scene_) =>
     robolaCabeza.addComponent(sprBolaA_cabeza.clone());
     robolaCabeza.addComponent(new Behaviour([], [follow], [], new Map().set("target", "robola_ruedas#"+id).set("rot_smoothing", 0)));
 
-    scene_.addEntity(robolaSombra);
-    scene_.addEntity(robolaBase);
-    scene_.addEntity(robolaRuedas);
-    scene_.addEntity(robolaCabeza);
-    scene_.addEntity(robolaCuello);
-    scene_.addEntity(robolaArmadura);
+    scene_.addToRun(robolaSombra);
+    scene_.addToRun(robolaBase);
+    scene_.addToRun(robolaRuedas);
+    scene_.addToRun(robolaCabeza);
+    scene_.addToRun(robolaCuello);
+    scene_.addToRun(robolaArmadura);
 };
 
 let createAranya = (id, pos, rot, scale, scene_) =>
@@ -1847,12 +1885,12 @@ let createAranya = (id, pos, rot, scale, scene_) =>
     aranyaSombra.addComponent(new RectCollider(40, 40, Victor(-20, -20)));
     aranyaSombra.addComponent(new Behaviour([], [aranyaAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 80).set("state", State.Chase).set("cabeza", "aranya_cabeza#"+id).set("ent_array", ["aranya_cuerpo#"+id, "aranya_cabeza#"+id, "aranya_patasT#"+id, "aranya_patasM#"+id, "aranya_patasB#"+id])));
     
-    scene_.addEntity(aranyaCabeza);
-    scene_.addEntity(aranyaCuerpo);
-    scene_.addEntity(aranyaPatasT);
-    scene_.addEntity(aranyaPatasM);
-    scene_.addEntity(aranyaPatasB);
-    scene_.addEntity(aranyaSombra);
+    scene_.addToRun(aranyaCabeza);
+    scene_.addToRun(aranyaCuerpo);
+    scene_.addToRun(aranyaPatasT);
+    scene_.addToRun(aranyaPatasM);
+    scene_.addToRun(aranyaPatasB);
+    scene_.addToRun(aranyaSombra);
 };
 
 let createBala = (id, pos, scene, rot, speed) =>
@@ -1986,20 +2024,20 @@ let createLagarto = (id, pos, rot, scale, scene) =>
         .set("wait_time", 0)
     ));
 
-    scene.addEntity(lagartoSombra);
+    scene.addToRun(lagartoSombra);
 
-    scene.addEntity(lagartoOrugaB);
-    scene.addEntity(lagartoRuedas);
-    scene.addEntity(lagartoOrugaT);
+    scene.addToRun(lagartoOrugaB);
+    scene.addToRun(lagartoRuedas);
+    scene.addToRun(lagartoOrugaT);
 
-    scene.addEntity(lagartoBodyB);
-    scene.addEntity(lagartoBodyT);
+    scene.addToRun(lagartoBodyB);
+    scene.addToRun(lagartoBodyT);
 
-    scene.addEntity(lagartoNeckB);
-    scene.addEntity(lagartoNeckM);
-    scene.addEntity(lagartoNeckT);
+    scene.addToRun(lagartoNeckB);
+    scene.addToRun(lagartoNeckM);
+    scene.addToRun(lagartoNeckT);
 
-    scene.addEntity(lagartoCabeza);
+    scene.addToRun(lagartoCabeza);
 };
 
 function loadBg(){
