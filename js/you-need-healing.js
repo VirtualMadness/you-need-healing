@@ -547,7 +547,7 @@ $(document).ready(()=>{
         if(isChromium){
             toggleDisplay($("#webApp-hint"), true);      
         }
-        $("#intro1").attr("src","assets/game/textures/intro_mobile1.gif");
+        $("#intro1").attr("src","assets/game/textures/intro_mobile.gif");
         $("#intro2").attr("src","assets/game/textures/intro_tap_mobile.gif");
     }
     
