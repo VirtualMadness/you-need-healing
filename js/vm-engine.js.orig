@@ -1,10 +1,8 @@
-//vscode-fold=1
-
 //#region helpers
-
+//vscode-fold=1
 /**
  * Contiene un valor entre otros dos dados (mínimo y máximo) y devuelve el resultado
- * 
+ *
  * @param {number} val Valor a contener
  * @param {number} min Valor mínimo
  * @param {number} max Valor máximo
@@ -17,7 +15,7 @@ function clamp(val, min, max)
 
 /**
  * Interpola linealmente entre dos valores, inicial y objetivo, según un factor dado.
- * 
+ *
  * @param {number} val Valor inicial
  * @param {number} target Valor objetivo
  * @param {number} factor Factor de la aproximación (<0 -> undershoot, 0 -> valor inicial, 0.5 -> valor intermedio, 1 -> valor objetivo, >1 -> overshoot)
@@ -26,7 +24,7 @@ function clamp(val, min, max)
 function lerp(val, target, factor)
 {
     return val + (target - val) * factor;
-}
+};
 /**
  * Interpola linealmente entre dos `Victor`, inicial y objetivo, según un factor dado.
  *
@@ -65,7 +63,7 @@ Victor.reflect = (dir, normal) =>{
     //reflected vetor
     var ref = velT.subtract(velN);
     return ref;
-};
+}
 
 function reflect(dir, normal){
     normal = normal.normalize();
@@ -82,7 +80,6 @@ function reflect(dir, normal){
 function rayCollision(dir, ori, minCorner, maxCorner){
     let dirfrac = Victor(1, 1).divide(dir);
 
-    let t = 0;
     let t1 = (minCorner.x - ori.x)* dirfrac.x;
     let t2 = (maxCorner.x - ori.x)* dirfrac.x;
     let t3 = (minCorner.y - ori.y)* dirfrac.y;
@@ -126,7 +123,7 @@ function rayCollision(dir, ori, minCorner, maxCorner){
  * ```
  * Enum.Valor = new Enum("Valor")
  * ```
- * 
+ *
  * @class Enum
  */
 class Enum
@@ -386,7 +383,7 @@ class Tag extends Enum
     Tag.Player = new Tag("Player");
     Tag.UI = new Tag("UI");
     Tag.Enemy = new Tag("Enemy");
-    Tag.AllyDMG = new Tag("AllyDMG");
+    Tag.AllyDMG = new Tag("AllyDMG")
 }
 //#endregion
 
@@ -991,7 +988,7 @@ class Collider extends Component
 
     static positionMeeting(pos)
     {
-        return false;
+
     }
 
     /**
@@ -1058,7 +1055,7 @@ class RectCollider extends Collider
      * @param {Victor} origin Distancia que se resta del centro de la entidad (`Entity`) para hacer cálculos con el rectángulo de colisón (`RectCollider`).
      * @memberof RectCollider
      */
-    constructor(width, height, offset = Victor(0, 0))
+    constructor(width, height, offset  = new Victor(0, 0))
     {
         super();
         this.entity = undefined;
@@ -1308,7 +1305,7 @@ class Animation extends Sprite
         if(image_index >= this.frame_length){
             this.image_index = 0;
         }else{
-            this.image_index = image_index;
+             this.image_index = image_index;
         }
         this.setImageSource(this.src, this.image_index);
     }
@@ -1420,13 +1417,12 @@ class AnimationD extends SpriteD
     {
         return new AnimationD(this.src, this.image_speed, this.depth, this.offset.clone());
     }
-
     setImageIndex(image_index)
     {
         if(image_index >= this.frame_length){
             this.image_index = 0;
         }else{
-            this.image_index = image_index;
+             this.image_index = image_index;
         }
         this.setImageSource(this.src, this.image_index);
     }
@@ -1465,6 +1461,7 @@ class AnimationD extends SpriteD
 
     }
 }
+//#endregion
 //#endregion
 
 //#region input
@@ -1729,17 +1726,6 @@ class Scene
         this.movables = new Map();
         this.collisionables = new Map();
         this.renderizables = new Map();
-        this.renderizablesByDepth = new Map();
-
-        this.sortRend = function(a, b)
-        {
-            let a_z = a[1];
-            let b_z = b[1];
-            
-            if(b_z > a_z) return 1;
-            if(a_z >= b_z) return -1;
-            return 0;
-        };
 
         this.name = name;
         this.running = SceneState.Pause;
@@ -1764,8 +1750,6 @@ class Scene
         this.kickX = 0;
 
         this.frame = 0;
-        //this.frameSkip = 0;
-
 
         this.ordered_draw = new Array();
         this.debug = false;
@@ -1793,17 +1777,24 @@ class Scene
         {
             this.renderizables.set(new_e.id, new_e);
 
-            this.renderizablesByDepth.set(new_e.id, new_e.getComponent(ComponentType.Sprite).depth);
-
-            this.renderizablesByDepth = new Map([...this.renderizablesByDepth.entries()].sort(this.sortRend));
-
-
-            if(this.debug)
+            this.ordered_draw = new Array();
+            this.renderizables.forEach(e => {
+                this.ordered_draw.push(e);
+            });
+            this.ordered_draw.sort((a, b) =>
             {
-                console.log(this.renderizablesByDepth);
+                let a_z = a.getComponent(ComponentType.Sprite).depth;
+                let b_z = b.getComponent(ComponentType.Sprite).depth;
+
+                if(b_z > a_z) return 1;
+                if(a_z > b_z) return -1;
+                return 0;
+            });
+            if(this.debug){
+                console.log(this.ordered_draw);
             }
         }
-        
+
         if(new_e.getComponent(ComponentType.Kinematic) != null || new_e.getComponent(ComponentType.Behaviour) != null)
         {
             this.movables.set(new_e.id, new_e);
@@ -1812,10 +1803,9 @@ class Scene
 
     removeFromRun(entity)
     {
-        this.renderizables.delete(entity.id);
-        this.renderizablesByDepth.delete(entity.id);
         this.collisionables.delete(entity.id);
         this.movables.delete(entity.id);
+        this.renderizables.delete(entity.id);
     }
 
     getEntity(id)
@@ -1830,10 +1820,8 @@ class Scene
         this.collisionables = new Map();
         this.movables = new Map();
         this.renderizables = new Map();
-        this.renderizablesByDepth = new Map();
 
         this.frame = 0;
-        this.frameSkip = 0;
         // Añade de nuevo las entidades
         this.entities.forEach((e)=>
         {
@@ -1890,7 +1878,7 @@ class Scene
             //el objeto sounds tiene muchas propiedades, entre ellas los propios sonidos
             //para manipular solo los sonidos comprobamos que la propiedad tenga la funcion pause
             $.each(this.sound_manager.sounds, function(index, sound){
-                if(sound != null && typeof sound.pause == "function"){
+                if(sound != null && typeof sound.pause == 'function'){
                     sound.pause();
                 }
             });
@@ -1939,15 +1927,6 @@ class Scene
     {
         if(this.running == SceneState.Play)
         {
-            /*if(this.frameSkip > 0)
-            {
-                this.frameSkip--;
-                if(this.frameSkip%2 == 0)
-                {
-                    return;
-                }
-            }*/
-
             this.movables.forEach(function(e)
             {
                 e.update(dt);
@@ -1968,7 +1947,7 @@ class Scene
     render(ctx)
     {
         if(this.running == SceneState.Play)
-        {           
+        {
             this.draw(ctx);
         }
         else if(this.running == SceneState.Step)
@@ -1985,11 +1964,8 @@ class Scene
 
         let cam_pos = this.camera.getComponent(ComponentType.Transform).position;
 
-        this.view_x = clamp(cam_pos.x - this.canvas_width * 0.5 + this.shake*Math.sign(Math.random()-0.5), -80, this.width - this.canvas_width+80);
-        this.view_y = clamp(cam_pos.y - this.canvas_height * 0.5 + this.shake*Math.sign(Math.random()-0.5), -80, this.height - this.canvas_height+80);
-
-        /*this.view_x = cam_pos.x - this.canvas_width * 0.5 + this.shake*Math.sign(Math.random()-0.5) + this.kickX;
-        this.view_y = cam_pos.y - this.canvas_height * 0.5 + this.shake*Math.sign(Math.random()-0.5) + this.kickY;*/
+        this.view_x = clamp(cam_pos.x - this.canvas_width * 0.5, 0, this.width - this.canvas_width);
+        this.view_y = clamp(cam_pos.y - this.canvas_height * 0.5, 0, this.height - this.canvas_height);
 
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, -this.view_x, -this.view_y);
@@ -2001,17 +1977,13 @@ class Scene
         ctx.fillRect(this.view_x, this.view_y, this.canvas_width, this.canvas_height);
 
         // Draw
-        this.renderizablesByDepth.forEach((depth, id)=>
+        this.ordered_draw.forEach(function(e)
         {
-            this.renderizables.get(id).render(ctx);
-        });
+            //e.render(ctx);
+            e.render(ctx);
+        }, this);
 
         ctx.restore();
-
-        // Reducir screenshake
-        this.shake = lerp(this.shake, 0, 1.8);
-        this.kickX = lerp(this.kickX, 0, 0.02);
-        this.kickY = lerp(this.kickY, 0, 0.02);
     }
 
     // Input
@@ -2034,33 +2006,9 @@ class Scene
         this.camera = cam;
     }
 
-    addShake(power)
-    {
-        this.shake += power;
-    }
-
-    kick(vector)
-    {
-        this.kickX += vector.x;
-        this.kickY += vector.y;
-    }
-
     // Sound
     setSoundManager(sm)
     {
         this.sound_manager = sm;
     }
-
 }
-//#endregion
-
-// Usa el siguiente comentario para desactivar los errores de librería que saca el linter
-/*global 
-
-Victor $
-console log
-
-Scene ComponentType Entity Transform Sprite Kinematic Collider Input KeyCode RectCollider Tag Behaviour MouseButton BehaviourType SoundManager SpriteD EasyStar Enum AnimationD
-
-lerpAngle sounds lerp clamp
-*/

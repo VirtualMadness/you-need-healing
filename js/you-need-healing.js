@@ -31,6 +31,7 @@ State.Chase = new State("Chase");
 State.Attack = new State("Shoot");
 State.Surround = new State("Surround");
 State.Wait = new State("Wait");
+//#endregion 
 
 //RESOURCE VARIABLES
 //sprite normal block
@@ -105,7 +106,18 @@ let sprBolaA_cuello = new SpriteD(["assets/game/sprites/enemies/robola-A/robola2
 let sprBolaA_cabeza = new SpriteD(["assets/game/sprites/enemies/robola-A/robola1.png"], -1, offset);
 let sprBullet = new SpriteD(["assets/game/sprites/enemies/robola-A/bullet.png"], -0.5, Victor(-8, -8));
 
-let sprLaser = new SpriteD(["assets/game/sprites/enemies/aranya/laser.png"], -0.8, Victor(-12, -12));
+let bullet_hit_src = 
+[
+    "assets/game/sprites/enemies/robola-A/bullet-hit1.png",
+    "assets/game/sprites/enemies/robola-A/bullet-hit2.png",
+    "assets/game/sprites/enemies/robola-A/bullet-hit3.png",
+    "assets/game/sprites/enemies/robola-A/bullet-hit4.png",
+    "assets/game/sprites/enemies/robola-A/bullet-hit5.png"
+];
+
+let sprBulletHit = new AnimationD(bullet_hit_src, 0.8, -1, Victor(-16, -16));
+
+let sprLaser = new SpriteD(["assets/game/sprites/enemies/aranya/laser.png"], -1.2, Victor(-12, -12));
 
 //sprite ninja
 let path = "assets/game/sprites/";
@@ -209,6 +221,55 @@ var sprLagarto_orugaT = new Sprite(lagarto_src[6], -0.4, lagarto_offset);
 var sprLagarto_ruedas = new SpriteD(lagarto_src[7], -0.2, lagarto_offset);
 var sprLagarto_orugaB = new Sprite(lagarto_src[8], -0.1, lagarto_offset);
 var sprLagarto_shadow = new Sprite(lagarto_src[9], 0, lagarto_offset);
+
+// Araña
+let aranya_path = "assets/game/sprites/enemies/aranya/";
+let aranya_legT_src = 
+[
+    aranya_path + "aranya_legT_1.png",
+    aranya_path + "aranya_legT_2.png",
+    aranya_path + "aranya_legT_3.png",
+    aranya_path + "aranya_legT_4.png"
+];
+
+let aranya_legM_src = 
+[
+    aranya_path + "aranya_legM_1.png",
+    aranya_path + "aranya_legM_2.png",
+    aranya_path + "aranya_legM_3.png",
+    aranya_path + "aranya_legM_4.png"
+];
+
+let aranya_legB_src = 
+[
+    aranya_path + "aranya_legB_1.png",
+    aranya_path + "aranya_legB_2.png",
+    aranya_path + "aranya_legB_3.png",
+    aranya_path + "aranya_legB_4.png"
+];
+let aranya_offset = Victor(-40, -40);
+let sprAranya_head = new SpriteD(aranya_path+"aranya_head.png", -1.5, aranya_offset);
+let sprAranya_body = new SpriteD(aranya_path+"aranya_body.png", -1, aranya_offset);
+let sprAranya_legT = new AnimationD(aranya_legT_src, 0, -0.8, aranya_offset);
+let sprAranya_legM = new AnimationD(aranya_legM_src, 0, -0.4, aranya_offset);
+let sprAranya_legB = new AnimationD(aranya_legB_src, 0, -0.05,aranya_offset);
+let sprAranya_shadow = new Sprite([aranya_path+"circle-shadow.png"], -0.2, Victor(-32, -32));
+
+let laser_init_src =
+[
+    aranya_path+"laser-init1.png",
+    aranya_path+"laser-init2.png",
+    aranya_path+"laser-init3.png",
+    aranya_path+"laser-init4.png",
+    aranya_path+"laser-init5.png",
+    aranya_path+"laser-init6.png",
+    aranya_path+"laser-init7.png",
+    aranya_path+"laser-init8.png",
+    aranya_path+"laser-init9.png",
+    aranya_path+"laser-init10.png"
+];
+
+let sprLaserInit = new AnimationD(laser_init_src, 0.3, -1.51, Victor(-12, -12));
 
 //#region Sonidos
 var snd_draw = "assets/game/snd/sfx/nin/draw-1.ogg";
@@ -657,23 +718,44 @@ var follow = (e, m)=>
     t.rotation = lerpAngle(t.rotation, target_rot, rot_smoothing);
 };
 
-/*var followCam = (e, m)=>
+var followPos = (e, m)=>
 {
     let target = e.scene.getEntity(m.get("target"));
     if(target == null) 
         return;
 
-    let smoothing = m.get("smoothing");
+    let pos_smoothing = m.has("pos_smoothing") ? m.get("pos_smoothing") : 1;
     let t = e.getComponent(ComponentType.Transform);
 
     let target_pos = target.getComponent(ComponentType.Transform).position;
-    let target_rot = target.getComponent(ComponentType.Transform).rotation;
 
-    t.position.x = clamp(lerp(t.position.x, target_pos.x, smoothing), e.scene.canvas_width/2, e.scene.width - e.scene.canvas_width/2);
-    t.position.y = clamp(lerp(t.position.y, target_pos.y, smoothing), e.scene.canvas_height/2, e.scene.height - e.scene.canvas_height/2);
-    t.rotation = target_rot;
-};*/
+    t.position = Victor(lerp(t.position.x, target_pos.x, pos_smoothing), lerp(t.position.y, target_pos.y, pos_smoothing));
+};
 
+var followCam = (e, m)=>
+{
+    let target = e.scene.getEntity(m.get("target"));
+    if(target == null) 
+        return;
+
+    let pos_smoothing = m.has("pos_smoothing") ? m.get("pos_smoothing") : 1;
+    let t = e.getComponent(ComponentType.Transform);
+
+    let target_pos = target.getComponent(ComponentType.Transform).position;
+
+    t.position = Victor(lerp(t.position.x, target_pos.x + e.scene.kickX, pos_smoothing), lerp(t.position.y, target_pos.y + e.scene.kickY, pos_smoothing));
+
+};
+
+var useSpeed = (e, m) =>
+{
+    let a = e.getComponent(ComponentType.Sprite);
+    let spd = e.scene.getEntity(m.get("target")).getComponent(ComponentType.Kinematic).speed.clone();
+    if(spd.length() > 10)
+        a.image_speed = spd.length()/500;
+    else
+        a.image_speed = 0;
+};
 //#endregion
 
 var rayCast = (collider, from, dir, tag, maxDist)=>
@@ -693,7 +775,6 @@ var rayCast = (collider, from, dir, tag, maxDist)=>
         }
     }
     return false;
-
 };
 
 //intenta acercarse al personaje para dispararle
@@ -759,7 +840,7 @@ var lagartoAct = (e, m, dt)=>
         case State.Chase:
             //console.log("chasing");
             chase(e, m);
-            if(t_t.position.clone().distance(t.position) < 150 && !rayCast(e.scene.getEntity(m.get("collider_holder")).getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
+            if(t_t.position.clone().distance(t.position) < 240 && !rayCast(e.scene.getEntity(m.get("collider_holder")).getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
             {
                 //console.log("CHARGE");
                 m.set("state", State.Charge);
@@ -779,7 +860,7 @@ var lagartoAct = (e, m, dt)=>
                 {
                     t.position.add(k.speed.clone().normalize().multiply(Victor(dt, dt)));
                 }               
-                
+                e.scene.addShake(8);
                 k.speed = Victor(0, 0);
                 m.set("state", State.Wait);
                 //console.log("WAIT");
@@ -815,17 +896,21 @@ var aranyaAct = (e, m, dt)=>
 
     let laser_dir;
 
+    let head_t = e.scene.getEntity(m.get("cabeza")).getComponent(ComponentType.Transform);
+
     switch(m.get("state"))
     {
         case State.Chase:
             //console.log("chasing");
             chase(e, m);
-            if(t_t.position.clone().distance(t.position) < 320 && !rayCast(e.getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
+            head_t.rotation = lerpAngle(head_t.rotation, t.rotation, 0.3);
+            if(t_t.position.clone().distance(t.position) < 320 && Math.abs(t_t.position.clone().subtract(head_t.position).horizontalAngleDeg() - head_t.rotation) < 30 && !rayCast(e.getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
             {
                 m.set("state", State.Wait);
+                createLaserInit(randomId(), t.position.clone().add(Victor(40, 0).rotateByDeg(head_t.rotation)), e.scene);
                 laser_dir = t_t.position.clone().add(target.getComponent(ComponentType.Kinematic).speed.clone().multiply(Victor(dt, dt))).subtract(t.position).horizontalAngleDeg();
-                t.rotation = laser_dir;
-                m.set("wait_time", 60);
+                head_t.rotation = laser_dir;
+                m.set("wait_time", 40);
                 k.speed.multiply(Victor(-0.05, -0.05).rotateDeg(laser_dir));
             }
             break;
@@ -839,8 +924,8 @@ var aranyaAct = (e, m, dt)=>
             }
             else
             {
-                createLaser(randomId(), t.position, e.scene, t.rotation, 900);
-                t.rotation = lerpAngle(t.rotation, t_t.position.clone().add(target.getComponent(ComponentType.Kinematic).speed.clone().multiply(Victor(dt, dt))).subtract(t.position).horizontalAngleDeg(), 0.01);
+                createLaser(randomId(), head_t.position.clone().add(Victor(20, 0).rotateByDeg(head_t.rotation)), e.scene, head_t.rotation, 900);
+                head_t.rotation = lerpAngle(head_t.rotation, t_t.position.clone().add(target.getComponent(ComponentType.Kinematic).speed.clone().multiply(Victor(dt, dt))).subtract(t.position).horizontalAngleDeg(), 0.01);
                 m.set("laser_time", m.get("laser_time") - 1);
             }
             break;
@@ -854,7 +939,7 @@ var aranyaAct = (e, m, dt)=>
             else
             {
                 m.set("wait_time", m.get("wait_time")-1);
-                t.rotation = lerpAngle(t.rotation, t.rotation + Math.sin(m.get("wait_time")*0.2) * 130, 0.01);
+                head_t.rotation = lerpAngle(t.rotation, t.rotation + Math.sin(m.get("wait_time")*0.2) * 130, 0.01);
             }
             break;
     }
@@ -944,7 +1029,11 @@ var bullet = (e, m)=>
     let c = e.getComponent(ComponentType.Collider);
     let t = e.getComponent(ComponentType.Transform);
     if(c.placeMeeting(t.position, Tag.Solid, -1) != null)
+    {
+        createBalaHit(randomId(), t.position, e.scene);
+        e.scene.addShake(0.5);
         e.destroy();
+    }
 };
 
 //#region Nin
@@ -957,7 +1046,7 @@ var bullet = (e, m)=>
     m.set("iframes", 0);
 };*/
 
-var ninUpdate = (e, m) =>
+var ninUpdate = (e, m, dt) =>
 {    
     // Params
     let dir = m.get("direction");
@@ -1065,11 +1154,11 @@ var ninUpdate = (e, m) =>
 
                 let power = e.scene.getEntity("charge").getComponent(ComponentType.Sprite).image_index;
                 if(power >= 36){
-                    new_spd *= 2;
+                    new_spd *= 1.7;
                     wastedEnergy++;
                 }
                 if(power >= 18){
-                    new_spd *= 1.5;
+                    new_spd *= 2;
                     wastedEnergy++;
                 }
                 if(wastedEnergy > 1){
@@ -1077,6 +1166,7 @@ var ninUpdate = (e, m) =>
                 }            
                 new_spd *= 5;
                 k.speed = input.mouseCanvasPosition.clone().subtract(i_mp).normalize().multiply(Victor(new_spd, new_spd));
+                e.scene.kick(k.speed.clone().multiply(Victor(-2*dt, -2*dt)));
                 t.rotation = k.speed.horizontalAngleDeg();                
             }
             else
@@ -1097,11 +1187,6 @@ var ninUpdate = (e, m) =>
         e.scene.getEntity("arrow").addComponent(sprArrowNull.clone());
         e.scene.getEntity("charge").addComponent(sprChargeNull.clone());
         m.set("press_count", 0);
-    }
-
-    if(input.getMousePressed(MouseButton.Left))
-    {
-        
     }
 
     /*if(input.getMouseUp(MouseButton.Left))
@@ -1233,7 +1318,7 @@ var uiLifeUpdate = (e, m) =>{
     let t = e.getComponent(ComponentType.Transform);
     let image_index = e.getComponent(ComponentType.Sprite).image_index;
     let scene_ = e.scene;
-    t.position = (Victor(scene_.view_x + scene_.canvas_width - 32, scene_.view_y + scene_.canvas_height - 10));
+    t.position = (Victor(scene_.view_x + scene_.canvas_width*0.5, scene_.view_y + scene_.canvas_height - 30));
     let hp = m.get("hp_value");
     if(m.get("damaged") === true){
         if(hp == 2){
@@ -1247,6 +1332,7 @@ var uiLifeUpdate = (e, m) =>{
         } 
         m.set("dmg_counter", 15);
         m.set("damaged", false);
+        e.scene.addShake(20);
     }   
     let count = m.get("dmg_counter");
     if(count > 0){
@@ -1263,7 +1349,7 @@ var uiEnergyUpdate = (e, m) =>{
     
     let t = e.getComponent(ComponentType.Transform);
     let scene_ = e.scene;
-    t.position = (Victor(scene_.view_x + scene_.canvas_width - 8, scene_.view_y + scene_.canvas_height - 10));
+    t.position = (Victor(scene_.view_x + scene_.canvas_width*0.5, scene_.view_y + scene_.canvas_height - 50));
     
     if(m.get("changed") === true){
         switch (energy){
@@ -1340,16 +1426,16 @@ var uiEnergyUpdate = (e, m) =>{
 
 var chargeUpdate = (e, m) =>{
     let s = e.getComponent(ComponentType.Sprite);
+    let t = e.getComponent(ComponentType.Transform);
     if(s.image_speed == 0){
+        t.rotation = 0;
         return;
     }
     // Input
     let input = e.scene.getInput();
-    let t = e.getComponent(ComponentType.Transform);
     let image_index = s.image_index;
     let ninMem = e.scene.getEntity("nin").getComponent(ComponentType.Behaviour).memory;
     let energy = ninMem.get("energy");  
-            
     let i_mp = ninMem.get("i_mp");
     if(i_mp == null)
         return;
@@ -1368,15 +1454,18 @@ var chargeUpdate = (e, m) =>{
     
     if(image_index == 8 && energy == 1){
         //no puede cargarse el dash más del nivel 1
-        s.setImageIndex(5);
+        s.setImageIndex(6);
+        t.rotation+=3;
     }
     if(image_index == 21 && energy <= 2){
         //no puede cargarse el dash más del nivel 2
-        s.setImageIndex(18);
+        s.setImageIndex(19);
+        t.rotation+=8;
     }
     if(image_index >= 39){
         //carga al nivel 3
-        s.setImageIndex(36);
+        s.setImageIndex(37);
+        t.rotation+=15;
     }  
 };
 
@@ -1420,7 +1509,7 @@ function loadLevel(level){
     
     createNin(Victor(580, 360), scene);
 
-    createAranya(randomId(), Victor(720, 440), 0, Victor(0, 0), scene);
+    createAranya(randomId(), Victor(720, 440), 0, Victor(1, 1), scene);
     
     var arrow = new Entity("arrow", scene, Tag.Default, new Transform(Victor(0, 0), 0, Victor(1, 1)));
     arrow.addComponent(sprArrowNull.clone());
@@ -1434,7 +1523,7 @@ function loadLevel(level){
     //Camara
     var cam = new Entity("camera", scene, Tag.Camera, new Transform(Victor(580, 360), 0, Victor(0.1, 0.1)));
     //cam.addComponent(new Sprite([spritesPath + "robola.png"], -2, Victor(0, 0)));
-    cam.addComponent(new Behaviour([], [follow], [], new Map().set("target", "nin").set("smoothing", 0.1)));
+    cam.addComponent(new Behaviour([], [followCam], [], new Map().set("target", "nin").set("smoothing", 0.1)));
     scene.addEntity(cam);
     scene.setCamera(cam);
     
@@ -1448,12 +1537,12 @@ function loadLevel(level){
     }));
     
     let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
-    uiLife.addComponent(new Animation([spritesPath + "health1.png", spritesPath + "health2.png", spritesPath + "health3.png", spritesPath + "health4.png", spritesPath + "health5.png", spritesPath + "health6.png", spritesPath + "health7.png"], 0, -100, Victor(-20, -81)));
+    uiLife.addComponent(new Animation([spritesPath + "health1.png", spritesPath + "health2.png", spritesPath + "health3.png", spritesPath + "health4.png", spritesPath + "health5.png", spritesPath + "health6.png", spritesPath + "health7.png"], 0, -100, Victor(-41, 0)));
     uiLife.addComponent(new Behaviour([], [uiLifeUpdate], []));
     scene.addEntity(uiLife);
     
     let uiEnergy = new Entity("HUD-energy", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
-    uiEnergy.addComponent(new Animation([spritesPath + "power1.png", spritesPath + "power2.png", spritesPath + "power3.png", spritesPath + "power4.png", spritesPath + "power5.png", spritesPath + "power6.png", spritesPath + "power7.png", spritesPath + "power8.png", spritesPath + "power9.png", spritesPath + "power10.png", spritesPath + "power11.png"], 0, -100, Victor(-20, -81)));
+    uiEnergy.addComponent(new Animation([spritesPath + "power1.png", spritesPath + "power2.png", spritesPath + "power3.png", spritesPath + "power4.png", spritesPath + "power5.png", spritesPath + "power6.png", spritesPath + "power7.png", spritesPath + "power8.png", spritesPath + "power9.png", spritesPath + "power10.png", spritesPath + "power11.png"], 0, -100, Victor(-41, 0)));
     uiEnergy.addComponent(new Behaviour([], [uiEnergyUpdate], [], new Map().set("energy", 5)));
     scene.addEntity(uiEnergy);
     
@@ -1704,50 +1793,79 @@ let createRobolaRanged = (id, pos, rot, scale, scene_) =>
 
 let createAranya = (id, pos, rot, scale, scene_) =>
 {
-    let offset = Victor(-20, -20);
-
-    let aranyaSombra = new Entity("aranya_shadow#"+id, scene_, Tag.Enemy, new Transform(pos, rot, scale));
-    aranyaSombra.addComponent(sprBolaA_S.clone());
-    aranyaSombra.addComponent(new Behaviour([], [aranyaAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Chase).set("cabeza", "aranya_cabeza#"+id).set("ent_array", ["aranya_base#"+id, "aranya_ruedas#"+id, "aranya_armadura#"+id, "aranya_cuello#"+id, "aranya_cabeza#"+id])));
-    aranyaSombra.addComponent(new Kinematic(new Victor(32, 18), new Victor(0, 0), new Victor(0, 0)));
-    aranyaSombra.addComponent(new RectCollider(40, 40, offset));
-
-    let aranyaBase = new Entity("aranya_base#"+id, scene_);
-    aranyaBase.addComponent(sprBolaA_Base.clone());
-    aranyaBase.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_shadow#"+id)));
     
-    let aranyaRuedas = new Entity("aranya_ruedas#"+id, scene_);
-    aranyaRuedas.addComponent(sprBolaA_ruedas.clone());
-    aranyaRuedas.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_base#"+id)));
-    
-    let aranyaArmadura = new Entity("aranya_armadura#"+id, scene_);
-    aranyaArmadura.addComponent(sprBolaA_armadura.clone());
-    aranyaArmadura.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_cuello#"+id).set("rot_smoothing", 0.5)));
-
-    let aranyaCuello = new Entity("aranya_cuello#"+id, scene_);
-    aranyaCuello.addComponent(sprBolaA_cuello.clone());
-    aranyaCuello.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_cabeza#"+id).set("rot_smoothing", 0.3)));
-
     let aranyaCabeza = new Entity("aranya_cabeza#"+id, scene_);
-    aranyaCabeza.addComponent(sprBolaA_cabeza.clone());
-    aranyaCabeza.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_ruedas#"+id).set("rot_smoothing", 0)));
+    aranyaCabeza.addComponent(sprAranya_head.clone());
+    aranyaCabeza.addComponent(new Behaviour([], [followPos], [], new Map().set("target", "aranya_sombra#"+id).set("pos_smoothing", 0.5).set("rot_smoothing", 0.3)));
 
-    scene_.addEntity(aranyaSombra);
-    scene_.addEntity(aranyaBase);
-    scene_.addEntity(aranyaRuedas);
+    let aranyaCuerpo = new Entity("aranya_cuerpo#"+id, scene_);
+    aranyaCuerpo.addComponent(sprAranya_body.clone());
+    aranyaCuerpo.addComponent(new Behaviour([], [follow], [], new Map().set("target", "aranya_sombra#"+id)));
+    
+    let aranyaPatasT = new Entity("aranya_patasT#"+id, scene_);
+    aranyaPatasT.addComponent(sprAranya_legT.clone());
+    aranyaPatasT.addComponent(new Behaviour([], [follow, useSpeed], [], new Map().set("target", "aranya_sombra#"+id)));
+
+    let aranyaPatasM = new Entity("aranya_patasM#"+id, scene_);
+    aranyaPatasM.addComponent(sprAranya_legM.clone());
+    aranyaPatasM.addComponent(new Behaviour([], [follow, useSpeed], [], new Map().set("target", "aranya_sombra#"+id)));
+
+    let aranyaPatasB = new Entity("aranya_patasB#"+id, scene_);
+    aranyaPatasB.addComponent(sprAranya_legB.clone());
+    aranyaPatasB.addComponent(new Behaviour([], [follow, useSpeed], [], new Map().set("target", "aranya_sombra#"+id)));
+
+    let aranyaSombra = new Entity("aranya_sombra#"+id, scene_, Tag.Enemy, new Transform(pos, rot, scale));
+    aranyaSombra.addComponent(sprAranya_shadow.clone());
+    aranyaSombra.addComponent(new Kinematic(new Victor(32, 18), new Victor(0, 0), new Victor(0, 0)));
+    aranyaSombra.addComponent(new RectCollider(40, 40, Victor(-20, -20)));
+    aranyaSombra.addComponent(new Behaviour([], [aranyaAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 80).set("state", State.Chase).set("cabeza", "aranya_cabeza#"+id).set("ent_array", ["aranya_cuerpo#"+id, "aranya_cabeza#"+id, "aranya_patasT#"+id, "aranya_patasM#"+id, "aranya_patasB#"+id])));
+    
     scene_.addEntity(aranyaCabeza);
-    scene_.addEntity(aranyaCuello);
-    scene_.addEntity(aranyaArmadura);
+    scene_.addEntity(aranyaCuerpo);
+    scene_.addEntity(aranyaPatasT);
+    scene_.addEntity(aranyaPatasM);
+    scene_.addEntity(aranyaPatasB);
+    scene_.addEntity(aranyaSombra);
 };
 
 let createBala = (id, pos, scene, rot, speed) =>
 {
     let c = new Entity("bullet#"+ id, scene, Tag.Enemy);
     c.addComponent(sprBullet.clone());
-    c.addComponent(new Transform(pos, rot, Victor(1, 1)));
+    c.addComponent(new Transform(pos, rot, Victor(1.5, 1.5)));
     c.addComponent(new Kinematic(Victor(speed, 0).rotateByDeg(rot), Victor(0, 0), Victor(0, 0)));
     c.addComponent(new RectCollider(16, 16, Victor(-8, -8)));
     c.addComponent(new Behaviour([], [bullet], []));
+    scene.addToRun(c);
+};
+
+let createBalaHit = (id, pos, scene) =>
+{
+    let c = new Entity("bullet-hit#"+ id, scene, Tag.Default);
+    let s = clamp((Math.random()+0.5)*2, 1.2, 1.8);
+    c.addComponent(sprBulletHit.clone());
+    c.addComponent(new Transform(pos, Math.random()*360, Victor(s, s)));
+    c.addComponent(new Behaviour([], [(e)=>
+    {
+        let a = e.getComponent(ComponentType.Sprite);
+        if(a.image_index >= a.frame_length-1)
+            e.destroy();
+    }], []));
+    scene.addToRun(c);
+};
+
+let createLaserInit = (id, pos, scene) =>
+{
+    let c = new Entity("laser-init#"+ id, scene, Tag.Default);
+    let s = 1.3;
+    c.addComponent(sprLaserInit.clone());
+    c.addComponent(new Transform(pos, Math.random()*360, Victor(s, s)));
+    c.addComponent(new Behaviour([], [(e)=>
+    {
+        let a = e.getComponent(ComponentType.Sprite);
+        if(a.image_index >= a.frame_length-1)
+            e.destroy();
+    }], []));
     scene.addToRun(c);
 };
 
