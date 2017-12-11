@@ -471,9 +471,11 @@ class Entity
 
     destroy()
     {
-        let behaviour = this.getComponent(ComponentType.Behaviour);
-        if(behaviour != null && behaviour["destroy"].length > 0)
-            behaviour.destroy();
+        //let behaviour = this.getComponent(ComponentType.Behaviour);
+        let behaviour = this.components.get(ComponentType.Behaviour);
+        if(behaviour != null && behaviour["onDestroy"].length > 0){
+            behaviour.onDestroy();            
+        }           
         this.scene.removeFromRun(this);
         this.removeComponent(ComponentType.Sprite);
         this.removeComponent(ComponentType.Collision);
@@ -572,7 +574,7 @@ class Behaviour extends Component
         {
             create: on_create_behaviours,
             update: on_update_behaviours,
-            destroy: on_destroy_behaviours
+            onDestroy: on_destroy_behaviours
         };
 
         this.type = ComponentType.Behaviour;
@@ -601,7 +603,7 @@ class Behaviour extends Component
         });
     }
 
-    destroy()
+    onDestroy()
     {
         this.behaviours["destroy"].forEach(behaviour =>
         {
@@ -1125,10 +1127,7 @@ class Sprite extends Component
         ctx.save();
 
         let tran = Victor(pos.x, pos.y);
-
-        ctx.translate(tran.x, tran.y);
-        ctx.rotate(transform.rotation*Math.PI/180);
-        ctx.translate(-tran.x, -tran.y);
+        
         if (this.entity.scene.debug){
             let c = this.entity.getComponent(ComponentType.Collider);
             if(c){
@@ -1136,6 +1135,10 @@ class Sprite extends Component
                 ctx.strokeRect(pos.x + c.offset.x, pos.y + c.offset.y, c.width * transform.scale.x, c.height * transform.scale.y);
             }
         }
+
+        ctx.translate(tran.x, tran.y);
+        ctx.rotate(transform.rotation*Math.PI/180);
+        ctx.translate(-tran.x, -tran.y);        
 
         ctx.drawImage(this.image, 0, 0,
             this.image.width, this.image.height,
@@ -1800,7 +1803,7 @@ class Scene
 
             if(this.debug)
             {
-                console.log(this.renderizablesByDepth);
+                //console.log(this.renderizablesByDepth);
             }
         }
         

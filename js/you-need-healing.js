@@ -10,6 +10,7 @@ var webApp = false;
 var fullScreen = false;
 var orientationLandscape = true;
 
+var actualLevel;
 var scene;
 var gameLoop;
 var ctx;
@@ -47,13 +48,13 @@ let sprCD_3 = new SpriteD(["assets/game/textures/CajaDestruible_third.png"], 0, 
 let sprCD2 = new SpriteD(["assets/game/textures/CajaDestruible4.png"], 0.2, Victor(-50, -50));  
 //sprite animated damage block
 let sprDMG = new AnimationD(["assets/game/textures/boxDamage_second1.png", "assets/game/textures/boxDamage_second2.png", "assets/game/textures/boxDamage_second3.png", "assets/game/textures/boxDamage_second4.png",], 0.1, 0, Victor(-60, -60));   
-let sprDMG2 = new AnimationD(["assets/game/textures/boxDamage_third1.png", "assets/game/textures/boxDamage_third2.png", "assets/game/textures/boxDamage_third3.png", "assets/game/textures/boxDamage_third4.png",],0.1, -1, Victor(-60, -60));    
+let sprDMG2 = new AnimationD(["assets/game/textures/boxDamage_third1.png", "assets/game/textures/boxDamage_third2.png", "assets/game/textures/boxDamage_third3.png", "assets/game/textures/boxDamage_third4.png",], 0.1, -1, Victor(-60, -60));    
 let sprDMG3 = new AnimationD(["assets/game/textures/boxDamage1.png", "assets/game/textures/boxDamage2.png", "assets/game/textures/boxDamage3.png", "assets/game/textures/boxDamage4.png",], 0.1, -2, Victor(-60, -60));   
 //sprite arrow indicator and null arrow
 let sprArrowNull = new Sprite(["assets/game/sprites/null.png"], -10, Victor(0, -9));
 let sprArrow = new Sprite(["assets/game/sprites/arrow.png"], -10, Victor(0, -9));
 //sprite charge indicator and null charge
-let sprChargeNull = new Animation(["assets/game/sprites/null.png"],0, 0.5, Victor(-50, -50));
+let sprChargeNull = new Animation(["assets/game/sprites/null.png"], 0, 0.5, Victor(-50, -50));
 let sprCharge = new Animation([
     "assets/game/sprites/charge_frames/charge1.png",
     "assets/game/sprites/charge_frames/charge2.png",
@@ -94,7 +95,7 @@ let sprCharge = new Animation([
     "assets/game/sprites/charge_frames/charge37.png",
     "assets/game/sprites/charge_frames/charge38.png",
     "assets/game/sprites/charge_frames/charge39.png",
-    "assets/game/sprites/charge_frames/charge40.png"], 0.5, 0, Victor(-50, -50));
+    "assets/game/sprites/charge_frames/charge40.png"], 0.5, -0.5, Victor(-50, -50));
 
 //enemy Sprites
 let offset = Victor(-20, -20);
@@ -277,6 +278,7 @@ var snd_dmg = "assets/game/snd/sfx/nin/ktana_damage.wav";
 var snd_death = "assets/game/snd/sfx/nin/ktana_death.wav";
 var snd_robolaAttack = "assets/game/snd/sfx/enemies/RoboBolaA_attack.wav";
 var snd_robolaDeath = "assets/game/snd/sfx/enemies/RoBolaA_death.wav";
+var snd_lagartoDeath = "assets/game/snd/sfx/enemies/RoboLagarto_death.wav";
 var game_music = "assets/game/snd/music/boss.ogg";
 var sounds_to_load = 
 [
@@ -285,7 +287,8 @@ var sounds_to_load =
     snd_dmg,
     snd_death,
     snd_robolaAttack,
-    snd_robolaDeath
+    snd_robolaDeath,
+    snd_lagartoDeath,
 ];
 //#endregion
 
@@ -310,8 +313,22 @@ easystar.setIterationsPerCalculation(200);
 //#endregion
 
 function gameOver(){
+    scene.pause();
+    toggleBlur($("#playground"), true);
+    $("#points").html(""+points);
+    toggleDisplay($("#gameover-window"), true);        
+}
+
+function startGame(){ 
+    toggleDisplay($("#load-window"), false);     
+    started = true;
+    gameLoop = new GameLoop(scene);      
     scene.start();
-    scene.getEntity("nin").addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
+    gameLoop.loop();    
+    let bso = scene.sound_manager.getSound(game_music);
+    bso.loop = true;
+    bso.play();  
+    setEnergyRec();
 }
 
 function randomId(){
@@ -345,6 +362,10 @@ function setEnergyRec(){
 
 //muestra/oculta el menu de ajustes
 function toggleSettings(){
+
+    if(started && ($("#gameover-window").css("display") == "block" || $("#load-window").css("display") == "block")){
+        return;
+    }
     var actualState = $("#settings-window").css("display");    
     actualState = actualState == "none"? false: true;
     if(!inMainMenu && !actualState && !started)
@@ -420,9 +441,9 @@ function toggleDisplay(item, newState){
 function play(level){
     toggleBlur($("#menu-window"), false);
     toggleDisplay($("#level-window"), false);
-    toggleDisplay($("#menu-window"), false);
+    toggleDisplay($("#menu-window"), false);    
     toggleDisplay($("#game-window"), true); 
-    
+    toggleDisplay($("#load-window"), true);   
     //inicializamos el canvas
     ctx = $("#playground").get(0).getContext("2d");
     ctx.webkitImageSmoothingEnabled = false;
@@ -430,18 +451,20 @@ function play(level){
     ctx.imageSmoothingEnabled = false;
     const C_WIDTH = parseInt(ctx.canvas.getAttribute("width"));
     const C_HEIGHT = parseInt(ctx.canvas.getAttribute("height"));
+
+    //pintamos la escena en negro
+    ctx.fillStyle = "#000000";
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     
     //creamos la escena
     scene = new Scene("main", 1240, 800, C_WIDTH, C_HEIGHT);    
     //scene.debug = true;
     scene.margin = 60;
-    started = true;
-    gameLoop = new GameLoop(scene);    
-    loadLevel(level);   
-    scene.start();
-    gameLoop.loop();
-    points = 0;
-    setEnergyRec();
+    points = 0;    
+    actualLevel = level;    
+    loadLevel(actualLevel); 
+    setTimeout(startGame, 4000);
 }
 
 function resetLanguageButtons(){
@@ -547,6 +570,24 @@ function checkOrientation(){
     }
 }
 
+function exitGame(){
+    clearInterval(energyRec); 
+    inMainMenu = true;
+    gameLoop = null;
+    scene.stop();
+    scene = null;     
+    toggleDisplay($("#gameover-window"), false);    
+    toggleBlur($("#playground"), false);
+    toggleDisplay($("#level-window"), false);
+    toggleDisplay($("#menu-window"), true);
+    toggleDisplay($("#game-window"), false);
+    toggleDisplay($("#settings-window"), false);
+    toggleDisplay($("#credits-window"), false);
+    changeButtonsState($(".menu-btn"), false);                   
+    started = false;
+    points = 0;
+}
+
 function loadRanking(){
     /*$("#ranking").html('<caption style="font-size:34px"><b>LeaderBoard</b></caption> <tr> <th style="width:20%">Place</th> <th style="width:50%">Player</th> <th>Points</th> </tr>');*/
     for(var i = 0; i < ranking.length; i++){					
@@ -567,6 +608,8 @@ $(document).ready(()=>{
         if(isChromium){
             toggleDisplay($("#webApp-hint"), true);      
         }
+        $("#intro1").attr("src","assets/game/textures/intro_mobile1.gif");
+        $("#intro2").attr("src","assets/game/textures/intro_tap_mobile.gif");
     }
     
     //definimos los valores por defecto de los sliders de audio
@@ -577,7 +620,7 @@ $(document).ready(()=>{
     if (matchMedia("(display-mode: standalone)").matches) {
         webApp = true;
         fullScreen = true;
-    }  
+    }      
     
     window.addEventListener("resize", function(){
         detectFullscreen();
@@ -639,20 +682,16 @@ $(document).ready(()=>{
     });
     
     //manejador boton salir del juego
-    $("#exit-button").click(function(){  
-        clearInterval(energyRec); 
-        inMainMenu = true;
-        gameLoop = null;
-        scene.stop();
-        scene = null;     
-        toggleBlur($("#playground"), false);
-        toggleDisplay($("#level-window"), false);
-        toggleDisplay($("#menu-window"), true);
-        toggleDisplay($("#game-window"), false);
-        toggleDisplay($("#settings-window"), false);
-        toggleDisplay($("#credits-window"), false);
-        changeButtonsState($(".menu-btn"), false);                   
-        started = false;
+    $("#exit-button").click(exitGame);
+
+    $("#exit-button-gameover").click(exitGame);
+
+    $("#retry-button").click(function(){        
+        toggleBlur($("#playground"), false);    
+        toggleDisplay($("#gameover-window"), false);    
+        scene.start();
+        scene.getEntity("nin").addComponent(new Kinematic(new Victor(50, 0), new Victor(0, 0), new Victor(0, 0)));
+        points = 0;
     });
     
     //manejador botones de idiomas
@@ -682,14 +721,18 @@ class GameLoop{
         this.scene.update(this.dt);
         this.scene.render(ctx);
         this.scene.checkPause();
-
-        // Render
-        requestAnimationFrame(function(){if(gameLoop != null) gameLoop.loop();});
-
+        
         this.t = this.nt;
 
         // Manages input
         this.scene.getInput().lateUpdate();
+        ctx.font = "bold 10px Telemarines1Import";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText(i18next.t("puntos") +": " + points, 590, 15);
+        
+        // Render
+        requestAnimationFrame(function(){if(gameLoop != null) gameLoop.loop();});             
     }    
 }
 
@@ -1117,16 +1160,19 @@ var ninUpdate = (e, m, dt) =>
                 doDamage(1);                            
             }            
         }else{
-            //daño a enemigo
+            //daño a enemigo        // puntos de la araña points += 10; bola points += 4
             if(obj[0].id.search("robola") != -1){
                 //enemigo robola
-                let arrayEnt = obj[0].getComponent(ComponentType.Behaviour).memory.get("ent_array");
-                $.each(arrayEnt, function(index, ent){
-                    e.scene.getEntity(ent).destroy();
-                });
-                obj[0].destroy();
+                enemyDeath(e.scene, obj[0].id)
+                points += 2;
                 let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
-                bolaDeath.play();
+                bolaDeath.play();            
+            }else if(obj[0].id.search("lagarto") != -1 && dashPower == 3){
+                //enemigo robola
+                enemyDeath(e.scene, obj[0].id)
+                let lagartoDeath = e.scene.sound_manager.getSound(snd_lagartoDeath);
+                lagartoDeath.play();  
+                points += 15;
             }
         }        
     }
@@ -1148,7 +1194,7 @@ var ninUpdate = (e, m, dt) =>
                     console.log("Dash");   
 
                 let i_mp = m.get("i_mp");
-                let pc = m.get("press_count");
+                //let pc = m.get("press_count");
                 let new_spd = spd;
                 let wastedEnergy = 1;
 
@@ -1189,45 +1235,8 @@ var ninUpdate = (e, m, dt) =>
         m.set("press_count", 0);
     }
 
-    /*if(input.getMouseUp(MouseButton.Left))
-    {
-        if(m.get("ready") === true)
-        {
-            if(e.scene.debug)
-                console.log("Dash");             
-            let i_mp = m.get("i_mp");
-            let pc = m.get("press_count");
-            let new_spd = spd;            
-            let wastedEnergy = 1;
-            let power = e.scene.getEntity("charge").getComponent(ComponentType.Sprite).image_index;
-            if(power >= 36){
-                new_spd *= 2;
-                wastedEnergy++;
-            }
-            if(power >= 18){
-                new_spd *= 1.5;
-                wastedEnergy++;
-            }
-            if(wastedEnergy > 1){
-                wasteEnergy(wastedEnergy);
-            }            
-            new_spd *= 5;
-            k.speed = input.mouseCanvasPosition.clone().subtract(i_mp).normalize().multiply(Victor(new_spd, new_spd));
-            t.rotation = k.speed.horizontalAngleDeg();
-            e.scene.getEntity("arrow").addComponent(sprArrowNull.clone());
-            e.scene.getEntity("charge").addComponent(sprChargeNull.clone());
-        }
-        else
-        {   
-            e.scene.getEntity("charge").addComponent(sprChargeNull.clone());
-            if(e.scene.debug)
-                console.log("Slash");
-            wasteEnergy(1);
-            let draw = e.scene.sound_manager.getSound(snd_draw);
-            draw.play();
-        }
-        m.set("press_count", 0);        
-    }*/
+    /*if(input.getMousePressed(MouseButton.Left))
+    }    */
     
     if(iframes > 0){
         if(iframes != 1){
@@ -1261,11 +1270,11 @@ var ninUpdate = (e, m, dt) =>
     }
     
     function dashing(){        
-        if(k.speed.magnitude() >= spd * 10)
+        if(k.speed.magnitude() >= spd * 7)
             return 3;
         if(k.speed.magnitude() >= spd * 4)
             return 2;
-        if(k.speed.magnitude() >= spd * 3)
+        if(k.speed.magnitude() >= spd * 2.5)
             return 1;
         return 0;
     }
@@ -1273,7 +1282,10 @@ var ninUpdate = (e, m, dt) =>
     function doDamage(value){
         let dmg = e.scene.sound_manager.getSound(snd_dmg);
         dmg.play();
-        let newHp = hp - value;        
+        let newHp = hp - value; 
+        //TOO borrar inmortal code
+        //newHp = 3;
+        //inmortal code
         m.set("hp", newHp);
         e.scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("damaged", true);
         e.scene.getEntity("HUD-life").getComponent(ComponentType.Behaviour).memory.set("hp_value", newHp);
@@ -1304,15 +1316,32 @@ var ninUpdate = (e, m, dt) =>
     // Lerp Speed
 };
 
-var robolaDeath = (e, m) =>{
-    console.log("destroying robola");
-    let arrayEnt = m.get("ent_array");
-    for(let i = 0; i < arrayEnt.length; i++){
-        e.scene.getEntity(arrayEnt[i]).destroy();
-    }            
-    let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
-    bolaDeath.play();
-};
+/*function robolaDeath(scene_, id){
+    var e = scene_.getEntity(id)
+    var b = e.getComponent(ComponentType.Behaviour);
+    if(e != null && b != null){
+        let arrayEnt = b.memory.get("ent_array");
+        for(let i = 0; i < arrayEnt.length; i++){
+            scene_.getEntity(arrayEnt[i]).destroy();
+        }    
+        e.destroy();
+        let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
+        bolaDeath.play();
+    }    
+}*/
+
+function enemyDeath(scene_, id){
+    var e = scene_.getEntity(id)
+    var b = e.getComponent(ComponentType.Behaviour);
+    if(e != null && b != null){
+        let arrayEnt = b.memory.get("ent_array");
+        for(let i = 0; i < arrayEnt.length; i++){
+            scene_.getEntity(arrayEnt[i]).destroy();            
+        }            
+        e.destroy();     
+        recoveryEnergy();
+    }    
+}
 
 var uiLifeUpdate = (e, m) =>{
     let t = e.getComponent(ComponentType.Transform);
@@ -1530,10 +1559,7 @@ function loadLevel(level){
     scene.setInput(new Input(), ctx.canvas);
     // Sound    
     scene.setSoundManager(new SoundManager(sounds, sounds_to_load, ()=>{     
-        scene.setVolume(musicVol, soundsVol, 100);
-        let bso = scene.sound_manager.getSound(game_music);
-        bso.loop = true;
-        bso.play();  
+        scene.setVolume(musicVol, soundsVol, 100);        
     }));
     
     let uiLife = new Entity("HUD-life", scene, Tag.UI, new Transform(Victor(50, 0), 0, Victor(1, 1)));
@@ -1673,7 +1699,7 @@ let createDamage = (id, pos, rot, scene)=>
             m.set("wait_time", m.get("wait_time") - 1);
         
         //check collision with enemies
-        obj = c.placeMeeting(p, Tag.Enemy, -1);
+        let obj = c.placeMeeting(p, Tag.Enemy, -1);
         if(obj != null){
         //daño a bola
             if(obj[0].id.search("bullet") != -1){
@@ -1683,7 +1709,8 @@ let createDamage = (id, pos, rot, scene)=>
             //daño a robola
             if(obj[0].id.search("robola") != -1){
             //enemigo robola
-                obj[0].destroy();            
+                enemyDeath(scene, obj[0].id);
+                points += 2;
             }
                 
         }
@@ -1759,7 +1786,7 @@ let createRobolaRanged = (id, pos, rot, scale, scene_) =>
 
     let robolaSombra = new Entity("robola_shadow#"+id, scene_, Tag.Enemy, new Transform(pos, rot, scale));
     robolaSombra.addComponent(sprBolaA_S.clone());
-    robolaSombra.addComponent(new Behaviour([], [robolaRangedAct], [robolaDeath], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Surround).set("cabeza", "robola_cabeza#"+id).set("ent_array", ["robola_base#"+id, "robola_ruedas#"+id, "robola_armadura#"+id, "robola_cuello#"+id, "robola_cabeza#"+id])));
+    robolaSombra.addComponent(new Behaviour([], [robolaRangedAct], [], new Map().set("target", "nin").set("pos_smoothing", 1).set("rot_smoothing", 1).set("speed", 100).set("state", State.Surround).set("cabeza", "robola_cabeza#"+id).set("ent_array", ["robola_base#"+id, "robola_ruedas#"+id, "robola_armadura#"+id, "robola_cuello#"+id, "robola_cabeza#"+id])));
     robolaSombra.addComponent(new Kinematic(new Victor(32, 18), new Victor(0, 0), new Victor(0, 0)));
     robolaSombra.addComponent(new RectCollider(40, 40, offset));
 
@@ -1883,10 +1910,11 @@ let createLaser = (id, pos, scene, rot, speed) =>
 let createLagarto = (id, pos, rot, scale, scene) =>
 {
     // Capas
-    let lagartoSombra = new Entity("lagarto_shadow#"+id, scene, Tag.Default, new Transform(pos, rot, scale));
+    let lagartoSombra = new Entity("lagarto_shadow#"+id, scene, Tag.Enemy, new Transform(pos, rot, scale));
     lagartoSombra.addComponent(sprLagarto_shadow.clone());
-    lagartoSombra.addComponent(new Behaviour([], [follow], [], new Map().set("target", "lagarto_cabeza#"+id).set("pos_smoothing", 0.3).set("rot_smoothing", 0.2)));
-    lagartoSombra.addComponent(new RectCollider(30, 30));
+    lagartoSombra.addComponent(new Behaviour([], [follow], [], new Map().set("target", "lagarto_cabeza#"+id).set("pos_smoothing", 0.3).set("rot_smoothing", 0.2).set("ent_array", ["lagarto_oruga_b#"+id, "lagarto_ruedas#"+id, "lagarto_oruga_t#"+id, "lagarto_body_b#"+id, "lagarto_body_m#"+id, "lagarto_neck_b#"+id,
+        "lagarto_neck_m#"+id, "lagarto_neck_t#"+id, "lagarto_cabeza#"+id])));
+    lagartoSombra.addComponent(new RectCollider(30, 30, Victor(-15, -15)));
 
     let lagartoOrugaB = new Entity("lagarto_oruga_b#"+id, scene, new Transform(pos, rot, scale));
     lagartoOrugaB.addComponent(sprLagarto_neckT.clone());

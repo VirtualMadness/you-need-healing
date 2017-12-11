@@ -38,7 +38,7 @@
 
 body, html{
     cursor: url("../assets/evolution_cursor.png"), auto;
-    //cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
+    /*cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;*/
     font-family: Telemarines1Import;
     text-align: center;
     margin: 0px auto;
@@ -73,9 +73,9 @@ input, button:hover{
 }
 
 .main-menu{    
-    //background-image: url("../assets/bg.png")center center no-repeat;
+    /*background-image: url("../assets/bg.png")center center no-repeat;
     //background-repeat: no-repeat;
-    //background-size: 100% 100%;
+    //background-size: 100% 100%;*/
     margin: 0px auto;
     width: 100%;
     height: 100%;
@@ -89,7 +89,7 @@ input, button:hover{
 }
 
 .menu-btn{
-    //background-image: url("assets/btn1.png");
+    /*background-image: url("assets/btn1.png");*/
     background-color: rgba(0, 0, 0, 0);
     border: none;
     background-repeat: no-repeat;
@@ -103,7 +103,6 @@ input, button:hover{
     font-weight: bold;
     font-size: 1em;
     transform-origin: 0% 0%;
-    //white-space: nowrap;
     transform: scaleX(1);
     transition-duration: 0.3s;
 }
@@ -273,9 +272,9 @@ input[type=checkbox]{
     transform: scale(1.1);
     filter: brightness(150%);
     transition-duration: 0.2s;
-    //background: #ed5e61;
+    /*background: #ed5e61;
     //background-image: -moz-linear-gradient(-45deg, #ed5e61 20%, #e7363e 70%);
-    //background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #ed5e61), color-stop(0.8, #e7363e));    
+    //background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0.2, #ed5e61), color-stop(0.8, #e7363e));*/
 }
 
 .close-button:active{
@@ -358,7 +357,6 @@ input[type=checkbox]{
     text-align: center;   
     color: white;
     font-size: calc(10px + 0.8vw);  /*hack for get min font size*/
-    font
     font-weight: bold;    
     left:0px; 
     top:0px;
