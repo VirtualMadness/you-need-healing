@@ -275,6 +275,30 @@ let laser_init_src =
 
 let sprLaserInit = new AnimationD(laser_init_src, 0.3, -1.51, Victor(-12, -12));
 
+let enemy_destroy_src =
+[
+    "assets/game/sprites/enemies/enemy-destroy/destroy1.png",
+    "assets/game/sprites/enemies/enemy-destroy/destroy2.png",
+    "assets/game/sprites/enemies/enemy-destroy/destroy3.png",
+    "assets/game/sprites/enemies/enemy-destroy/destroy4.png",
+    "assets/game/sprites/enemies/enemy-destroy/destroy5.png",
+    "assets/game/sprites/enemies/enemy-destroy/destroy6.png"
+];
+
+let sprEnemyDestroy = new Animation(enemy_destroy_src, 0.3, -2, Victor(-40, -40));
+
+let enemy_spawn_src =
+[
+    "assets/game/sprites/enemies/enemy-spawn/spawn1.png",
+    "assets/game/sprites/enemies/enemy-spawn/spawn2.png",
+    "assets/game/sprites/enemies/enemy-spawn/spawn3.png",
+    "assets/game/sprites/enemies/enemy-spawn/spawn4.png",
+    "assets/game/sprites/enemies/enemy-spawn/spawn5.png",
+    "assets/game/sprites/enemies/enemy-spawn/spawn6.png"
+];
+
+let sprEnemySpawn = new Animation(enemy_spawn_src, 0.2, -2, Victor(-50, -50));
+
 //#region Sonidos
 var snd_draw = "assets/game/snd/sfx/nin/draw-1.ogg";
 var snd_dmg = "assets/game/snd/sfx/nin/ktana_damage.wav";
@@ -282,7 +306,10 @@ var snd_death = "assets/game/snd/sfx/nin/ktana_death.wav";
 var snd_robolaAttack = "assets/game/snd/sfx/enemies/RoboBolaA_attack.wav";
 var snd_robolaDeath = "assets/game/snd/sfx/enemies/RoBolaA_death.wav";
 var snd_lagartoDeath = "assets/game/snd/sfx/enemies/RoboLagarto_death.wav";
+var snd_lagartoAttack = "assets/game/snd/sfx/enemies/RoboLagarto_attack.wav";
 var snd_aranyaDeath = "assets/game/snd/sfx/enemies/RoboArana_death.wav";
+var snd_aranyaAttack = "assets/game/snd/sfx/enemies/RoboArana_attack.wav";
+
 //var game_music = "assets/game/snd/music/boss.ogg";
 var game_music = "assets/game/snd/music/game-theme.mp3";
 var sounds_to_load = 
@@ -293,8 +320,10 @@ var sounds_to_load =
     snd_death,
     snd_robolaAttack,
     snd_robolaDeath,
+    snd_lagartoAttack,
     snd_lagartoDeath,
     snd_aranyaDeath,
+    snd_aranyaAttack,
 ];
 //#endregion
 
@@ -896,6 +925,8 @@ var lagartoAct = (e, m, dt)=>
             {
                 //console.log("CHARGE");
                 m.set("state", State.Charge);
+                let snd_charge = e.scene.sound_manager.getSound(snd_lagartoAttack);
+                snd_charge.play();
                 charge_dir = t_t.position.clone().subtract(t.position).horizontalAngleDeg();
                 k.speed = Victor(330, 0).rotateByDeg(charge_dir);
                 t.rotation = charge_dir;
@@ -956,11 +987,13 @@ var aranyaAct = (e, m, dt)=>
             //console.log("chasing");
             chase(e, m);
             head_t.rotation = lerpAngle(head_t.rotation, t.rotation, 0.3);
-            if(t_t.position.clone().distance(t.position) < 320 && Math.abs(t_t.position.clone().subtract(head_t.position).horizontalAngleDeg() - head_t.rotation) < 30 && !rayCast(e.getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
+            if(t_t.position.clone().distance(t.position) < 240 && Math.abs(t_t.position.clone().subtract(head_t.position).horizontalAngleDeg() - head_t.rotation) < 60 && !rayCast(e.getComponent(ComponentType.Collider), t.position, t_t.position.clone().subtract(t.position).horizontalAngleDeg(), Tag.Solid, t_t.position.distance(t.position)))
             {
                 m.set("state", State.Wait);
                 createLaserInit(randomId(), t.position.clone().add(Victor(40, 0).rotateByDeg(head_t.rotation)), e.scene);
                 laser_dir = t_t.position.clone().add(target.getComponent(ComponentType.Kinematic).speed.clone().multiply(Victor(dt, dt))).subtract(t.position).horizontalAngleDeg();
+                let snd_laser = e.scene.sound_manager.getSound(snd_aranyaAttack);
+                snd_laser.play();
                 head_t.rotation = laser_dir;
                 m.set("wait_time", 40);
                 k.speed.multiply(Victor(-0.05, -0.05).rotateDeg(laser_dir));
@@ -977,6 +1010,8 @@ var aranyaAct = (e, m, dt)=>
             else
             {
                 createLaser(randomId(), head_t.position.clone().add(Victor(20, 0).rotateByDeg(head_t.rotation)), e.scene, head_t.rotation, 900);
+                let snd_laser = e.scene.sound_manager.getSound(snd_robolaAttack);
+                snd_laser.play();
                 head_t.rotation = lerpAngle(head_t.rotation, t_t.position.clone().add(target.getComponent(ComponentType.Kinematic).speed.clone().multiply(Victor(dt, dt))).subtract(t.position).horizontalAngleDeg(), 0.01);
                 m.set("laser_time", m.get("laser_time") - 1);
             }
@@ -1171,20 +1206,24 @@ var ninUpdate = (e, m, dt) =>
         }else{
             //daño a enemigo        // puntos de la araña points += 10; bola points += 4
             if(obj[0].id.search("robola") != -1){
-                //enemigo robola
+                //enemigo robola 
                 enemyDeath(e.scene, obj[0].id);
                 points += 2;
                 let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
-                bolaDeath.play();            
+                bolaDeath.play();    
             }else if(obj[0].id.search("lagarto") != -1 && dashPower == 3){
                 //enemigo lagarto
                 enemyDeath(e.scene, obj[0].id);
+                let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
+                bolaDeath.play();  
                 let lagartoDeath = e.scene.sound_manager.getSound(snd_lagartoDeath);
                 lagartoDeath.play();  
                 points += 15;
             }else if(obj[0].id.search("aranya") != -1 && dashPower == 2){
                 //enemigo aranya
                 enemyDeath(e.scene, obj[0].id);
+                let bolaDeath = e.scene.sound_manager.getSound(snd_robolaDeath);
+                bolaDeath.play(); 
                 let aranyaDeath = e.scene.sound_manager.getSound(snd_aranyaDeath);
                 aranyaDeath.play();  
                 points += 10;
@@ -1234,7 +1273,7 @@ var ninUpdate = (e, m, dt) =>
             {
                 if(e.scene.debug)
                     console.log("Slash");
-                wasteEnergy(1);
+                //wasteEnergy(1);
                 
                 let draw = e.scene.sound_manager.getSound(snd_draw);
                 draw.play();
@@ -1346,7 +1385,10 @@ var ninUpdate = (e, m, dt) =>
 }*/
 
 function enemyDeath(scene_, id){
-    var e = scene_.getEntity(id)
+    var e = scene_.getEntity(id);
+    createEnemyDestroy(randomId(), scene_.getEntity(id).getComponent(ComponentType.Transform).position, e.scene);   
+    createEnemyDestroy(randomId(), scene_.getEntity(id).getComponent(ComponentType.Transform).position, e.scene);  
+    createEnemyDestroy(randomId(), scene_.getEntity(id).getComponent(ComponentType.Transform).position, e.scene);  
     var b = e.getComponent(ComponentType.Behaviour);
     if(e != null && b != null){
         let arrayEnt = b.memory.get("ent_array");
@@ -1616,11 +1658,13 @@ function loadLevel(level){
             createD(scene, Victor(40 * ent.x + mar, 40* ent.y + mar), ent.rot, Victor(ent.scaleX, ent.scaleY));                
         }else if(ent.type == "rba"){
             createRobolaRanged(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), 0, Victor(1,1), scene); 
+            createEnemySpawn(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), scene);
             intervalRobola = setInterval(function(){
                 if(scene.running != SceneState.Play || scene.frame > 60*13){
                     return;
                 }
                 createRobolaRanged(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), 0, Victor(1,1), scene); 
+                createEnemySpawn(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), scene);
             }, 10000);
         }else if(ent.type == "ra"){
             intervalAranya = setInterval(function(){
@@ -1628,6 +1672,7 @@ function loadLevel(level){
                     return;
                 }
                 createAranya(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar), 0, Victor(1, 1), scene);
+                createEnemySpawn(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), scene);
             }, 20000);            
         }else if(ent.type == "rl"){
             intervalLagarto = setInterval(function(){
@@ -1635,6 +1680,7 @@ function loadLevel(level){
                     return;
                 }
                 createLagarto(randomId(), Victor(40 * ent.x + mar, 40 * ent.y + mar, 0), 0, Victor(1,1), scene);
+                createEnemySpawn(randomId(), Victor(40 * ent.x + mar, 40 * ent.y +mar, 0), scene);
             }, 30000); 
             //createLagarto(randomId(), Victor(40 * ent.x + mar, 40 * ent.y + mar, 0), 0, Victor(1,1), scene);
         }    
@@ -1919,6 +1965,39 @@ let createBalaHit = (id, pos, scene) =>
     scene.addToRun(c);
 };
 
+let createEnemyDestroy = (id, pos, scene) =>
+{
+    let c = new Entity("enemy-destroy#"+ id, scene, Tag.Default);
+    let s = clamp((Math.random()+0.5), 1.2, 1.5);
+    c.addComponent(sprEnemyDestroy.clone());
+    c.addComponent(new Transform(pos.add(Victor((Math.random()-0.5)*5, (Math.random()-0.5)*5)), Math.random()*360, Victor(s, s)));
+    c.addComponent(new Behaviour([], [(e)=>
+    {
+        let a = e.getComponent(ComponentType.Sprite);
+        let t = e.getComponent(ComponentType.Transform);
+        t.position.add(Victor((Math.random()-0.5)*20, (Math.random()-0.5)*20));
+        a.depth-=0.2;
+        if(a.image_index >= a.frame_length-1)
+            e.destroy();
+    }], []));
+    scene.addToRun(c);
+};
+
+let createEnemySpawn = (id, pos, scene) =>
+{
+    let c = new Entity("enemy-spawn#"+ id, scene, Tag.Default);
+    let s = 1.5;
+    c.addComponent(sprEnemySpawn.clone());
+    c.addComponent(new Transform(pos, 0, Victor(s, s)));
+    c.addComponent(new Behaviour([], [(e)=>
+    {
+        let a = e.getComponent(ComponentType.Sprite);
+        if(a.image_index >= a.frame_length-1)
+            e.destroy();
+    }], []));
+    scene.addToRun(c);
+};
+
 let createLaserInit = (id, pos, scene) =>
 {
     let c = new Entity("laser-init#"+ id, scene, Tag.Default);
@@ -2019,9 +2098,9 @@ let createLagarto = (id, pos, rot, scale, scene) =>
         .set("rot_smoothing", 0.2)
         .set("target", "nin")
         .set("speed", 50)
-        .set("state", State.Chase)
+        .set("state", State.Wait)
         .set("collider_holder", "lagarto_shadow#"+id)
-        .set("wait_time", 0)
+        .set("wait_time", 60)
     ));
 
     scene.addToRun(lagartoSombra);
